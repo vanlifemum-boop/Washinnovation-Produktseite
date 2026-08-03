@@ -1,0 +1,59 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import Zaehler from "../../components/Zaehler.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+import { sichtbareProjekte } from "../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+const projekte = sichtbareProjekte();
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("spenden.titel")}
+  beschreibung={t("spenden.untertitel")}
+  seitenpfad="spenden"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <p class="lead" data-reveal>{t("spenden.text")}</p>
+
+      <!-- Der Unterschied zwischen Kauf und Geldspende gehört klar sichtbar hierher,
+           nicht ins Kleingedruckte: Eine Zuwendungsbestätigung darf nur ausstellen,
+           wer gemeinnützig ist. -->
+      <div class="hinweis" data-reveal>
+        <p style="margin:0">{t("spenden.hinweis")}</p>
+      </div>
+
+      {projekte.length > 0 && (
+        <ul class="liste" data-reveal>
+          {projekte.map((p) => (
+            <li>
+              <a href={pfad(sprache, `projekte/${p.slug}`)}>{p.name}</a>
+              {p.spendenlink && (
+                <>
+                  {" · "}
+                  <a href={p.spendenlink} rel="noopener noreferrer" target="_blank">
+                    {t("projekte.direkt-spenden")}
+                  </a>
+                </>
+              )}
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn" href={pfad(sprache, "bestellen")}>{t("spenden.button")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "projekte")}>{t("projekte.alle")}</a>
+      </div>
+    </div>
+  </section>
+
+  <Zaehler sprache={sprache} />
+</Basis>

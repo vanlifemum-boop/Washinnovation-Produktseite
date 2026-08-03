@@ -1,0 +1,21 @@
+{
+  "name": "washinnovation-shop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "WashInnovation — Verkaufsseite für tragbare, wassersparende Produkte mit 1+1-Spendenmodell",
+  "scripts": {
+    "dev": "astro dev",
+    "start": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "check": "astro check"
+  },
+  "dependencies": {
+    "astro": "^7.1.6"
+  },
+  "devDependencies": {
+    "@astrojs/check": "^0.9.10",
+    "typescript": "^6.0.3"
+  }
+}

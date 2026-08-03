@@ -1,0 +1,59 @@
+---
+import Basis from "../../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../../i18n/ui";
+import { sichtbareProjekte, gespendetAnProjekt, text } from "../../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+const liste = sichtbareProjekte();
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("projekte.titel")}
+  beschreibung={t("projekte.untertitel")}
+  seitenpfad="projekte"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      {liste.length === 0 ? (
+        <div class="leer-zustand" data-reveal>
+          <h2>{t("projekte.keine.titel")}</h2>
+          <p style="margin:0 auto;max-width:52ch">{t("projekte.keine.text")}</p>
+        </div>
+      ) : (
+        <div class="raster raster--2">
+          {liste.map((p) => {
+            const erhalten = gespendetAnProjekt(p.id);
+            const ziel = p.ziel ?? 0;
+            const anteil = ziel > 0 ? Math.min(100, Math.round((erhalten / ziel) * 100)) : 0;
+            return (
+              <a class="karte" href={pfad(sprache, `projekte/${p.slug}`)} data-reveal style="text-decoration:none">
+                <h3>{p.name}</h3>
+                <p class="augenbraue" style="margin:0">{p.stadt}</p>
+                <p class="leise">{text(p.beschreibung, sprache)}</p>
+                {ziel > 0 && (
+                  <div>
+                    <div class="fortschritt"><div class="fortschritt-balken" style={`width:${anteil}%`}></div></div>
+                    <p class="leise" style="margin:0;font-size:0.9rem">
+                      {t("projekte.erhalten")}: {erhalten} / {ziel}
+                    </p>
+                  </div>
+                )}
+              </a>
+            );
+          })}
+        </div>
+      )}
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn btn--rand" href={pfad(sprache, "1plus1")}>{t("start.hero.cta2")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "transparenz")}>{t("zaehler.zur-transparenz")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

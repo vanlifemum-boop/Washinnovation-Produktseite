@@ -1,0 +1,43 @@
+---
+import { getCollection } from "astro:content";
+import Basis from "../../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datum, pfad, type Sprache } from "../../../i18n/ui";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+const alle = await getCollection("blog");
+const beitraege = alle
+  .filter((b) => b.id.startsWith(`${sprache}/`) && !b.data.entwurf)
+  .sort((a, b) => b.data.datum.localeCompare(a.data.datum));
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("blog.titel")}
+  beschreibung={t("blog.untertitel")}
+  seitenpfad="journal"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      {beitraege.length === 0 ? (
+        <div class="leer-zustand"><p style="margin:0">{t("blog.leer")}</p></div>
+      ) : (
+        <div class="raster raster--2">
+          {beitraege.map((b) => (
+            <a class="karte" href={pfad(sprache, `journal/${b.data.slug}`)} data-reveal style="text-decoration:none">
+              <p class="augenbraue" style="margin:0">{datum(b.data.datum, sprache)}</p>
+              <h3>{b.data.titel}</h3>
+              <p class="leise">{b.data.beschreibung}</p>
+              <p class="augenbraue" style="margin:0">{t("blog.weiterlesen")} →</p>
+            </a>
+          ))}
+        </div>
+      )}
+    </div>
+  </section>
+</Basis>

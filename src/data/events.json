@@ -1,0 +1,28 @@
+{
+  "_schema": {
+    "hinweis": "Termine, auf denen die Produkte gezeigt oder verkauft werden — Festivals, Messen, Märkte. 'verkauft' und 'gespendet' werden erst nach dem Event eingetragen und müssen zu den Lieferungen passen.",
+    "felder": {
+      "id": "Eindeutig, z. B. '2026-fusion'",
+      "slug": "Teil der URL",
+      "name": "Name der Veranstaltung",
+      "ort": "Ort",
+      "datum": "ISO-Startdatum",
+      "datumBis": "ISO-Enddatum, optional",
+      "verkauft": "Zahl oder null, solange das Event noch bevorsteht",
+      "gespendet": "Zahl oder null",
+      "text": "Objekt pro Sprache: { de, pl, en } — Ankündigung oder Rückblick"
+    },
+    "beispiel": {
+      "id": "2026-beispielfestival",
+      "slug": "beispielfestival-2026",
+      "name": "Beispielfestival",
+      "ort": "Irgendwo",
+      "datum": "2026-07-10",
+      "datumBis": "2026-07-13",
+      "verkauft": null,
+      "gespendet": null,
+      "text": { "de": "Wir sind mit dem Van da.", "pl": "…", "en": "…" }
+    }
+  },
+  "eintraege": []
+}

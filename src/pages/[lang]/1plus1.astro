@@ -1,0 +1,84 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import Zaehler from "../../components/Zaehler.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+import { modellAktiv } from "../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+const aktiv = modellAktiv();
+
+const fragen = [1, 2, 3, 4, 5, 6];
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("1plus1.titel")}
+  beschreibung={t("1plus1.untertitel")}
+  seitenpfad="1plus1"
+>
+  <!-- Stand des Modells — steht bewusst ganz oben, nicht im Kleingedruckten. -->
+  {!aktiv && (
+    <section class="sek sek--eis" style="padding-block:clamp(28px,4vw,44px)">
+      <div class="behaelter">
+        <div class="hinweis" style="margin:0">
+          <p>
+            <strong>{t("1plus1.stand.titel")}:</strong> {t("1plus1.stand.text")}
+          </p>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="sek-kopf schmal">
+        <h2 class="gross" data-reveal>{t("1plus1.wie.titel")}</h2>
+      </div>
+      <div class="raster raster--3 schritte">
+        <div class="schritt" data-reveal>
+          <h3>{t("1plus1.wie.schritt1.titel")}</h3>
+          <p class="leise">{t("1plus1.wie.schritt1.text")}</p>
+        </div>
+        <div class="schritt" data-reveal>
+          <h3>{t("1plus1.wie.schritt2.titel")}</h3>
+          <p class="leise">{t("1plus1.wie.schritt2.text")}</p>
+        </div>
+        <div class="schritt" data-reveal>
+          <h3>{t("1plus1.wie.schritt3.titel")}</h3>
+          <p class="leise">{t("1plus1.wie.schritt3.text")}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <Zaehler sprache={sprache} />
+
+  <!-- Die Kritik am Modell — vor dem ersten Presseartikel, nicht danach. -->
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <div class="sek-kopf">
+        <h2 class="gross" data-reveal>{t("1plus1.kritik.titel")}</h2>
+        <p class="lead" data-reveal>{t("1plus1.kritik.text")}</p>
+      </div>
+
+      <div class="faq" data-reveal>
+        {fragen.map((n) => (
+          <details>
+            <summary>{t(`1plus1.faq.${n}.frage`)}</summary>
+            <p class="leise">{t(`1plus1.faq.${n}.antwort`)}</p>
+          </details>
+        ))}
+      </div>
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn" href={pfad(sprache, "transparenz")}>{t("zaehler.zur-transparenz")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "projekte")}>{t("projekte.alle")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

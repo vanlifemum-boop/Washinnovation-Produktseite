@@ -1,0 +1,37 @@
+---
+import { gespendetGesamt, modellAktiv } from "../data/daten";
+import { pfad, uebersetzer, type Sprache } from "../i18n/ui";
+
+interface Props {
+  sprache: Sprache;
+}
+
+const { sprache } = Astro.props;
+const t = uebersetzer(sprache);
+
+// Diese Zahl kommt ausschließlich aus bestätigten Lieferungen.
+// Wer sie aus Bestellungen berechnet, macht aus der Transparenzseite eine Lüge.
+const gesamt = gespendetGesamt();
+const aktiv = modellAktiv();
+---
+
+<section class="sek sek--tief zaehler">
+  <div class="behaelter">
+    <p class="augenbraue" data-reveal>{t("zaehler.titel")}</p>
+    <span class="zaehler-zahl" data-zaehler={gesamt}>{gesamt}</span>
+    <p class="zaehler-einheit">{t("zaehler.einheit")}</p>
+    <p class="zaehler-erklaerung leise" data-reveal>{t("zaehler.erklaerung")}</p>
+
+    {!aktiv && (
+      <div class="hinweiskasten" data-reveal>
+        <h3>{t("zaehler.noch-nicht.titel")}</h3>
+        <p>{t("zaehler.noch-nicht.text")}</p>
+      </div>
+    )}
+
+    <div class="knopfreihe" style="justify-content:center" data-reveal>
+      <a class="btn btn--rand" href={pfad(sprache, "transparenz")}>{t("zaehler.zur-transparenz")}</a>
+      <a class="btn" href={pfad(sprache, "1plus1")}>{t("start.hero.cta2")}</a>
+    </div>
+  </div>
+</section>

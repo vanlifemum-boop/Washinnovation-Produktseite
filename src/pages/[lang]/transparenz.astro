@@ -1,0 +1,80 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datum, pfad, type Sprache } from "../../i18n/ui";
+import { bestaetigteLieferungen, gespendetGesamt, projekte, text } from "../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+const lieferungen = bestaetigteLieferungen();
+const gesamt = gespendetGesamt();
+
+function empfaenger(projektId: string) {
+  return projekte.find((p) => p.id === projektId)?.name ?? projektId;
+}
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("transparenz.titel")}
+  beschreibung={t("transparenz.untertitel")}
+  seitenpfad="transparenz"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <p class="lead schmal" data-reveal>{t("transparenz.text")}</p>
+
+      {lieferungen.length === 0 ? (
+        <div class="leer-zustand" data-reveal>
+          <p style="margin:0">{t("transparenz.leer")}</p>
+        </div>
+      ) : (
+        <div class="tabellen-huelle" data-reveal>
+          <table>
+            <thead>
+              <tr>
+                <th>{t("transparenz.spalte.datum")}</th>
+                <th>{t("transparenz.spalte.empfaenger")}</th>
+                <th>{t("transparenz.spalte.menge")}</th>
+                <th>{t("transparenz.spalte.notiz")}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {lieferungen.map((l) => (
+                <tr>
+                  <td>{datum(l.datum, sprache)}</td>
+                  <td>{empfaenger(l.projektId)}</td>
+                  <td>{l.menge}</td>
+                  <td class="leise">{text(l.notiz, sprache)}</td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr>
+                <td>{t("transparenz.summe")}</td>
+                <td></td>
+                <td>{gesamt}</td>
+                <td></td>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      )}
+
+      <div class="hinweis" data-reveal style="margin-top:32px">
+        <p>{t("zaehler.erklaerung")}</p>
+      </div>
+
+      <h2 style="margin-top:2.6rem" data-reveal>{t("transparenz.jahresbericht")}</h2>
+      <p class="leise" data-reveal>{t("transparenz.jahresbericht.folgt")}</p>
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn btn--rand" href={pfad(sprache, "1plus1")}>{t("start.hero.cta2")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

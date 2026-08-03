@@ -1,0 +1,194 @@
+---
+import "../styles/design.css";
+import {
+  AKTIVE_SPRACHEN, SPRACH_NAMEN, STANDARD_SPRACHE, uebersetzer, pfad, datei,
+  type Sprache,
+} from "../i18n/ui";
+
+interface Props {
+  sprache: Sprache;
+  titel: string;
+  beschreibung?: string;
+  /** Seitenpfad ohne Sprache und ohne Basis, z. B. "produkte" oder "" für die Startseite. */
+  seitenpfad?: string;
+  /**
+   * Nur nötig, wenn der Pfad je Sprache abweicht — etwa bei Journalbeiträgen mit
+   * übersetzten Slugs. Fehlt eine Sprache, taucht sie im Umschalter nicht auf,
+   * statt auf eine Seite zu verlinken, die es nicht gibt.
+   */
+  sprachPfade?: Partial<Record<Sprache, string>>;
+  /** Die Startseite bringt ihren eigenen Hero mit und braucht keinen Seitenkopf. */
+  hero?: boolean;
+}
+
+const { sprache, titel, beschreibung, seitenpfad = "", sprachPfade, hero = false } = Astro.props;
+
+/** Sprachen, die es für diese Seite tatsächlich gibt, mit ihrem jeweiligen Pfad. */
+const sprachZiele = AKTIVE_SPRACHEN.flatMap((s) => {
+  const p = sprachPfade ? sprachPfade[s] : seitenpfad;
+  return p === undefined ? [] : [{ sprache: s, url: pfad(s, p) }];
+});
+
+// x-default muss auf eine Seite zeigen, die es wirklich gibt: die deutsche
+// Fassung, falls vorhanden — sonst die erste verfügbare Sprache. (Bei
+// übersetzten Slugs wäre der eigene Pfad in der Standardsprache eine tote URL.)
+const standardZiel =
+  sprachZiele.find((z) => z.sprache === STANDARD_SPRACHE) ?? sprachZiele[0];
+const t = uebersetzer(sprache);
+
+const marke = t("meta.marke");
+const vollerTitel = titel === marke ? `${marke} — ${t("meta.claim")}` : `${titel} — ${marke}`;
+const beschreibungText = beschreibung ?? t("meta.beschreibung");
+
+const seite = Astro.site ?? new URL("https://example.com");
+const kanonisch = new URL(pfad(sprache, seitenpfad), seite).toString();
+
+// Navigation — bewusst kurz gehalten; der Rest steht im Footer.
+const navPunkte = [
+  { schluessel: "nav.produkte", ziel: "produkte" },
+  { schluessel: "nav.1plus1", ziel: "1plus1" },
+  { schluessel: "nav.transparenz", ziel: "transparenz" },
+  { schluessel: "nav.unterwegs", ziel: "unterwegs" },
+  { schluessel: "nav.blog", ziel: "journal" },
+  { schluessel: "nav.ueber-uns", ziel: "ueber-uns" },
+];
+
+const aktuellerPfad = Astro.url.pathname.replace(/\/$/, "");
+function istAktiv(ziel: string) {
+  return aktuellerPfad === pfad(sprache, ziel).replace(/\/$/, "");
+}
+---
+
+<html lang={sprache}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{vollerTitel}</title>
+    <meta name="description" content={beschreibungText} />
+    <link rel="canonical" href={kanonisch} />
+
+    {sprachZiele.map((z) => (
+      <link rel="alternate" hreflang={z.sprache} href={new URL(z.url, seite).toString()} />
+    ))}
+    {standardZiel && (
+      <link rel="alternate" hreflang="x-default" href={new URL(standardZiel.url, seite).toString()} />
+    )}
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={vollerTitel} />
+    <meta property="og:description" content={beschreibungText} />
+    <meta property="og:url" content={kanonisch} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href={datei("bilder/tropfen.svg")} type="image/svg+xml" />
+  </head>
+
+  <body>
+    <a class="sprunglink" href="#inhalt">{t("nav.zum-inhalt")}</a>
+
+    <header class="kopf">
+      <div class="behaelter">
+        <a class="marke" href={pfad(sprache)}>
+          <svg width="22" height="26" viewBox="0 0 22 26" aria-hidden="true">
+            <path
+              d="M11 1C11 1 1 12.2 1 17.6 1 22.2 5.5 25 11 25s10-2.8 10-7.4C21 12.2 11 1 11 1z"
+              fill="#0f6fc4"
+            />
+            <path d="M7.4 17.4c0 2.3 1.7 3.9 3.9 4.1" stroke="#fff" stroke-width="1.6" fill="none" stroke-linecap="round" />
+          </svg>
+          Wash<span>Innovation</span>
+        </a>
+
+        <button class="nav-schalter" aria-expanded="false" aria-label={t("nav.menue-oeffnen")}>☰</button>
+
+        <nav class="nav-links" aria-label={t("nav.produkte")}>
+          {navPunkte.map((p) => (
+            <a href={pfad(sprache, p.ziel)} aria-current={istAktiv(p.ziel) ? "page" : undefined}>
+              {t(p.schluessel)}
+            </a>
+          ))}
+          <a class="pille" href={pfad(sprache, "bestellen")}>{t("nav.bestellen")}</a>
+        </nav>
+
+        <div class="sprache">
+          <button class="sprache-schalter" aria-expanded="false" aria-haspopup="true">
+            {sprache}
+          </button>
+          <div class="sprache-menue" role="menu" aria-label={t("nav.sprache")}>
+            {sprachZiele.map((z) => (
+              <a
+                href={z.url}
+                role="menuitem"
+                lang={z.sprache}
+                aria-current={z.sprache === sprache ? "true" : undefined}
+              >
+                {SPRACH_NAMEN[z.sprache]}
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="inhalt">
+      {!hero && (
+        <div class="seitenkopf">
+          <div class="behaelter">
+            <h1 class="gross">{titel}</h1>
+            {beschreibung && <p class="lead">{beschreibung}</p>}
+          </div>
+        </div>
+      )}
+      <slot />
+    </main>
+
+    <footer class="fuss">
+      <div class="behaelter">
+        <div class="fuss-raster">
+          <div>
+            <h4>{marke}</h4>
+            <p>{t("footer.marke.text")}</p>
+          </div>
+          <div>
+            <h4>{t("footer.entdecken")}</h4>
+            <ul>
+              <li><a href={pfad(sprache, "produkte")}>{t("nav.produkte")}</a></li>
+              <li><a href={pfad(sprache, "journal")}>{t("nav.blog")}</a></li>
+              <li><a href={pfad(sprache, "unterwegs")}>{t("nav.unterwegs")}</a></li>
+              <li><a href={pfad(sprache, "haendler")}>{t("nav.haendler")}</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>{t("footer.modell")}</h4>
+            <ul>
+              <li><a href={pfad(sprache, "1plus1")}>{t("nav.1plus1")}</a></li>
+              <li><a href={pfad(sprache, "projekte")}>{t("nav.projekte")}</a></li>
+              <li><a href={pfad(sprache, "transparenz")}>{t("nav.transparenz")}</a></li>
+              <li><a href={pfad(sprache, "spenden")}>{t("nav.spenden")}</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>{t("footer.rechtliches")}</h4>
+            <ul>
+              <li><a href={pfad(sprache, "kontakt")}>{t("nav.kontakt")}</a></li>
+              <li><a href={pfad(sprache, "impressum")}>{t("recht.impressum")}</a></li>
+              <li><a href={pfad(sprache, "datenschutz")}>{t("recht.datenschutz")}</a></li>
+              <li><a href={pfad(sprache, "agb")}>{t("recht.agb")}</a></li>
+              <li><a href={pfad(sprache, "widerruf")}>{t("recht.widerruf")}</a></li>
+              <li><a href={pfad(sprache, "versand-zahlung")}>{t("recht.versand")}</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="fuss-unten">
+          <span>© <span data-jahr>2026</span> {marke}. {t("footer.rechte")}</span>
+          <span>{t("footer.hinweis-marke")}</span>
+        </div>
+      </div>
+    </footer>
+
+    <script is:inline src={datei("effekte/seite.js")}></script>
+    <script is:inline src={datei("effekte/ripple.js")}></script>
+    <script is:inline type="module" src={datei("effekte/tropfen.js")}></script>
+    <slot name="skripte" />
+  </body>
+</html>

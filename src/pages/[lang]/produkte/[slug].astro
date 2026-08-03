@@ -1,0 +1,119 @@
+---
+import { getCollection, render } from "astro:content";
+import Basis from "../../../layouts/Basis.astro";
+import Bildflaeche from "../../../components/Bildflaeche.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../../i18n/ui";
+
+export async function getStaticPaths() {
+  const alle = await getCollection("produkte");
+  return alle
+    .filter((eintrag) => AKTIVE_SPRACHEN.some((s) => eintrag.id.startsWith(`${s}/`)))
+    .map((eintrag) => ({
+      params: { lang: eintrag.id.split("/")[0], slug: eintrag.data.slug },
+      props: { eintrag },
+    }));
+}
+
+const { eintrag } = Astro.props;
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+const d = eintrag.data;
+const { Content } = await render(eintrag);
+
+const preisFormat =
+  d.preis === null
+    ? null
+    : new Intl.NumberFormat(sprache === "pl" ? "pl-PL" : sprache === "en" ? "en-GB" : "de-DE", {
+        style: "currency",
+        currency: "EUR",
+      }).format(d.preis);
+---
+
+<Basis
+  sprache={sprache}
+  titel={d.name}
+  beschreibung={d.kurz}
+  seitenpfad={`produkte/${d.slug}`}
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="raster raster--2" style="align-items:start">
+        <div data-reveal>
+          <Bildflaeche
+            bild={d.bild}
+            alt={d.name}
+            ripple={true}
+            platzhalter={true}
+            hinweis={t("platzhalter.bild")}
+          />
+          <p class="leise" style="margin-top:14px;font-size:0.92rem">
+            <span class="platzhalter">{t("platzhalter.hinweis")}</span> {t("produkte.video-folgt")}
+          </p>
+        </div>
+
+        <div data-reveal>
+          <p class="augenbraue">
+            {preisFormat ?? t("produkte.preis-folgt")}
+          </p>
+          <div class="prosa">
+            <Content />
+          </div>
+
+          {d.spendenfaehig && (
+            <div class="hinweis">
+              <p>{t("produkte.spendenfaehig")}</p>
+            </div>
+          )}
+
+          <div class="knopfreihe">
+            <a class="btn" href={`${pfad(sprache, "bestellen")}?produkt=${d.slug}`}>
+              {t("produkte.anfragen")}
+            </a>
+            <a class="btn btn--rand" href={pfad(sprache, "produkte")}>{t("produkte.zurueck")}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="sek sek--schaum">
+    <div class="behaelter">
+      <div class="raster raster--3" style="align-items:start">
+        <div data-reveal>
+          <h2>{t("produkte.merkmale")}</h2>
+          <ul class="liste">
+            {d.merkmale.map((m) => <li>{m}</li>)}
+          </ul>
+        </div>
+
+        <div data-reveal>
+          <h2>{t("produkte.lieferumfang")}</h2>
+          <ul class="liste">
+            {d.lieferumfang.map((m) => <li>{m}</li>)}
+          </ul>
+
+          <h2 style="margin-top:2rem">{t("produkte.anwendung")}</h2>
+          <ol class="prosa" style="padding-left:1.2em">
+            {d.anwendung.map((m) => <li>{m}</li>)}
+          </ol>
+        </div>
+
+        <div data-reveal>
+          <h2>{t("produkte.technisch")}</h2>
+          <dl class="datenliste">
+            {d.technisch.map((z) => (
+              <div>
+                <dt>{z.bezeichnung}</dt>
+                <dd>
+                  {z.wert.includes("PLATZHALTER") || z.wert.includes("PLACEHOLDER")
+                    ? <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+                    : z.wert}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </div>
+      </div>
+    </div>
+  </section>
+</Basis>

@@ -1,0 +1,185 @@
+---
+import { getCollection } from "astro:content";
+import Basis from "../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datei, type Sprache } from "../../i18n/ui";
+import { sichtbareProjekte, modellAktiv } from "../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+const alle = await getCollection("produkte");
+const produkte = alle
+  .filter((p) => p.id.startsWith(`${sprache}/`))
+  .sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
+
+const projekte = sichtbareProjekte();
+
+// [PLATZHALTER] Empfängeradresse für Bestellungen eintragen, bevor die Seite live geht.
+const bestellKonfig = {
+  email: "BITTE-EINTRAGEN@example.com",
+  betreff: `${t("bestellen.titel")} — ${t("meta.marke")}`,
+  endpunkt: null,
+};
+
+const bestellTexte = {
+  pflicht: t("bestellen.fehler.pflicht"),
+  email: t("bestellen.fehler.email"),
+  menge: t("bestellen.fehler.menge"),
+  datenschutz: t("bestellen.fehler.datenschutz"),
+  kopiert: t("bestellen.erfolg.kopiert"),
+};
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("bestellen.titel")}
+  beschreibung={t("bestellen.untertitel")}
+  seitenpfad="bestellen"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="hinweis hinweis--warnung" data-reveal>
+        <p style="margin:0">
+          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+          {" "}Bevor diese Seite öffentlich beworben wird: Empfängeradresse in
+          <code>src/pages/[lang]/bestellen.astro</code> eintragen und Preise in den
+          Produktdateien ergänzen.
+        </p>
+      </div>
+
+      <form class="formular" data-bestellformular novalidate>
+        <div class="feld">
+          <label for="produkt">{t("bestellen.produkt")}</label>
+          <select id="produkt" name="produkt" data-beschriftung={t("bestellen.produkt")} required>
+            <option value="" disabled selected>{t("bestellen.produkt.waehlen")}</option>
+            {produkte.map((p) => <option value={p.data.slug}>{p.data.name}</option>)}
+          </select>
+          <span class="feld-fehler"></span>
+        </div>
+
+        <div class="feld-reihe">
+          <div class="feld">
+            <label for="menge">{t("bestellen.menge")}</label>
+            <input id="menge" name="menge" type="number" min="1" value="1"
+                   data-beschriftung={t("bestellen.menge")} required />
+            <span class="feld-fehler"></span>
+          </div>
+          <div class="feld">
+            <label for="projekt">{t("bestellen.projekt")}</label>
+            <select id="projekt" name="projekt" data-beschriftung={t("bestellen.projekt")}>
+              <option value="">{t("bestellen.projekt.keins")}</option>
+              {projekte.map((p) => <option value={p.slug}>{p.name}</option>)}
+            </select>
+            <span class="feld-fehler"></span>
+            {!modellAktiv() && <span class="feld-zusatz">{t("bestellen.projekt.hinweis")}</span>}
+          </div>
+        </div>
+
+        <div class="feld-reihe">
+          <div class="feld">
+            <label for="name">{t("bestellen.name")}</label>
+            <input id="name" name="name" type="text" autocomplete="name"
+                   data-beschriftung={t("bestellen.name")} required />
+            <span class="feld-fehler"></span>
+          </div>
+          <div class="feld">
+            <label for="email">{t("bestellen.email")}</label>
+            <input id="email" name="email" type="email" autocomplete="email"
+                   data-beschriftung={t("bestellen.email")} required />
+            <span class="feld-fehler"></span>
+          </div>
+        </div>
+
+        <div class="feld">
+          <label for="telefon">
+            {t("bestellen.telefon")} <span class="feld-zusatz">{t("bestellen.optional")}</span>
+          </label>
+          <input id="telefon" name="telefon" type="tel" autocomplete="tel"
+                 data-beschriftung={t("bestellen.telefon")} />
+          <span class="feld-fehler"></span>
+        </div>
+
+        <div class="feld">
+          <label for="strasse">{t("bestellen.strasse")}</label>
+          <input id="strasse" name="strasse" type="text" autocomplete="street-address"
+                 data-beschriftung={t("bestellen.strasse")} required />
+          <span class="feld-fehler"></span>
+        </div>
+
+        <div class="feld-reihe">
+          <div class="feld">
+            <label for="plz">{t("bestellen.plz")}</label>
+            <input id="plz" name="plz" type="text" autocomplete="postal-code"
+                   data-beschriftung={t("bestellen.plz")} required />
+            <span class="feld-fehler"></span>
+          </div>
+          <div class="feld">
+            <label for="ort">{t("bestellen.ort")}</label>
+            <input id="ort" name="ort" type="text" autocomplete="address-level2"
+                   data-beschriftung={t("bestellen.ort")} required />
+            <span class="feld-fehler"></span>
+          </div>
+        </div>
+
+        <div class="feld">
+          <label for="land">{t("bestellen.land")}</label>
+          <input id="land" name="land" type="text" autocomplete="country-name"
+                 data-beschriftung={t("bestellen.land")} required />
+          <span class="feld-fehler"></span>
+        </div>
+
+        <div class="feld">
+          <label for="nachricht">
+            {t("bestellen.nachricht")} <span class="feld-zusatz">{t("bestellen.optional")}</span>
+          </label>
+          <textarea id="nachricht" name="nachricht" rows="4"
+                    placeholder={t("bestellen.nachricht.platzhalter")}
+                    data-beschriftung={t("bestellen.nachricht")}></textarea>
+          <span class="feld-fehler"></span>
+        </div>
+
+        <div class="feld feld--kasten">
+          <input id="datenschutz" name="datenschutz" type="checkbox" required />
+          <label for="datenschutz">{t("bestellen.datenschutz")}</label>
+        </div>
+        <span class="feld-fehler"></span>
+
+        <div>
+          <button class="btn" type="submit">{t("bestellen.absenden")}</button>
+        </div>
+      </form>
+
+      <div class="bestellergebnis" data-bestellergebnis hidden>
+        <h3>{t("bestellen.erfolg.titel")}</h3>
+        <p>{t("bestellen.erfolg.text")}</p>
+        <textarea data-bestelltext readonly aria-label={t("bestellen.nachricht")}></textarea>
+        <button class="btn btn--rand" type="button" data-kopieren>
+          {t("bestellen.erfolg.kopieren")}
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <Fragment slot="skripte">
+    <script is:inline define:vars={{ bestellKonfig, bestellTexte }}>
+      window.BESTELL_KONFIG = bestellKonfig;
+      window.BESTELL_TEXTE = bestellTexte;
+
+      // Produktwahl aus dem Link vorbelegen: …/bestellen/?produkt=camptap
+      var gewuenscht = new URLSearchParams(window.location.search).get("produkt");
+      if (gewuenscht) {
+        var feld = document.getElementById("produkt");
+        if (feld) {
+          Array.prototype.forEach.call(feld.options, function (o) {
+            if (o.value === gewuenscht) o.selected = true;
+          });
+        }
+      }
+    </script>
+    <script is:inline src={datei("effekte/bestellung.js")}></script>
+  </Fragment>
+</Basis>

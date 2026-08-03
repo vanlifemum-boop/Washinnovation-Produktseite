@@ -1,0 +1,53 @@
+---
+/**
+ * Sprachweiche. Die eigentlichen Seiten liegen unter /de/, /pl/, /en/ —
+ * diese Datei schickt Besucher an die passende Sprache weiter und bietet
+ * für den Fall abgeschalteter Skripte sichtbare Links an.
+ */
+import { AKTIVE_SPRACHEN, SPRACH_NAMEN, STANDARD_SPRACHE, pfad, uebersetzer } from "../i18n/ui";
+
+const t = uebersetzer(STANDARD_SPRACHE);
+const ziel = pfad(STANDARD_SPRACHE);
+const sprachZiele = Object.fromEntries(AKTIVE_SPRACHEN.map((s) => [s, pfad(s)]));
+---
+
+<html lang={STANDARD_SPRACHE}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{t("meta.marke")} — {t("meta.claim")}</title>
+    <meta name="description" content={t("meta.beschreibung")} />
+    <link rel="canonical" href={ziel} />
+    <meta http-equiv="refresh" content={`0; url=${ziel}`} />
+    {AKTIVE_SPRACHEN.map((s) => <link rel="alternate" hreflang={s} href={pfad(s)} />)}
+    <link rel="alternate" hreflang="x-default" href={ziel} />
+    <style>
+      body {
+        font-family: system-ui, sans-serif;
+        background: #062a4a;
+        color: #eaf4fb;
+        display: grid;
+        place-items: center;
+        min-height: 100vh;
+        margin: 0;
+        text-align: center;
+      }
+      a { color: #9ed2f5; display: inline-block; margin: 0 10px; }
+    </style>
+  </head>
+  <body>
+    <div>
+      <p>WashInnovation</p>
+      <p>
+        {AKTIVE_SPRACHEN.map((s) => <a href={sprachZiele[s]}>{SPRACH_NAMEN[s]}</a>)}
+      </p>
+    </div>
+    <script is:inline define:vars={{ sprachZiele, ziel }}>
+      // Browsersprache bevorzugen, sonst Deutsch.
+      var gewuenscht = (navigator.languages || [navigator.language || "de"])
+        .map(function (l) { return String(l).slice(0, 2).toLowerCase(); })
+        .find(function (l) { return sprachZiele[l]; });
+      window.location.replace(gewuenscht ? sprachZiele[gewuenscht] : ziel);
+    </script>
+  </body>
+</html>

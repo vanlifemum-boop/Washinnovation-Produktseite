@@ -1,0 +1,25 @@
+---
+import Basis from "../layouts/Basis.astro";
+import { STANDARD_SPRACHE, uebersetzer, pfad } from "../i18n/ui";
+
+// GitHub Pages liefert bei unbekannten Adressen genau diese Seite aus.
+// Sie läuft in der Standardsprache, weil zu dem Zeitpunkt keine Sprache feststeht.
+const sprache = STANDARD_SPRACHE;
+const t = uebersetzer(sprache);
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("seite.404.titel")}
+  beschreibung={t("seite.404.text")}
+  seitenpfad=""
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <div class="knopfreihe">
+        <a class="btn" href={pfad(sprache)}>{t("seite.404.button")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "produkte")}>{t("nav.produkte")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

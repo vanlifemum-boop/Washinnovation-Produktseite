@@ -1,0 +1,77 @@
+---
+import Basis from "../../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datum, pfad, type Sprache } from "../../../i18n/ui";
+import { sichtbareProjekte, gespendetAnProjekt, bestaetigteLieferungen, text } from "../../../data/daten";
+
+export function getStaticPaths() {
+  // Nur bestätigte Partner bekommen eine Seite. Ohne Vereinbarung gibt es hier nichts.
+  return AKTIVE_SPRACHEN.flatMap((lang) =>
+    sichtbareProjekte().map((projekt) => ({
+      params: { lang, slug: projekt.slug },
+      props: { projekt },
+    })),
+  );
+}
+
+const { projekt } = Astro.props;
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+const erhalten = gespendetAnProjekt(projekt.id);
+const uebergaben = bestaetigteLieferungen().filter((l) => l.projektId === projekt.id);
+---
+
+<Basis
+  sprache={sprache}
+  titel={projekt.name}
+  beschreibung={text(projekt.beschreibung, sprache)}
+  seitenpfad={`projekte/${projekt.slug}`}
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="raster raster--2" style="align-items:start">
+        <div data-reveal>
+          <dl class="datenliste">
+            <div><dt>{t("projekte.stadt")}</dt><dd>{projekt.stadt}</dd></div>
+            <div><dt>{t("projekte.erhalten")}</dt><dd>{erhalten}</dd></div>
+            <div><dt>{t("projekte.uebergaben")}</dt><dd>{uebergaben.length}</dd></div>
+          </dl>
+          <div class="knopfreihe">
+            {projekt.website && (
+              <a class="btn btn--rand" href={projekt.website} rel="noopener noreferrer" target="_blank">
+                {t("projekte.website")}
+              </a>
+            )}
+            {projekt.spendenlink && (
+              <a class="btn btn--tuerkis" href={projekt.spendenlink} rel="noopener noreferrer" target="_blank">
+                {t("projekte.direkt-spenden")}
+              </a>
+            )}
+          </div>
+        </div>
+
+        <div data-reveal>
+          <p class="lead">{text(projekt.beschreibung, sprache)}</p>
+
+          <h2 style="margin-top:2rem">{t("projekte.uebergaben")}</h2>
+          {uebergaben.length === 0 ? (
+            <p class="leise">{t("transparenz.leer")}</p>
+          ) : (
+            <ul class="liste">
+              {uebergaben.map((l) => (
+                <li>
+                  <strong>{datum(l.datum, sprache)}</strong> — {l.menge} {t("zaehler.einheit")}
+                  {text(l.notiz, sprache) && <span class="leise"> · {text(l.notiz, sprache)}</span>}
+                </li>
+              ))}
+            </ul>
+          )}
+
+          <div class="knopfreihe">
+            <a class="btn btn--rand" href={pfad(sprache, "projekte")}>{t("projekte.alle")}</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</Basis>

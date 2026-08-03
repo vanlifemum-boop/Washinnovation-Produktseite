@@ -1,0 +1,53 @@
+---
+import { getCollection, render } from "astro:content";
+import Basis from "../../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datum, pfad, type Sprache } from "../../../i18n/ui";
+
+export async function getStaticPaths() {
+  const alle = await getCollection("blog");
+  const sichtbar = alle.filter(
+    (b) => !b.data.entwurf && AKTIVE_SPRACHEN.some((s) => b.id.startsWith(`${s}/`)),
+  );
+
+  // Journalbeiträge haben je Sprache einen eigenen Slug. Zusammengehalten werden
+  // die Fassungen über das Feld `familie` — daraus entstehen die Pfade für
+  // hreflang und Sprachumschalter. Sprachen ohne Übersetzung tauchen nicht auf.
+  return sichtbar.map((eintrag) => {
+    const sprachPfade: Record<string, string> = {};
+    sichtbar
+      .filter((anderer) => anderer.data.familie === eintrag.data.familie)
+      .forEach((anderer) => {
+        sprachPfade[anderer.id.split("/")[0]] = `journal/${anderer.data.slug}`;
+      });
+    return {
+      params: { lang: eintrag.id.split("/")[0], slug: eintrag.data.slug },
+      props: { eintrag, sprachPfade },
+    };
+  });
+}
+
+const { eintrag, sprachPfade } = Astro.props;
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+const { Content } = await render(eintrag);
+---
+
+<Basis
+  sprache={sprache}
+  titel={eintrag.data.titel}
+  beschreibung={eintrag.data.beschreibung}
+  seitenpfad={`journal/${eintrag.data.slug}`}
+  sprachPfade={sprachPfade}
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <p class="augenbraue" data-reveal>{datum(eintrag.data.datum, sprache)}</p>
+      <div class="prosa" data-reveal>
+        <Content />
+      </div>
+      <div class="knopfreihe" data-reveal>
+        <a class="btn btn--rand" href={pfad(sprache, "journal")}>{t("blog.zurueck")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

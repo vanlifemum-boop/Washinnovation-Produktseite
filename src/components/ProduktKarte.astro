@@ -1,0 +1,38 @@
+---
+import { datei, pfad, uebersetzer, type Sprache } from "../i18n/ui";
+
+interface Props {
+  sprache: Sprache;
+  name: string;
+  slug: string;
+  kurz: string;
+  preis: number | null;
+  bild: string;
+}
+
+const { sprache, name, slug, kurz, preis, bild } = Astro.props;
+const t = uebersetzer(sprache);
+const preisFormat =
+  preis === null
+    ? null
+    : new Intl.NumberFormat(sprache === "pl" ? "pl-PL" : sprache === "en" ? "en-GB" : "de-DE", {
+        style: "currency",
+        currency: "EUR",
+      }).format(preis);
+---
+
+<a class="karte produktkarte" href={pfad(sprache, `produkte/${slug}`)} data-reveal>
+  <div class="produktkarte-bild">
+    <img src={datei(bild)} alt={name} loading="lazy" decoding="async" />
+  </div>
+  <div class="produktkarte-text">
+    <h3>{name}</h3>
+    <p class="leise">{kurz}</p>
+    <div class="produktkarte-fuss">
+      {preisFormat
+        ? <span class="preis">{t("produkte.ab")} {preisFormat}</span>
+        : <span class="preis preis--offen">{t("produkte.preis-folgt")}</span>}
+      <span class="augenbraue" style="margin:0">{t("produkte.details")} →</span>
+    </div>
+  </div>
+</a>

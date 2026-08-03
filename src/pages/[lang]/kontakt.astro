@@ -1,0 +1,47 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+// [PLATZHALTER] Echte Kontaktadresse eintragen.
+const email = "BITTE-EINTRAGEN@example.com";
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("kontakt.titel")}
+  beschreibung={t("kontakt.untertitel")}
+  seitenpfad="kontakt"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <div class="hinweis hinweis--warnung" data-reveal>
+        <p style="margin:0">
+          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+          {" "}E-Mail-Adresse in <code>src/pages/[lang]/kontakt.astro</code> und
+          <code>src/pages/[lang]/bestellen.astro</code> eintragen.
+        </p>
+      </div>
+
+      <dl class="datenliste" data-reveal>
+        <div>
+          <dt>{t("kontakt.email")}</dt>
+          <dd><a href={`mailto:${email}`}>{email}</a></dd>
+        </div>
+      </dl>
+
+      <p class="leise" data-reveal style="margin-top:1.2rem">{t("kontakt.antwortzeit")}</p>
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn" href={pfad(sprache, "bestellen")}>{t("start.cta.button")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "haendler")}>{t("haendler.anfrage")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

@@ -1,0 +1,24 @@
+{
+  "_schema": {
+    "hinweis": "DIE QUELLE DER WAHRHEIT FÜR DEN SPENDENZÄHLER. Hier steht ausschließlich, was nachweislich bei einer Organisation angekommen ist — niemals Bestellungen, niemals Zusagen. Ein Eintrag wird erst hinzugefügt, wenn die Lieferung bestätigt ist. Diese Datei speist gleichzeitig den Zähler auf der Startseite, die Transparenztabelle und die Mengen auf den Projektseiten. Wer hier eine Zahl schönt, macht aus der Transparenzseite eine Lüge.",
+    "felder": {
+      "id": "Eindeutig, z. B. '2026-09-gobanyo'",
+      "projektId": "Muss einer id aus projekte.json entsprechen",
+      "menge": "Zahl der übergebenen Sets",
+      "datum": "ISO-Datum der Übergabe, z. B. '2026-09-14'",
+      "fotos": "Liste von Bildpfaden unter public/ — keine Gesichter ohne schriftliche Einwilligung, im Zweifel Hände, Details, Orte",
+      "notiz": "Objekt mit je einem kurzen Text pro Sprache: { de, pl, en }",
+      "oeffentlich": "true = erscheint auf der Transparenzseite und im Zähler"
+    },
+    "beispiel": {
+      "id": "2026-09-beispiel",
+      "projektId": "beispiel",
+      "menge": 50,
+      "datum": "2026-09-14",
+      "fotos": [],
+      "notiz": { "de": "Erste Übergabe.", "pl": "…", "en": "…" },
+      "oeffentlich": true
+    }
+  },
+  "eintraege": []
+}

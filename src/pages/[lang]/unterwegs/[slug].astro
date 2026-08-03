@@ -1,0 +1,39 @@
+---
+import Basis from "../../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datum, pfad, type Sprache } from "../../../i18n/ui";
+import { veranstaltungen, text } from "../../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.flatMap((lang) =>
+    veranstaltungen.map((v) => ({ params: { lang, slug: v.slug }, props: { v } })),
+  );
+}
+
+const { v } = Astro.props;
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+---
+
+<Basis
+  sprache={sprache}
+  titel={v.name}
+  beschreibung={text(v.text, sprache)}
+  seitenpfad={`unterwegs/${v.slug}`}
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <dl class="datenliste" data-reveal>
+        <div><dt>{t("transparenz.spalte.datum")}</dt><dd>{datum(v.datum, sprache)}</dd></div>
+        <div><dt>{t("unterwegs.ort")}</dt><dd>{v.ort}</dd></div>
+        {v.verkauft !== null && <div><dt>{t("unterwegs.verkauft")}</dt><dd>{v.verkauft}</dd></div>}
+        {v.gespendet !== null && <div><dt>{t("unterwegs.gespendet")}</dt><dd>{v.gespendet}</dd></div>}
+      </dl>
+
+      <p class="lead" style="margin-top:1.6rem" data-reveal>{text(v.text, sprache)}</p>
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn btn--rand" href={pfad(sprache, "unterwegs")}>{t("unterwegs.titel")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

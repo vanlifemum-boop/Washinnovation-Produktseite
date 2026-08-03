@@ -1,0 +1,36 @@
+{
+  "_schema": {
+    "hinweis": "Partnerorganisationen. Bewusst leer: Es ist noch keine Vereinbarung unterschrieben. Eine Organisation wird hier erst eingetragen, wenn sie schriftlich zugestimmt hat, dass Name und Logo genannt werden dürfen. Vorher darf sie nicht auf der Seite auftauchen — auch nicht als 'in Gesprächen'.",
+    "felder": {
+      "id": "Kurz und eindeutig, wird in lieferungen.json referenziert",
+      "slug": "Teil der URL, z. B. 'gobanyo' → /de/projekte/gobanyo/",
+      "name": "Offizieller Name der Organisation",
+      "stadt": "Ort oder 'bundesweit'",
+      "website": "Volle URL",
+      "spendenlink": "URL der Direktspendenseite der Organisation (für Menschen, die eine Zuwendungsbestätigung brauchen)",
+      "logo": "Pfad unter public/, z. B. 'bilder/projekte/name.svg'",
+      "bilder": "Liste weiterer Bildpfade unter public/",
+      "ziel": "Zahl: angestrebte Sets für die nächste Lieferung, treibt den Fortschrittsbalken",
+      "aktiv": "true = Vereinbarung unterschrieben und auf der Seite sichtbar",
+      "beschreibung": "Objekt mit je einem Text pro Sprache: { de, pl, en }"
+    },
+    "beispiel": {
+      "id": "beispiel",
+      "slug": "beispiel-organisation",
+      "name": "Beispiel-Organisation e. V.",
+      "stadt": "Hamburg",
+      "website": "https://example.org",
+      "spendenlink": "https://example.org/spenden",
+      "logo": "bilder/projekte/beispiel.svg",
+      "bilder": [],
+      "ziel": 50,
+      "aktiv": false,
+      "beschreibung": {
+        "de": "Was die Organisation tut und warum die Sets dort gebraucht werden.",
+        "pl": "…",
+        "en": "…"
+      }
+    }
+  },
+  "eintraege": []
+}

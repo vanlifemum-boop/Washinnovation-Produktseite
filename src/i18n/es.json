@@ -1,0 +1,23 @@
+{
+  "_hinweis": "VORBEREITET, NOCH NICHT AKTIV. Nur die Navigation ist übersetzt; alle übrigen Schlüssel fallen auf Englisch, dann Deutsch zurück. Zum Freischalten: Datei nach dem Muster von de.json vervollständigen, dann 'es' in src/i18n/ui.ts (AKTIVE_SPRACHEN) und in astro.config.mjs (i18n.locales) eintragen.",
+
+  "meta.marke": "WashInnovation",
+  "meta.claim": "Agua contigo. En todas partes.",
+  "meta.beschreibung": "Sistemas portátiles de ducha y lavado que ahorran agua y funcionan sin electricidad ni fontanería. Para vanlife, camping, viajes y lugares sin agua corriente.",
+
+  "nav.produkte": "Productos",
+  "nav.1plus1": "1+1",
+  "nav.projekte": "Proyectos",
+  "nav.transparenz": "Transparencia",
+  "nav.unterwegs": "En ruta",
+  "nav.blog": "Diario",
+  "nav.ueber-uns": "Quiénes somos",
+  "nav.haendler": "Distribuidores",
+  "nav.spenden": "Regalar",
+  "nav.bestellen": "Pedir",
+  "nav.kontakt": "Contacto",
+  "nav.menue-oeffnen": "Abrir menú",
+  "nav.menue-schliessen": "Cerrar menú",
+  "nav.sprache": "Idioma",
+  "nav.zum-inhalt": "Ir al contenido"
+}

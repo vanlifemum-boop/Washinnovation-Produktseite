@@ -1,0 +1,50 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, type Sprache } from "../../i18n/ui";
+import { rechtsseite, type RechtSchluessel } from "../../inhalte/recht";
+
+export function getStaticPaths() {
+  const seiten: RechtSchluessel[] = ["impressum", "datenschutz", "agb", "widerruf", "versand-zahlung"];
+  return AKTIVE_SPRACHEN.flatMap((lang) => seiten.map((recht) => ({ params: { lang, recht } })));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const schluessel = Astro.params.recht as RechtSchluessel;
+const t = uebersetzer(sprache);
+const seite = rechtsseite(sprache, schluessel);
+
+function istPlatzhalter(text: string) {
+  return text.includes("[PLATZHALTER]");
+}
+---
+
+<Basis
+  sprache={sprache}
+  titel={seite.titel}
+  beschreibung={seite.einleitung}
+  seitenpfad={schluessel}
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter schmal">
+      <div class="hinweis hinweis--warnung" data-reveal>
+        <p style="margin:0">
+          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+          {" "}Diese Seite ist ein Gerüst und ersetzt keine Rechtsberatung. Alle mit
+          <strong> [PLATZHALTER]</strong> markierten Stellen müssen vor der Veröffentlichung
+          durch echte Angaben ersetzt und die Texte fachlich geprüft werden.
+        </p>
+      </div>
+
+      <div class="prosa">
+        {seite.abschnitte.map((abschnitt) => (
+          <>
+            <h2>{abschnitt.titel}</h2>
+            {abschnitt.absaetze.map((absatz) => (
+              <p class={istPlatzhalter(absatz) ? "leise" : undefined}>{absatz}</p>
+            ))}
+          </>
+        ))}
+      </div>
+    </div>
+  </section>
+</Basis>

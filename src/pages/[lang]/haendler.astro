@@ -1,0 +1,46 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("haendler.titel")}
+  beschreibung={t("haendler.untertitel")}
+  seitenpfad="haendler"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="raster raster--2">
+        <div class="karte" data-reveal>
+          <h3>{t("haendler.wiederverkauf.titel")}</h3>
+          <p class="leise">{t("haendler.wiederverkauf.text")}</p>
+        </div>
+        <div class="karte" data-reveal>
+          <h3>{t("haendler.organisationen.titel")}</h3>
+          <p class="leise">{t("haendler.organisationen.text")}</p>
+        </div>
+      </div>
+
+      <div class="hinweis" data-reveal style="margin-top:30px">
+        <p style="margin:0">
+          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+          {" "}Staffelpreise und Mindestmengen ergänzen, sobald sie mit dem Hersteller
+          abgestimmt sind.
+        </p>
+      </div>
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn" href={pfad(sprache, "bestellen")}>{t("haendler.anfrage")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "kontakt")}>{t("nav.kontakt")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>

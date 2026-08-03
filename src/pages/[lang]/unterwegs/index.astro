@@ -1,0 +1,62 @@
+---
+import Basis from "../../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, datum, pfad, type Sprache } from "../../../i18n/ui";
+import { kommendeVeranstaltungen, vergangeneVeranstaltungen } from "../../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+const kommend = kommendeVeranstaltungen();
+const vergangen = vergangeneVeranstaltungen();
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("unterwegs.titel")}
+  beschreibung={t("unterwegs.untertitel")}
+  seitenpfad="unterwegs"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <h2 data-reveal>{t("unterwegs.kommend")}</h2>
+      {kommend.length === 0 ? (
+        <div class="leer-zustand" data-reveal>
+          <p style="margin:0">{t("unterwegs.keine")}</p>
+        </div>
+      ) : (
+        <div class="raster raster--3">
+          {kommend.map((v) => (
+            <a class="karte" href={pfad(sprache, `unterwegs/${v.slug}`)} data-reveal style="text-decoration:none">
+              <p class="augenbraue" style="margin:0">{datum(v.datum, sprache)}</p>
+              <h3>{v.name}</h3>
+              <p class="leise">{v.ort}</p>
+            </a>
+          ))}
+        </div>
+      )}
+
+      {vergangen.length > 0 && (
+        <>
+          <h2 style="margin-top:3rem" data-reveal>{t("unterwegs.vergangen")}</h2>
+          <div class="raster raster--3">
+            {vergangen.map((v) => (
+              <a class="karte" href={pfad(sprache, `unterwegs/${v.slug}`)} data-reveal style="text-decoration:none">
+                <p class="augenbraue" style="margin:0">{datum(v.datum, sprache)}</p>
+                <h3>{v.name}</h3>
+                <p class="leise">{v.ort}</p>
+                {v.verkauft !== null && (
+                  <p class="leise" style="margin:0">
+                    {t("unterwegs.verkauft")}: {v.verkauft} · {t("unterwegs.gespendet")}: {v.gespendet ?? 0}
+                  </p>
+                )}
+              </a>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  </section>
+</Basis>

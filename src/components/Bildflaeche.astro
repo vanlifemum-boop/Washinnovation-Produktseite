@@ -1,0 +1,22 @@
+---
+import { datei } from "../i18n/ui";
+
+interface Props {
+  /** Pfad unter public/, z. B. "bilder/produkte/camptap.svg" */
+  bild: string;
+  alt: string;
+  /** Wasser-Ripple auf der Fläche aktivieren */
+  ripple?: boolean;
+  /** Platzhalter-Fähnchen einblenden, solange kein echtes Foto da ist */
+  platzhalter?: boolean;
+  hinweis?: string;
+  klasse?: string;
+}
+
+const { bild, alt, ripple = false, platzhalter = false, hinweis, klasse = "" } = Astro.props;
+---
+
+<figure class={`bildflaeche ${klasse}`} data-ripple={ripple ? "" : undefined}>
+  <img src={datei(bild)} alt={alt} loading="lazy" decoding="async" />
+  {platzhalter && hinweis && <figcaption class="bild-hinweis">{hinweis}</figcaption>}
+</figure>

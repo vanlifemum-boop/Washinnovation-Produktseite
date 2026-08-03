@@ -1,0 +1,57 @@
+---
+import { getCollection } from "astro:content";
+import Basis from "../../../layouts/Basis.astro";
+import ProduktKarte from "../../../components/ProduktKarte.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../../i18n/ui";
+import { modellAktiv } from "../../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+const alle = await getCollection("produkte");
+const produkte = alle
+  .filter((p) => p.id.startsWith(`${sprache}/`))
+  .sort((a, b) => a.data.reihenfolge - b.data.reihenfolge);
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("produkte.titel")}
+  beschreibung={t("produkte.untertitel")}
+  seitenpfad="produkte"
+>
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="raster raster--2">
+        {produkte.map((p) => (
+          <ProduktKarte
+            sprache={sprache}
+            name={p.data.name}
+            slug={p.data.slug}
+            kurz={p.data.kurz}
+            preis={p.data.preis}
+            bild={p.data.bild}
+          />
+        ))}
+      </div>
+
+      {!modellAktiv() && (
+        <div class="hinweis" data-reveal style="margin-top:34px">
+          <p>
+            <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+            {" "}{t("1plus1.stand.text")}
+          </p>
+        </div>
+      )}
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn" href={pfad(sprache, "bestellen")}>{t("start.cta.button")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "haendler")}>{t("haendler.anfrage")}</a>
+      </div>
+    </div>
+  </section>
+</Basis>
