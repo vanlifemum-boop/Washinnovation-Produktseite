@@ -1,10 +1,8 @@
 {
   "_hinweis": "ROHÜBERSETZUNG — muss vor dem Livegang von einer polnischen Muttersprachlerin geprüft werden. Verkaufstexte klingen sonst schnell nach Maschine. Siehe README, Abschnitt 'Übersetzungen'.",
-
   "meta.marke": "WashInnovation",
   "meta.claim": "Woda zawsze przy sobie.",
   "meta.beschreibung": "Przenośne, oszczędzające wodę zestawy prysznicowe i myjące, które działają bez prądu i bez podłączenia do instalacji. Do życia w vanie, na kemping, w podróż i tam, gdzie nie ma bieżącej wody.",
-
   "nav.produkte": "Produkty",
   "nav.1plus1": "1+1",
   "nav.projekte": "Projekty",
@@ -20,14 +18,12 @@
   "nav.menue-schliessen": "Zamknij menu",
   "nav.sprache": "Język",
   "nav.zum-inhalt": "Przejdź do treści",
-
   "start.hero.zeile1": "Jeden litr",
   "start.hero.zeile2": "wystarczy.",
   "start.hero.text": "Prysznic, mycie, płukanie — przy ułamku zużycia wody, bez prądu i bez instalacji. Złożony zestaw mieści się w kieszeni kurtki.",
   "start.hero.cta": "Zobacz produkty",
   "start.hero.cta2": "Model 1+1",
   "start.hero.scrollhinweis": "Przewiń",
-
   "start.problem.titel": "Woda rzadko jest oczywista",
   "start.problem.text": "W vanie, na festiwalu, w schronisku, po długim dniu: moment, w którym chcesz się umyć, przychodzi zawsze — kran niekoniecznie. Typowe rozwiązania są ciężkie, potrzebują prądu albo opróżniają pół kanistra w pięć minut.",
   "start.problem.punkt1.titel": "Bez prądu",
@@ -36,11 +32,9 @@
   "start.problem.punkt2.text": "Butelka, kanister, wiadro — wystarczy to, co masz pod ręką. Bez węża, bez montażu.",
   "start.problem.punkt3.titel": "Mało wody",
   "start.problem.punkt3.text": "Drobny strumień kieruje wodę dokładnie tam, gdzie trzeba. Z jednego litra powstaje pełne mycie.",
-
   "start.produkte.titel": "Zestawy",
-  "start.produkte.text": "Cztery warianty, jedna zasada — zależnie od tego, czy chcesz wziąć prysznic, umyć naczynia czy odświeżyć się w drodze.",
+  "start.produkte.text": "Siedem zestawów, jedna zasada — zależnie od tego, czy chcesz wziąć prysznic, umyć naczynia czy odświeżyć się w drodze.",
   "start.produkte.alle": "Zobacz wszystkie produkty",
-
   "start.einsatz.titel": "Gdzie się sprawdza",
   "start.einsatz.vanlife": "Vanlife i kemping",
   "start.einsatz.vanlife.text": "Prysznic, który nie zajmuje miejsca i nie opróżnia zbiornika w dwa dni.",
@@ -50,20 +44,17 @@
   "start.einsatz.festival.text": "Trzy dni kurzu i kolejka do pryszniców — albo nie.",
   "start.einsatz.hilfe": "Organizacje społeczne",
   "start.einsatz.hilfe.text": "Wszędzie tam, gdzie ludzie nie mają pewnego dostępu do wody. Właśnie tu zaczyna się nasz model darowizn.",
-
   "start.cta.titel": "Kiedy tylko będziesz gotów",
   "start.cta.text": "Sklep ruszy wkrótce. Do tego czasu przyjmujemy zamówienia bezpośrednio — napisz, czego potrzebujesz.",
   "start.cta.button": "Zapytaj o zamówienie",
-
   "zaehler.titel": "Przekazane zestawy",
   "zaehler.einheit": "zestawów",
   "zaehler.erklaerung": "Ta liczba obejmuje wyłącznie produkty, które potwierdzono jako dostarczone do organizacji partnerskiej — nie sprzedane i nie obiecane.",
   "zaehler.noch-nicht.titel": "Model ruszy, gdy potwierdzimy pierwszego partnera",
   "zaehler.noch-nicht.text": "Rozmawiamy z organizacjami społecznymi w Niemczech i Europie. Obietnicę składamy dopiero po podpisaniu umowy. Do tego czasu stoi tu uczciwe zero.",
   "zaehler.zur-transparenz": "Zobacz wszystkie dostawy",
-
   "produkte.titel": "Produkty",
-  "produkte.untertitel": "Cztery zestawy na różne sytuacje. Wszystkie bez prądu, składane i oszczędne.",
+  "produkte.untertitel": "Siedem zestawów na różne sytuacje. Wszystkie bez prądu, składane i oszczędne.",
   "produkte.ab": "od",
   "produkte.preis-folgt": "Cena wkrótce",
   "produkte.details": "Zobacz szczegóły",
@@ -72,10 +63,8 @@
   "produkte.merkmale": "Cechy",
   "produkte.lieferumfang": "Zawartość zestawu",
   "produkte.technisch": "Dane techniczne",
-  "produkte.anwendung": "Jak się tego używa",
   "produkte.video-folgt": "Tutaj pojawi się film o produkcie",
   "produkte.spendenfaehig": "Obietnica 1+1 obejmie ten produkt, gdy model wystartuje.",
-
   "1plus1.titel": "Jeden zakup, jeden przekazany produkt",
   "1plus1.untertitel": "Zasada jest prosta. Prawdziwą pracą jest utrzymanie jej w uczciwości.",
   "1plus1.wie.titel": "Jak to działa",
@@ -85,10 +74,8 @@
   "1plus1.wie.schritt2.text": "Przy zamówieniu decydujesz, która organizacja otrzyma przekazany zestaw.",
   "1plus1.wie.schritt3.titel": "Dostarczamy partiami",
   "1plus1.wie.schritt3.text": "Gdy zbierze się odpowiednia liczba zestawów, wysyłamy dostawę — ze zdjęciem, datą i liczbą sztuk na stronie przejrzystości.",
-
   "1plus1.kritik.titel": "Krytyka, zanim ktoś zapyta",
   "1plus1.kritik.text": "Model 1+1 ma coś do stracenia. Rozsławiła go marka TOMS Shoes i przez lata była za niego krytykowana: darowane towary potrafią wypierać lokalnych sprzedawców, nie rozwiązują problemów strukturalnych i przede wszystkim poprawiają samopoczucie kupujących. Ta krytyka jest uzasadniona. Dlatego poniżej piszemy, co robimy inaczej — i czego nie twierdzimy.",
-
   "1plus1.faq.1.frage": "Czy nie wypieracie w ten sposób lokalnych sprzedawców?",
   "1plus1.faq.1.antwort": "Nasi odbiorcy są w Niemczech i w Europie, a nie w krajach z działającym lokalnym rynkiem takich produktów. Osoby, które dostają zestaw, i tak nie byłyby klientami lokalnego sklepu — po prostu nie ma dla nich oferty. Nikomu nie odbieramy sprzedaży.",
   "1plus1.faq.2.frage": "Czy to rozwiązuje problem strukturalny?",
@@ -101,10 +88,8 @@
   "1plus1.faq.5.antwort": "Na stronie przejrzystości jest każda dostawa z datą, liczbą sztuk, odbiorcą i dowodem. Licznik na stronie głównej pokazuje wyłącznie potwierdzone dostawy, nigdy zamówienia. Jeśli widnieje tam liczba, towar dotarł.",
   "1plus1.faq.6.frage": "Dlaczego licznik pokazuje zero?",
   "1plus1.faq.6.antwort": "Bo nie podpisaliśmy jeszcze umowy z żadnym partnerem. Moglibyśmy wyliczyć liczbę z zamówień — byłaby to obietnica bez pokrycia. Zmieni się to po pierwszej dostawie.",
-
   "1plus1.stand.titel": "Na jakim jesteśmy etapie",
   "1plus1.stand.text": "Model jest przygotowany, ale jeszcze nieaktywny. Rozmawiamy z organizacjami społecznymi; gdy umowa będzie gotowa, podamy tu nazwę, liczbę sztuk i termin. Do tego czasu: żadnej obietnicy darowizny i żadnej reklamy nią.",
-
   "projekte.titel": "Projekty",
   "projekte.untertitel": "Organizacje, które otrzymują przekazane zestawy.",
   "projekte.keine.titel": "Nie potwierdziliśmy jeszcze żadnego partnera",
@@ -117,7 +102,6 @@
   "projekte.alle": "Wszystkie projekty",
   "projekte.status.gespraech": "W rozmowach",
   "projekte.status.aktiv": "Partner",
-
   "transparenz.titel": "Przejrzystość",
   "transparenz.untertitel": "Każda wysłana dostawa. W komplecie, z datą i liczbą sztuk.",
   "transparenz.text": "Ta strona jest powodem, dla którego można nam wierzyć — albo nie. To nie narzędzie marketingowe, tylko lista. Jeśli nic tu nie ma, nic nie zostało dostarczone.",
@@ -129,7 +113,6 @@
   "transparenz.summe": "Razem",
   "transparenz.jahresbericht": "Raport roczny",
   "transparenz.jahresbericht.folgt": "Pierwszy raport roczny pojawi się po udokumentowaniu pełnego roku.",
-
   "unterwegs.titel": "W trasie",
   "unterwegs.untertitel": "Gdzie będziemy najbliżej — i co udało się ostatnio.",
   "unterwegs.kommend": "Nadchodzące terminy",
@@ -138,18 +121,15 @@
   "unterwegs.verkauft": "Sprzedane",
   "unterwegs.gespendet": "Przekazane",
   "unterwegs.ort": "Miejsce",
-
   "blog.titel": "Dziennik",
   "blog.untertitel": "Notatki o wodzie, sprzęcie i o tym, co naprawdę sprawdza się w drodze.",
   "blog.leer": "Pierwsze wpisy właśnie powstają.",
   "blog.weiterlesen": "Czytaj dalej",
   "blog.zurueck": "Wróć do dziennika",
-
   "ueber.titel": "O nas",
   "ueber.untertitel": "Kto prowadzi ten sklep.",
   "ueber.hersteller.titel": "O producencie",
   "ueber.hersteller.text": "Produkty pochodzą od WaSH Innovation. Ta strona należy do niezależnego partnera handlowego; model 1+1 jest inicjatywą tego partnera.",
-
   "haendler.titel": "Dla sprzedawców i organizacji",
   "haendler.untertitel": "Ilości, warunki, zapytania.",
   "haendler.wiederverkauf.titel": "Odsprzedaż",
@@ -157,13 +137,11 @@
   "haendler.organisationen.titel": "Organizacje społeczne",
   "haendler.organisationen.text": "Placówki, które używają produktów w swojej pracy, mają inne warunki niż handel detaliczny. Odezwij się, także przy małych ilościach.",
   "haendler.anfrage": "Zapytaj o ceny hurtowe",
-
   "spenden.titel": "Przekaż dalej",
   "spenden.untertitel": "Podaruj zestaw, nawet jeśli sam go nie potrzebujesz.",
   "spenden.text": "Możesz kupić zestaw i od razu przekazać go dalej, zamiast wysyłać do siebie. Trafi z najbliższą dostawą do wybranej organizacji i pojawi się na stronie przejrzystości.",
   "spenden.hinweis": "Ważne: to zakup, a nie darowizna pieniężna. Nie możemy wystawić potwierdzenia dla urzędu skarbowego. Jeśli chcesz odliczyć darowiznę, przekaż ją bezpośrednio organizacji — linki są na stronach projektów.",
   "spenden.button": "Zapytaj o zestaw do przekazania",
-
   "bestellen.titel": "Zapytanie o zamówienie",
   "bestellen.untertitel": "Sklep jeszcze nie działa. Napisz, czego potrzebujesz — odpowiemy z ceną, kosztem wysyłki i sposobem płatności.",
   "bestellen.produkt": "Produkt",
@@ -192,30 +170,31 @@
   "bestellen.fehler.email": "Podaj poprawny adres e-mail",
   "bestellen.fehler.menge": "Podaj liczbę co najmniej 1",
   "bestellen.fehler.datenschutz": "Potwierdź, abyśmy mogli obsłużyć zapytanie",
-
   "kontakt.titel": "Kontakt",
   "kontakt.untertitel": "Pytania o produkty, ilości, prasę lub model darowizn.",
   "kontakt.email": "E-mail",
   "kontakt.antwortzeit": "Zwykle odpowiadamy w ciągu dwóch dni roboczych.",
-
   "recht.impressum": "Nota prawna",
   "recht.datenschutz": "Prywatność",
   "recht.agb": "Regulamin",
   "recht.widerruf": "Odstąpienie od umowy",
   "recht.versand": "Wysyłka i płatność",
-
   "footer.marke.text": "Przenośne systemy wodne dla wszystkich w drodze — i dla tych, którzy nie mają wyboru.",
   "footer.entdecken": "Odkryj",
   "footer.modell": "Model",
   "footer.rechtliches": "Informacje prawne",
   "footer.hinweis-marke": "WashInnovation jest marką WaSH Innovation. Tę stronę prowadzi niezależny partner handlowy.",
   "footer.rechte": "Wszelkie prawa zastrzeżone.",
-
   "platzhalter.bild": "Zdjęcie zastępcze — tu pojawi się fotografia produktu",
   "platzhalter.hinweis": "PLACEHOLDER",
   "platzhalter.text": "Ten tekst jest tymczasowy i musi zostać zastąpiony przed publikacją.",
-
   "seite.404.titel": "Taka strona nie istnieje",
   "seite.404.text": "Ten link prowadzi donikąd. Może pomoże strona główna.",
-  "seite.404.button": "Przejdź na stronę główną"
+  "seite.404.button": "Przejdź na stronę główną",
+  "produkte.komponenten": "Zawartość zestawu",
+  "produkte.pflege": "Pielęgnacja",
+  "produkte.code": "Kod produktu",
+  "produkte.kategorie.dusche": "Zestaw prysznicowy",
+  "produkte.kategorie.spuele": "Bateria i miska",
+  "produkte.hersteller": "Producent: WaSH Innovation. Dane wg katalogu produktów 2025."
 }

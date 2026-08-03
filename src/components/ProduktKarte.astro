@@ -22,7 +22,9 @@ const preisFormat =
 ---
 
 <a class="karte produktkarte" href={pfad(sprache, `produkte/${slug}`)} data-reveal>
-  <div class="produktkarte-bild">
+  {/* Die Katalogfotos zeigen das komplette Set nebeneinander liegend. Sie werden
+      eingepasst statt beschnitten — sonst fehlen an den Rändern Teile des Sets. */}
+  <div class="produktkarte-bild produktkarte-bild--frei">
     <img src={datei(bild)} alt={name} loading="lazy" decoding="async" />
   </div>
   <div class="produktkarte-text">

@@ -2,7 +2,6 @@
   "meta.marke": "WashInnovation",
   "meta.claim": "Water with you. Everywhere.",
   "meta.beschreibung": "Portable, water-saving shower and washing systems that work without electricity and without plumbing. For van life, camping, travel and places with no running water.",
-
   "nav.produkte": "Products",
   "nav.1plus1": "1+1",
   "nav.projekte": "Projects",
@@ -18,14 +17,12 @@
   "nav.menue-schliessen": "Close menu",
   "nav.sprache": "Language",
   "nav.zum-inhalt": "Skip to content",
-
   "start.hero.zeile1": "One litre",
   "start.hero.zeile2": "is enough.",
   "start.hero.text": "Shower, wash, rinse — with a fraction of the water, no power, no plumbing. Folded up, the whole thing fits in a jacket pocket.",
   "start.hero.cta": "See the products",
   "start.hero.cta2": "The 1+1 model",
   "start.hero.scrollhinweis": "Scroll",
-
   "start.problem.titel": "Water is rarely a given",
   "start.problem.text": "In the van, at a festival, in a mountain hut, after a long day: the moment you want to wash arrives reliably — the tap does not. The usual answers are heavy, need power, or empty half a canister in five minutes.",
   "start.problem.punkt1.titel": "No power",
@@ -34,11 +31,9 @@
   "start.problem.punkt2.text": "A bottle, a canister, a bucket — whatever is there will do. No hose, no installation.",
   "start.problem.punkt3.titel": "Little water",
   "start.problem.punkt3.text": "The fine jet puts the water exactly where it belongs. One litre becomes a full wash.",
-
   "start.produkte.titel": "The systems",
-  "start.produkte.text": "Four setups, one principle — depending on whether you want to shower, rinse, or freshen up on the move.",
+  "start.produkte.text": "Seven sets, one principle — depending on whether you want to shower, rinse, or freshen up on the move.",
   "start.produkte.alle": "See all products",
-
   "start.einsatz.titel": "Where it earns its place",
   "start.einsatz.vanlife": "Van life & camping",
   "start.einsatz.vanlife.text": "The shower that costs no space and doesn't drain the tank in two days.",
@@ -48,20 +43,17 @@
   "start.einsatz.festival.text": "Three days of dust and a queue at the showers — or not.",
   "start.einsatz.hilfe": "Social organisations",
   "start.einsatz.hilfe.text": "Wherever people have no reliable access to water. This is exactly where our donation model starts.",
-
   "start.cta.titel": "Ready when you are",
   "start.cta.text": "The shop opens soon. Until then we take orders directly — tell us what you need.",
   "start.cta.button": "Request an order",
-
   "zaehler.titel": "Sets donated",
   "zaehler.einheit": "sets",
   "zaehler.erklaerung": "This number counts only products that have verifiably arrived at a partner organisation — not sold, not promised.",
   "zaehler.noch-nicht.titel": "The model starts once the first partner is confirmed",
   "zaehler.noch-nicht.text": "We are in talks with social organisations in Germany and Europe. Only once an agreement is signed do we turn it into a promise. Until then, an honest zero stands here.",
   "zaehler.zur-transparenz": "See every delivery",
-
   "produkte.titel": "Products",
-  "produkte.untertitel": "Four systems for different situations. All without power, all foldable, all frugal.",
+  "produkte.untertitel": "Seven sets for different situations. All without power, all foldable, all frugal.",
   "produkte.ab": "from",
   "produkte.preis-folgt": "Price to follow",
   "produkte.details": "See details",
@@ -70,10 +62,8 @@
   "produkte.merkmale": "Features",
   "produkte.lieferumfang": "What's included",
   "produkte.technisch": "Technical data",
-  "produkte.anwendung": "How it is used",
   "produkte.video-folgt": "The product video goes here",
   "produkte.spendenfaehig": "The 1+1 promise applies to this product once the model starts.",
-
   "1plus1.titel": "One purchase, one product donated",
   "1plus1.untertitel": "The principle is simple. Keeping it honest is the actual work.",
   "1plus1.wie.titel": "How it works",
@@ -83,10 +73,8 @@
   "1plus1.wie.schritt2.text": "When ordering, you decide which organisation receives the donated set.",
   "1plus1.wie.schritt3.titel": "We deliver in batches",
   "1plus1.wie.schritt3.text": "Once enough sets have accumulated, a delivery goes out — with photo, date and quantity on the transparency page.",
-
   "1plus1.kritik.titel": "The criticism, before anyone asks",
   "1plus1.kritik.text": "The 1+1 model has a reputation to lose. TOMS Shoes made it famous and was criticised for years: donated goods can undercut local traders, they solve no structural problem, and they mostly serve the buyer's good conscience. That criticism is fair. So here is what we do differently — and what we do not claim.",
-
   "1plus1.faq.1.frage": "Doesn't this undercut local traders?",
   "1plus1.faq.1.antwort": "Our recipients are in Germany and Europe, not in countries with functioning local markets for these products. And the people who receive a set would not be a local trader's customers — there is simply no offer for them. We are not taking a sale away from anyone.",
   "1plus1.faq.2.frage": "Does this solve a structural problem?",
@@ -99,10 +87,8 @@
   "1plus1.faq.5.antwort": "The transparency page lists every delivery with date, quantity, recipient and proof. The counter on the home page reflects only these confirmed deliveries — never the orders. If a number is shown there, the goods have arrived.",
   "1plus1.faq.6.frage": "Why does the counter show zero?",
   "1plus1.faq.6.antwort": "Because no partner agreement has been signed yet. We could extrapolate a number from orders — that would be a promise with nothing behind it. Once the first delivery goes out, this changes.",
-
   "1plus1.stand.titel": "Where we stand",
   "1plus1.stand.text": "The model is prepared but not yet active. We are talking to social organisations; as soon as an agreement is in place, we will name the organisation, the quantity and the timeframe here. Until then: no donation promise, and no advertising with one.",
-
   "projekte.titel": "Projects",
   "projekte.untertitel": "The organisations that receive the donated sets.",
   "projekte.keine.titel": "No partners confirmed yet",
@@ -115,7 +101,6 @@
   "projekte.alle": "All projects",
   "projekte.status.gespraech": "In talks",
   "projekte.status.aktiv": "Partner",
-
   "transparenz.titel": "Transparency",
   "transparenz.untertitel": "Every delivery that has gone out. In full, with date and quantity.",
   "transparenz.text": "This page is the reason you can believe us — or not. It is not a marketing device, it is a list. If nothing is listed, nothing has been delivered.",
@@ -127,7 +112,6 @@
   "transparenz.summe": "Total",
   "transparenz.jahresbericht": "Annual report",
   "transparenz.jahresbericht.folgt": "The first annual report appears once a full year has been documented.",
-
   "unterwegs.titel": "On the road",
   "unterwegs.untertitel": "Where we'll be next — and what came together last time.",
   "unterwegs.kommend": "Upcoming dates",
@@ -136,18 +120,15 @@
   "unterwegs.verkauft": "Sold",
   "unterwegs.gespendet": "Donated",
   "unterwegs.ort": "Location",
-
   "blog.titel": "Journal",
   "blog.untertitel": "Notes on water, gear, and what actually works on the road.",
   "blog.leer": "The first posts are being written.",
   "blog.weiterlesen": "Read on",
   "blog.zurueck": "Back to the journal",
-
   "ueber.titel": "About us",
   "ueber.untertitel": "Who runs this shop.",
   "ueber.hersteller.titel": "About the manufacturer",
   "ueber.hersteller.text": "The products are made by WaSH Innovation. This site belongs to an independent distribution partner; the 1+1 model is that partner's initiative.",
-
   "haendler.titel": "For retailers and organisations",
   "haendler.untertitel": "Quantities, terms, enquiries.",
   "haendler.wiederverkauf.titel": "Resale",
@@ -155,13 +136,11 @@
   "haendler.organisationen.titel": "Social organisations",
   "haendler.organisationen.text": "Organisations using the products in their work get different terms than retail. Get in touch, small quantities included.",
   "haendler.anfrage": "Request volume pricing",
-
   "spenden.titel": "Donate",
   "spenden.untertitel": "Give a set away without needing one yourself.",
   "spenden.text": "You can buy a set and have it donated straight away instead of shipped to you. It goes out with the next delivery to the organisation you choose and appears on the transparency page.",
   "spenden.hinweis": "Important: this is a purchase, not a monetary donation. We cannot issue a tax receipt. If you want a tax-deductible donation, please give directly to the organisation — the links are on the project pages.",
   "spenden.button": "Request a set to give away",
-
   "bestellen.titel": "Request an order",
   "bestellen.untertitel": "The shop isn't open yet. Tell us what you need — we'll come back with price, shipping and payment details.",
   "bestellen.produkt": "Product",
@@ -190,30 +169,31 @@
   "bestellen.fehler.email": "Please enter a valid email address",
   "bestellen.fehler.menge": "Please enter a quantity of at least 1",
   "bestellen.fehler.datenschutz": "Please confirm so we may process the enquiry",
-
   "kontakt.titel": "Contact",
   "kontakt.untertitel": "Questions about products, quantities, press or the donation model.",
   "kontakt.email": "Email",
   "kontakt.antwortzeit": "We usually reply within two working days.",
-
   "recht.impressum": "Legal notice",
   "recht.datenschutz": "Privacy",
   "recht.agb": "Terms",
   "recht.widerruf": "Right of withdrawal",
   "recht.versand": "Shipping & payment",
-
   "footer.marke.text": "Portable water systems for everyone on the move — and for those who have no choice.",
   "footer.entdecken": "Explore",
   "footer.modell": "The model",
   "footer.rechtliches": "Legal",
   "footer.hinweis-marke": "WashInnovation is a brand of WaSH Innovation. This site is operated by an independent distribution partner.",
   "footer.rechte": "All rights reserved.",
-
   "platzhalter.bild": "Placeholder image — a product photo goes here",
   "platzhalter.hinweis": "PLACEHOLDER",
   "platzhalter.text": "This text is a placeholder and must be replaced before going live.",
-
   "seite.404.titel": "This page doesn't exist",
   "seite.404.text": "The link leads nowhere. The home page might help.",
-  "seite.404.button": "Go to the home page"
+  "seite.404.button": "Go to the home page",
+  "produkte.komponenten": "What's included",
+  "produkte.pflege": "Care",
+  "produkte.code": "Product code",
+  "produkte.kategorie.dusche": "Shower set",
+  "produkte.kategorie.spuele": "Tap & sink",
+  "produkte.hersteller": "Manufacturer: WaSH Innovation. Details as per product catalogue 2025."
 }

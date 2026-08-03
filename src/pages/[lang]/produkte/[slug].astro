@@ -20,6 +20,14 @@ const t = uebersetzer(sprache);
 const d = eintrag.data;
 const { Content } = await render(eintrag);
 
+// Platzhalter-Fähnchen nur, solange noch die gezeichnete SVG-Attrappe steht.
+// Sobald ein echtes Foto hinterlegt ist, verschwindet der Hinweis von selbst.
+const istAttrappe = d.bild.endsWith(".svg");
+
+// Freigestellte PNGs bleiben ohne Ripple: Der Effekt rechnet ohne Alphakanal
+// und würde die durchsichtigen Flächen schwarz füllen.
+const hatTransparenz = d.bild.endsWith(".png");
+
 const preisFormat =
   d.preis === null
     ? null
@@ -42,8 +50,8 @@ const preisFormat =
           <Bildflaeche
             bild={d.bild}
             alt={d.name}
-            ripple={true}
-            platzhalter={true}
+            ripple={!hatTransparenz}
+            platzhalter={istAttrappe}
             hinweis={t("platzhalter.bild")}
           />
           <p class="leise" style="margin-top:14px;font-size:0.92rem">
@@ -53,7 +61,7 @@ const preisFormat =
 
         <div data-reveal>
           <p class="augenbraue">
-            {preisFormat ?? t("produkte.preis-folgt")}
+            {t(`produkte.kategorie.${d.kategorie}`)} · {preisFormat ?? t("produkte.preis-folgt")}
           </p>
           <div class="prosa">
             <Content />
@@ -89,13 +97,8 @@ const preisFormat =
         <div data-reveal>
           <h2>{t("produkte.lieferumfang")}</h2>
           <ul class="liste">
-            {d.lieferumfang.map((m) => <li>{m}</li>)}
+            {d.komponenten.map((m) => <li>{m}</li>)}
           </ul>
-
-          <h2 style="margin-top:2rem">{t("produkte.anwendung")}</h2>
-          <ol class="prosa" style="padding-left:1.2em">
-            {d.anwendung.map((m) => <li>{m}</li>)}
-          </ol>
         </div>
 
         <div data-reveal>
@@ -104,14 +107,23 @@ const preisFormat =
             {d.technisch.map((z) => (
               <div>
                 <dt>{z.bezeichnung}</dt>
-                <dd>
-                  {z.wert.includes("PLATZHALTER") || z.wert.includes("PLACEHOLDER")
-                    ? <span class="platzhalter">{t("platzhalter.hinweis")}</span>
-                    : z.wert}
-                </dd>
+                <dd>{z.wert}</dd>
               </div>
             ))}
+            <div>
+              <dt>{t("produkte.code")}</dt>
+              <dd>{d.code}</dd>
+            </div>
           </dl>
+
+          {d.pflege && (
+            <>
+              <h2 style="margin-top:2rem">{t("produkte.pflege")}</h2>
+              <p class="leise">{d.pflege}</p>
+            </>
+          )}
+
+          <p class="leise" style="font-size:0.88rem">{t("produkte.hersteller")}</p>
         </div>
       </div>
     </div>

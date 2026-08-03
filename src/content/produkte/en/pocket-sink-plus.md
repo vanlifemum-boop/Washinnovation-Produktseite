@@ -1,17 +1,17 @@
 ---
-name: "Pocket Sink"
-slug: pocket-sink
-code: PSSCV-NB-EN
+name: "Pocket Sink Plus"
+slug: pocket-sink-plus
+code: PSPCV-NB-EN
 kategorie: spuele
-reihenfolge: 6
-kurz: "A folding sink with tap, attached to a tree or pole with a cord."
+reihenfolge: 5
+kurz: "A folding sink with tap and mirror. Mounted with a magnet or suction cup."
 preis: null
-bild: bilder/produkte/pocket-sink.jpg
+bild: bilder/produkte/pocket-sink-plus.jpg
 spendenfaehig: true
 merkmale:
   - "Effective water pressure: the patented teemer® click valve provides a strong and water-efficient stream."
   - "Easy to use: press the tap head to start the water flow, press again to stop it."
-  - "Quick installation: attach sink and tap using the cord — to a tree, a post or a pole."
+  - "Quick installation: sink and tap mount with magnets or suction cups — set up in under a minute."
   - "Gravity-fed: place the water container higher than the tap."
   - "Simple filling and care: wide bag opening for easy filling, cleaning, and drying."
   - "Mobile: the foldable sink takes all parts inside and stores flat."
@@ -19,21 +19,24 @@ komponenten:
   - "Tap teemer® click valve"
   - "Foldable sink"
   - "Silicone hose 50 cm"
-  - "M6 × 10 screw"
+  - "Neodymium magnet"
+  - "Suction cup"
   - "Short nozzle: 9 small holes"
   - "Nylon bag 4 l"
-  - "Cord 200 cm"
+  - "Mirror"
   - "Drain"
   - "Black drain hose 70 cm"
   - "O-ring"
+  - "Microfiber towel with instructions"
+  - "Sachet"
 pflege: "Wash with soap or detergent, rinse well with water, and dry before storing."
 technisch:
   - bezeichnung: "Weight"
-    wert: "450 g"
+    wert: "500 g"
   - bezeichnung: "Dimensions"
     wert: "24 × 18 × 8 cm"
 ---
 
-The version without magnet and mirror — with 200 centimetres of cord instead. That lets the washing station hang where there is no smooth surface: on a tree, on tent poles, on a post at the pitch.
+A complete washing station that folds down into a drawer: basin, tap, mirror, drain with a 70-centimetre hose. Mount it with a magnet or suction cup — on the van's sliding door, on the fridge door, on a tile.
 
-Basin, tap, drain and bag are the same as on the Pocket Sink Plus. If you are outdoors anyway and do not need a mirror, this version travels 50 grams lighter.
+The drain hose is what makes the difference day to day: the water ends up where it should — in a canister for reuse, or in proper disposal. Soapy water does not belong in the ground.

@@ -4,15 +4,15 @@ import { glob } from "astro/loaders";
 
 /**
  * Produkte und Journalbeiträge liegen als Markdown je Sprache:
- *   src/content/produkte/de/camptap.md
- *   src/content/produkte/en/camptap.md
- * Die Sprache steckt im Ordnernamen und damit in der id ("de/camptap").
+ *   src/content/produkte/de/pocket-bath-plus.md
+ *   src/content/produkte/en/pocket-bath-plus.md
+ * Die Sprache steckt im Ordnernamen und damit in der id ("de/pocket-bath-plus").
  */
 
 /**
  * Ohne eigenes generateId nimmt der Loader das Feld `slug` als id — dieselbe id
  * in drei Sprachen, die sich gegenseitig überschreiben. Deshalb wird die id hier
- * aus dem Pfad gebildet: "de/camptap", "pl/camptap", …
+ * aus dem Pfad gebildet: "de/pocket-bath-plus", "pl/pocket-bath-plus", …
  */
 const idAusPfad = ({ entry }: { entry: string }) => entry.replace(/\.mdx?$/, "");
 
@@ -21,6 +21,10 @@ const produkte = defineCollection({
   schema: z.object({
     name: z.string(),
     slug: z.string(),
+    /** Artikelnummer aus dem Produktkatalog, z. B. "PBPCV-NB-EN". */
+    code: z.string(),
+    /** "dusche" = Duschset, "spuele" = Armatur- und Beckenset. */
+    kategorie: z.enum(["dusche", "spuele"]),
     /** Reihenfolge in der Übersicht — kleinere Zahl zuerst. */
     reihenfolge: z.number().default(99),
     kurz: z.string(),
@@ -29,10 +33,13 @@ const produkte = defineCollection({
     bild: z.string(),
     /** Für das 1+1-Versprechen vorgesehen. */
     spendenfaehig: z.boolean().default(true),
+    /** Vorteile („Benefits" im Katalog). */
     merkmale: z.array(z.string()).default([]),
-    lieferumfang: z.array(z.string()).default([]),
+    /** Lieferumfang („Components" im Katalog). */
+    komponenten: z.array(z.string()).default([]),
+    /** Pflegehinweis („Maintenance" im Katalog). */
+    pflege: z.string().optional(),
     technisch: z.array(z.object({ bezeichnung: z.string(), wert: z.string() })).default([]),
-    anwendung: z.array(z.string()).default([]),
   }),
 });
 

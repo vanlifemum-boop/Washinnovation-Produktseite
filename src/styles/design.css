@@ -299,6 +299,28 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .hero-inhalt .lead { color: #d6ebfa; max-width: 52ch; }
 .hero-zeile2 { color: var(--blau-hell); display: block; }
 
+/* Die Duschbrause im Hero — Quelle des Tropfenregens (siehe tropfen.js). */
+.hero-produkt {
+  position: absolute;
+  right: clamp(16px, 9vw, 150px);
+  top: 46%;
+  transform: translateY(-50%);
+  width: clamp(96px, 15vw, 230px);
+  z-index: 2;
+  pointer-events: none;
+  filter: drop-shadow(0 26px 40px rgba(3, 25, 44, 0.55));
+}
+@media (max-width: 860px) {
+  .hero-produkt {
+    top: auto;
+    bottom: 8%;
+    right: 6%;
+    transform: none;
+    width: clamp(74px, 20vw, 120px);
+    opacity: 0.92;
+  }
+}
+
 .scrollhinweis {
   position: absolute;
   bottom: 26px;
@@ -356,9 +378,23 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .produktkarte { padding: 0; overflow: hidden; text-decoration: none; }
 .produktkarte-bild { background: var(--eis); aspect-ratio: 4 / 3; overflow: hidden; }
 .produktkarte-bild img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s ease; }
+.produktkarte-bild--frei {
+  background: linear-gradient(160deg, var(--eis), #cfe6f7);
+  padding: 18px;
+}
+.produktkarte-bild--frei img { object-fit: contain; }
 .produktkarte:hover .produktkarte-bild img { transform: scale(1.04); }
 .produktkarte-text { padding: clamp(18px, 2.4vw, 26px); display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.produktkarte-fuss { margin-top: auto; display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+.produktkarte-fuss {
+  margin-top: auto;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 12px;
+  flex-wrap: wrap;
+}
+/* Preis und Verweis dürfen umbrechen — aber nicht mitten im Wort. */
+.produktkarte-fuss > * { white-space: nowrap; }
 .preis { font-weight: 800; font-size: 1.15rem; }
 .preis--offen { color: var(--text-leise); font-weight: 600; font-size: 0.97rem; }
 

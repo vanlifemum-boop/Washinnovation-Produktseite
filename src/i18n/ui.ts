@@ -85,7 +85,7 @@ export function pfad(sprache: Sprache, pfadAngabe = ""): string {
   return rest ? `${basis}/${sprache}/${rest}/` : `${basis}/${sprache}/`;
 }
 
-/** Link auf eine Datei in public/, z. B. bild("bilder/camptap.svg"). */
+/** Link auf eine Datei in public/, z. B. datei("bilder/tropfen.svg"). */
 export function datei(pfadAngabe: string): string {
   const basis = import.meta.env.BASE_URL.replace(/\/$/, "");
   return `${basis}/${pfadAngabe.replace(/^\//, "")}`;

@@ -1,8 +1,15 @@
 # WashInnovation — Produktseite
 
-Verkaufsseite für tragbare, wassersparende Produkte (CampTap, Handy Shower,
-Handy Shattaf, Pocket Sink) mit vorbereitetem **1+1-Spendenmodell**:
-pro Kauf ein gespendetes Produkt — sichtbar, zählbar und nachprüfbar.
+Verkaufsseite für sieben tragbare, wassersparende Sets von WaSH Innovation
+(Pocket Bath Plus, Handy Bath Plus, Pocket Self-Priming Shower, Pocket Bottle
+Shower Mini, Pocket Sink Plus, Pocket Sink, Pocket Tap Self-Priming) mit
+vorbereitetem **1+1-Spendenmodell**: pro Kauf ein gespendetes Produkt —
+sichtbar, zählbar und nachprüfbar.
+
+Alle Produktangaben — Vorteile, Lieferumfang, Pflege, Gewicht, Maße,
+Artikelnummer — stammen aus dem Produktkatalog 2025 des Herstellers.
+**Preise stehen bewusst auf `null`**, sie sind noch nicht festgelegt; die Seite
+zeigt dann „Preis folgt".
 
 Gebaut mit **Astro**, statisch, ohne Datenbank. Veröffentlicht über GitHub Pages.
 
@@ -14,9 +21,10 @@ Die Seite ist vollständig gebaut, aber noch nicht startklar. Diese Punkte gehö
 erledigt, bevor sie beworben wird — alle betroffenen Stellen sind im Code und auf
 der Seite mit `[PLATZHALTER]` markiert:
 
-1. **Zustimmung des Herstellers.** Die Seite läuft unter der Marke WashInnovation,
-   das Spendenversprechen ist aber das des Vertriebspartners. Ein 1+1-Versprechen
-   unter fremder Marke braucht die schriftliche Zustimmung von WaSH Innovation.
+1. **Zustimmung des Herstellers.** Für die Verwendung des Namens liegt sie vor.
+   Offen ist noch, ob sie auch die Spendenkommunikation abdeckt: Das
+   1+1-Versprechen ist das des Vertriebspartners, steht aber unter der Marke des
+   Herstellers — das gehört einmal schriftlich festgehalten.
 2. **Werberecht.** Konkrete Spendenaussagen sind in Deutschland streng geregelt:
    Empfänger und Höhe müssen benannt sein. Deshalb steht das Modell derzeit als
    Ankündigung auf der Seite, nicht als Versprechen. Unbestimmte Formulierungen
@@ -37,8 +45,8 @@ der Seite mit `[PLATZHALTER]` markiert:
 |---|---|
 | Empfängeradresse für Bestellungen | `src/pages/[lang]/bestellen.astro` (`bestellKonfig.email`) |
 | Kontaktadresse | `src/pages/[lang]/kontakt.astro` |
-| Preise, Maße, Gewichte | `src/content/produkte/<sprache>/*.md` |
-| Produktfotos und -videos | `public/bilder/produkte/` |
+| Preise | `src/content/produkte/<sprache>/*.md` (Feld `preis`) |
+| Produktvideos | `public/bilder/produkte/` |
 | Firmendaten, Rechtstexte | `src/inhalte/recht.ts` |
 | Eure Geschichte | `src/pages/[lang]/ueber-uns.astro` |
 
@@ -70,7 +78,7 @@ ausliefert.
 
 ```
 public/effekte/     Die Wasser-Effekte (reines JS, gehen nicht durchs Bundling)
-public/bilder/      Bilder — aktuell SVG-Platzhalter
+public/bilder/      Produktfotos aus dem Katalog, freigestellte Brause, Symbole
 src/i18n/           Übersetzungen und Sprachhilfen
 src/data/           Projekte, Lieferungen, Veranstaltungen (JSON)
 src/content/        Produkte und Journalbeiträge (Markdown, je Sprache ein Ordner)
@@ -78,19 +86,21 @@ src/inhalte/        Rechtstexte
 src/components/     Zähler, Produktkarte, Bildfläche
 src/layouts/        Basis-Layout mit Kopf, Fuß, hreflang
 src/pages/[lang]/   Alle Seiten, einmal je Sprache
+werkzeuge/          Einmal-Skripte für die Bildaufbereitung (siehe werkzeuge/README.md)
 ```
 
 ---
 
-## Die vier Effekte
+## Die Effekte
 
 Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 
 | Datei | Was sie macht |
 |---|---|
-| `public/effekte/tropfen.js` | Fixe Ebene mit ~90 Physik-Tropfen über der ganzen Seite (Three.js, lokal gevendort). Sie folgen der Maus, bekommen beim Scrollen Schub und **werden über Text durchsichtig**, damit alles lesbar bleibt. |
+| `public/effekte/tropfen.js` | Fixe Ebene über der ganzen Seite (Three.js, lokal gevendort) mit zwei Gruppen echter Tropfenformen: **schwebende** Tropfen folgen der Maus und bekommen beim Scrollen Schub, **fallende** treten an der Düse der Duschbrause im Hero aus und regnen über die Seite. Beide **werden über Text durchsichtig**, damit alles lesbar bleibt. |
 | `public/effekte/hero-szene.js` | Zeichnet den Hero prozedural: ein Tropfen fällt, trifft auf, wirft Krone und Ringe — gesteuert allein vom Scroll-Fortschritt. |
 | `public/effekte/ripple.js` | Wasserwellen auf Bildflächen (`data-ripple`). Gedämpftes Höhenfeld auf Canvas 2D, rechnet auf 220 px und wird hochskaliert. |
+| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch, der an der Düse der Brause ansetzt und über die ganze Seite nach unten läuft. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
 | `public/effekte/seite.js` | Menü, Reveals, Parallax (`data-parallax`), hochzählender Zähler. |
 
 Alle Effekte schalten sich ab bei `prefers-reduced-motion: reduce`, bei
@@ -113,6 +123,25 @@ ersetzen durch
 ```js
 { section: "#hero", frameCount: 180, bg: "#03192c",
   framePath: (i) => `frames/hero/frame_${String(i).padStart(4, "0")}.jpg` }
+```
+
+### Produktfotos
+
+Die Fotos sind aus den Seiten des Produktkatalogs 2025 herausgeschnitten
+(`werkzeuge/katalog-zuschnitt.mjs`) und tragen noch den Katalog-Hintergrund.
+Sobald freigestellte Pressefotos vorliegen, genügt es, die Dateien unter
+`public/bilder/produkte/` gleichnamig zu ersetzen.
+
+Die Brause im Hero ist ein freigestelltes Foto
+(`werkzeuge/freistellen.mjs`). Ihr Attribut `data-duese="40.6,98"` sagt der
+Tropfen-Ebene, wo am Bild die Düse sitzt — bei einem anderen Foto muss dieser
+Wert angepasst werden, sonst treten die Tropfen an der falschen Stelle aus.
+
+Beide Werkzeuge brauchen `sharp`:
+
+```bash
+npm i -D sharp
+node werkzeuge/katalog-zuschnitt.mjs
 ```
 
 ---

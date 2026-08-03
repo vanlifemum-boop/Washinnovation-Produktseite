@@ -25,6 +25,19 @@ const produkte = alle
     <div class="hero-buehne">
       <div class="hero-klebrig">
         <canvas></canvas>
+
+        {/* Die Duschbrause ist die Quelle des Regens: data-duese gibt an, wo
+            am Bild die Düse sitzt (in Prozent der Bildmaße). Die Tropfen-Ebene
+            liest das aus und lässt die Tropfen genau dort austreten. */}
+        <img
+          class="hero-produkt"
+          src={datei("bilder/produkte/handy-shower-foto.png")}
+          alt="Handy Shower"
+          data-tropfen-quelle
+          data-duese="40.6,98"
+          fetchpriority="high"
+        />
+
         <div class="hero-inhalt">
           <div class="behaelter">
             <p class="augenbraue" style="color:#9ed2f5">{t("meta.claim")}</p>
