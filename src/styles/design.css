@@ -312,7 +312,13 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .hero-inhalt .lead { color: #d6ebfa; max-width: 52ch; }
 .hero-zeile2 { color: var(--blau-hell); display: block; }
 
-/* Die Duschbrause im Hero — Quelle des Tropfenregens (siehe tropfen.js). */
+/* Die Handpumpe im Hero — Quelle des Tropfenregens (siehe tropfen.js).
+   Zwei Ebenen desselben Bildes: Der Körper liegt im Fluss und gibt dem
+   Umschlag seine Höhe, der blaue Druckkopf liegt absolut darüber und wird von
+   pumpe.js über --druck nach unten geschoben. Getrennt wird bei 28,3 % der
+   Bildhöhe — dort endet im Foto der blaue Kopf und beginnt der weiße Körper.
+   Der Kopf ist an der Naht breiter als der Körper, deshalb bleibt sie beim
+   Einsinken in jeder Stellung gedeckt. */
 .hero-produkt {
   position: absolute;
   right: clamp(16px, 9vw, 150px);
@@ -322,6 +328,22 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
   z-index: 2;
   pointer-events: none;
   filter: drop-shadow(0 26px 40px rgba(3, 25, 44, 0.55));
+}
+.hero-produkt__koerper {
+  display: block;
+  width: 100%;
+  clip-path: inset(28.3% 0 0 0);
+}
+.hero-produkt__kopf {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* 71,5 statt 71,7 — die 0,2 % Überlappung verhindert eine Haarlinie
+     zwischen den beiden Ebenen bei krummen Zoomstufen. */
+  clip-path: inset(0 0 71.5% 0);
+  transform: translateY(var(--druck, 0%));
+  will-change: transform;
 }
 @media (max-width: 860px) {
   .hero-produkt {

@@ -5,10 +5,23 @@
  *   1. SCHWEBEND — Tropfen treiben umher, folgen der Maus, bekommen beim
  *      Scrollen Schub und stoßen sich gegenseitig ab.
  *   2. REGEN — Tropfen treten aus der Düse der Duschbrause im Hero aus, fallen
- *      beschleunigt nach unten und regnen über die Seite. Ist die Brause
- *      weggescrollt, kommt der Regen von der oberen Bildschirmkante.
+ *      nach unten und regnen über die Seite. Ist die Brause weggescrollt, kommt
+ *      der Regen von der oberen Bildschirmkante.
  *
- * Beide werden über Text durchsichtig, damit alles lesbar bleibt.
+ * Alles läuft in Zeitlupe: Der Regen braucht rund fünf Sekunden über die
+ * Bildhöhe, die schwebenden Tropfen treiben kaum merklich.
+ *
+ * Alle Geschwindigkeiten sind in Welteinheiten **je Sekunde** angegeben und
+ * werden mit dt verrechnet. Das ist wichtig: Vorher wurde je *Bild* gerechnet,
+ * dadurch lief die Szene auf einem 120-Hz-Bildschirm doppelt so schnell wie auf
+ * einem 60-Hz-Gerät.
+ *
+ * Die Pumpe (public/effekte/pumpe.js) meldet über window.WI_PUMPE, wie weit der
+ * blaue Druckkopf eingesunken ist und ob gerade gedrückt wird. Beim Drücken
+ * spritzt es, sonst tropft es langsam weiter. Der Zugriff ist absichtlich
+ * defensiv — auf allen Seiten außer der Startseite gibt es keine Pumpe.
+ *
+ * Beide Gruppen werden über Text durchsichtig, damit alles lesbar bleibt.
  *
  * Abschaltungen: prefers-reduced-motion, kein WebGL, Tab im Hintergrund,
  * schmale Viewports bekommen weniger Tropfen.
@@ -33,7 +46,17 @@ function init() {
   const ANZAHL = schmal ? 40 : 78;        // schwebende Tropfen inkl. Cursor-Schieber
   const REGEN_ANZAHL = schmal ? 26 : 55;  // fallende Tropfen
   const CURSOR_R = 1.4;
-  const ALPHA_VOLL = 0.9, ALPHA_TEXT = 0.14;
+  const ALPHA_VOLL = 0.9;
+
+  /* Restdeckung über Text, je Farbe aus FARBEN — je dunkler das Blau, desto
+     stärker verschwindet der Tropfen. Die hellen Tropfen stören auf Text kaum,
+     die dunklen sehr; deshalb werden sie ungleich behandelt statt alle über
+     einen Kamm geschoren. */
+  const ALPHA_TEXT_JE_FARBE = [0.10, 0.09, 0.06, 0.035, 0.02];
+
+  /* Sicherheitsrand um jede Textfläche. Damit verblasst ein Tropfen, *bevor* er
+     die Buchstaben erreicht, statt mitten über dem Wort auszugehen. */
+  const TEXT_RAND = 14;
 
   const huelle = document.createElement("div");
   huelle.id = "tropfen-ebene";
@@ -88,7 +111,15 @@ function init() {
   // einzelne Tropfen über Text ausblenden, ohne das Material zu tauschen.
   function materialMitAlpha(anzahl) {
     const attr = new InstancedBufferAttribute(new Float32Array(anzahl).fill(ALPHA_VOLL), 1);
-    const mat = new MeshStandardMaterial({ metalness: 0.15, roughness: 0.06, transparent: true });
+    /* depthWrite: false ist hier Pflicht, nicht Geschmack. Durchsichtige
+       Instanzen werden in Reihenfolge gezeichnet und nicht nach Tiefe sortiert;
+       schreiben sie dabei in den Tiefenpuffer, verwirft er alles, was später
+       und weiter hinten kommt. Sichtbar wurde das als glatt abgeschnittene
+       Tropfen — halbe Eier statt Wasser, überall dort, wo zwei sich
+       überlappen. */
+    const mat = new MeshStandardMaterial({
+      metalness: 0.15, roughness: 0.06, transparent: true, depthWrite: false,
+    });
     mat.onBeforeCompile = (shader) => {
       shader.vertexShader = shader.vertexShader
         .replace("#include <common>", "#include <common>\nattribute float aAlpha;\nvarying float vAlpha;")
@@ -125,38 +156,67 @@ function init() {
 
   /* ---------------------- Physik: schwebende Tropfen ---------------------- */
   const pos = new Float32Array(ANZAHL * 3);
-  const geschw = new Float32Array(ANZAHL * 3);
+  const geschw = new Float32Array(ANZAHL * 3);        // Einheiten je Sekunde
   const groesse = new Float32Array(ANZAHL);
   const alpha = new Float32Array(ANZAHL).fill(ALPHA_VOLL);
+  const alphaText = new Float32Array(ANZAHL);
   const raum = { x: 12, y: 6, z: 4 };
   groesse[0] = CURSOR_R;
   for (let i = 1; i < ANZAHL; i++) groesse[i] = MathUtils.randFloat(0.26, 0.72);
   for (let i = 0; i < ANZAHL; i++) {
+    alphaText[i] = ALPHA_TEXT_JE_FARBE[i % ALPHA_TEXT_JE_FARBE.length];
     pos[i * 3] = MathUtils.randFloatSpread(raum.x * 2);
     pos[i * 3 + 1] = MathUtils.randFloatSpread(raum.y * 2);
     pos[i * 3 + 2] = MathUtils.randFloatSpread(raum.z * 2);
-    geschw[i * 3] = MathUtils.randFloatSpread(0.02);
-    geschw[i * 3 + 1] = MathUtils.randFloatSpread(0.02);
+    geschw[i * 3] = MathUtils.randFloatSpread(0.3);
+    geschw[i * 3 + 1] = MathUtils.randFloatSpread(0.3);
   }
 
-  const REIBUNG = 0.995, ABPRALL = 0.6, MAXV = 0.2, FOLGEN = 0.4;
+  const REIBUNG = 0.3;    // e-Dämpfung je Sekunde (≈ 0,74 der Geschwindigkeit)
+  const ABPRALL = 0.6;
+  const MAXV = 3.0;       // Einheiten/s — vorher 12, also rund ein Viertel
+  const FOLGEN = 2.5;     // Beschleunigung zum Zeiger, Einheiten/s²
+  const SCHUB_KRAFT = 15; // Umrechnung des Scroll-Schubs in Beschleunigung
+  const TRENN_KRAFT = 9;  // Rückstoß beim Auseinanderschieben, Einheiten/s
 
   /* ------------------------------ Regen ---------------------------------- */
   const rPos = new Float32Array(REGEN_ANZAHL * 3);
   const rGeschw = new Float32Array(REGEN_ANZAHL * 3);
   const rGroesse = new Float32Array(REGEN_ANZAHL);
+  const rStreckung = new Float32Array(REGEN_ANZAHL).fill(1);
   const rAlpha = new Float32Array(REGEN_ANZAHL).fill(ALPHA_VOLL);
+  const rAlphaText = new Float32Array(REGEN_ANZAHL);
   const rWartet = new Float32Array(REGEN_ANZAHL);       // Sekunden bis zum nächsten Austritt
-  const SCHWERKRAFT = 9.0;
+
+  /* Zeitlupe: gebremste Beschleunigung plus Endgeschwindigkeit. Ohne den Deckel
+     würden die Tropfen unten wieder schnell — die Beschleunigung allein zu
+     senken reicht dafür nicht. */
+  const SCHWERKRAFT = 2.6;   // Einheiten/s²
+  const MAX_FALL = 5.5;      // Einheiten/s — Weg über die Bildhöhe ≈ 5 s
 
   for (let i = 0; i < REGEN_ANZAHL; i++) {
     rGroesse[i] = MathUtils.randFloat(0.12, 0.3);
+    rAlphaText[i] = ALPHA_TEXT_JE_FARBE[i % 3];
     rWartet[i] = Math.random() * 3.5;
+  }
+
+  /** Stärke des Pumpenstoßes, 0…1. Fehlt die Pumpe (alle Seiten außer der
+   *  Startseite), bleibt es beim gleichmäßigen langsamen Tropfen.
+   *
+   *  Der Wert wird geprüft, nicht nur gelesen: Er kommt aus einer fremden Datei
+   *  und geht hier direkt in Positionen und Wartezeiten ein. Ein einziger
+   *  ungültiger Wert würde die Tropfen auf NaN setzen und den Regen für immer
+   *  anhalten — dagegen hilft eine Zeile hier mehr als jede Sorgfalt dort. */
+  function pumpenStoss() {
+    const p = window.WI_PUMPE;
+    if (!p || typeof p.stoss !== "number" || !Number.isFinite(p.stoss)) return 0;
+    return Math.min(Math.max(p.stoss, 0), 1);
   }
 
   /* Düse der Duschbrause im Dokument finden.
      Das Element trägt data-tropfen-quelle und data-duese="x%,y%" — damit weiß
-     die Ebene, wo genau am Bild die Tropfen austreten. */
+     die Ebene, wo genau am Bild die Tropfen austreten. Das ist der Körper der
+     Brause, nicht der bewegte Druckkopf: Die Düse wandert beim Pumpen nicht. */
   let quelle = null;      // { x, y } in Bildschirmkoordinaten, oder null
   function quelleMessen() {
     const el = document.querySelector("[data-tropfen-quelle]");
@@ -190,21 +250,26 @@ function init() {
   function regenSetzen(i) {
     const b = i * 3;
     const z = MathUtils.randFloat(-1.5, 1.5);
+    // Beim Drücken kommt der Tropfen mit mehr Schwung und breiter gestreut heraus
+    const stoss = pumpenStoss();
     if (quelle && quelle.y > -60 && quelle.y < window.innerHeight) {
-      // Austritt an der Düse — mit ein wenig Streuung, sonst wirkt es wie eine Schnur
+      // Austritt an der Düse. Die Streuung muss breiter sein als früher: In
+      // Zeitlupe legen die Tropfen bis zum Bildrand viel weniger Weg zurück, um
+      // sich zu verteilen — mit der alten engen Streuung hing eine Perlenkette
+      // unter der Brause statt eines Regens.
       const p = ausBildschirm(quelle.x, quelle.y, z);
-      rPos[b] = p.x + MathUtils.randFloatSpread(0.45);
+      rPos[b] = p.x + MathUtils.randFloatSpread(0.9);
       rPos[b + 1] = p.y;
       rPos[b + 2] = z;
-      rGeschw[b] = MathUtils.randFloatSpread(0.5);
-      rGeschw[b + 1] = -MathUtils.randFloat(0.4, 1.4);
+      rGeschw[b] = MathUtils.randFloatSpread(0.35 + stoss * 0.6);
+      rGeschw[b + 1] = -MathUtils.randFloat(0.1, 0.35) * (1 + stoss * 2.5);
     } else {
       // Brause nicht im Bild: Regen fällt von oben auf die Seite
       rPos[b] = MathUtils.randFloatSpread(raum.x * 2);
       rPos[b + 1] = raum.y + MathUtils.randFloat(0.5, 4);
       rPos[b + 2] = z;
-      rGeschw[b] = MathUtils.randFloatSpread(0.3);
-      rGeschw[b + 1] = -MathUtils.randFloat(1, 3);
+      rGeschw[b] = MathUtils.randFloatSpread(0.1);
+      rGeschw[b + 1] = -MathUtils.randFloat(0.3, 0.8);
     }
     rAlpha[i] = ALPHA_VOLL;
   }
@@ -233,35 +298,58 @@ function init() {
   }, { passive: true });
 
   /* Textflächen einsammeln — darüber werden die Tropfen durchsichtig.
-     Ohne das wäre die Seite an manchen Stellen schlicht nicht lesbar. */
+     Ohne das wäre die Seite an manchen Stellen schlicht nicht lesbar.
+
+     Die Kandidatenliste ändert sich selten und wird deshalb nur alle zwei
+     Sekunden neu geholt. Die Rechtecke dagegen werden **jeden Frame** frisch
+     gemessen, und zwar in Bildschirmkoordinaten. Das ist der entscheidende
+     Punkt: Die Hero-Überschrift steckt in einem `position: sticky`-Kasten, ihre
+     Dokumentposition wandert beim Scrollen also mit. Gemerkte Dokument-
+     koordinaten waren dort fast immer falsch — ausgerechnet bei der größten
+     Schrift der Seite. Gleiches gilt für die klebende Navigation.
+
+     Alle getBoundingClientRect() stehen bewusst am Stück ohne Schreibzugriff
+     dazwischen: Dann rechnet der Browser das Layout einmal statt hundertfach. */
+  const TEXT_SELEKTOR = "h1, h2, h3, h4, p, li, blockquote, .btn, .augenbraue, .zaehler-zahl, td, th, label, summary";
+  let textKandidaten = [];
+  function textKandidatenSammeln() {
+    textKandidaten = Array.prototype.slice.call(document.querySelectorAll(TEXT_SELEKTOR));
+  }
+  textKandidatenSammeln();
+  setInterval(textKandidatenSammeln, 2000);
+
   let textFlaechen = [];
-  function textFlaechenSammeln() {
-    const els = document.querySelectorAll("h1, h2, h3, h4, p, li, blockquote, .btn, .augenbraue, .zaehler-zahl, td, th, label, summary");
+  function textFlaechenMessen() {
+    const h = window.innerHeight;
     const flaechen = [];
-    els.forEach((el) => {
-      if (!el.offsetParent && el.offsetWidth === 0) return;
-      const r = el.getBoundingClientRect();
-      if (r.width < 8 || r.height < 8) return;
-      flaechen.push({ l: r.left, o: r.top + window.scrollY, r: r.right, u: r.bottom + window.scrollY });
-    });
+    for (let k = 0; k < textKandidaten.length; k++) {
+      const r = textKandidaten[k].getBoundingClientRect();
+      if (r.bottom < -80 || r.top > h + 80) continue;   // außerhalb des Bildes
+      if (r.width < 8 || r.height < 8) continue;        // unsichtbar oder winzig
+      flaechen.push({
+        l: r.left - TEXT_RAND, o: r.top - TEXT_RAND,
+        r: r.right + TEXT_RAND, u: r.bottom + TEXT_RAND,
+      });
+    }
     textFlaechen = flaechen;
   }
-  textFlaechenSammeln();
-  setInterval(textFlaechenSammeln, 2000);
-  window.addEventListener("resize", textFlaechenSammeln);
 
   let pxProEinheit = 1;
-  function ueberText(weltPos, radius) {
+  /** Überdeckt der Tropfen Text? Ellipse statt Kreis, weil fallende Tropfen in
+   *  die Länge gezogen werden — mit dem ungestreckten Radius gerechnet blieben
+   *  sie über Text deckend stehen. */
+  function ueberText(weltPos, rx, ry) {
     vProj.copy(weltPos).project(kamera);
     const sx = ((vProj.x + 1) / 2) * window.innerWidth;
-    const sy = ((1 - vProj.y) / 2) * window.innerHeight + window.scrollY;
-    const rPx = radius * pxProEinheit;
+    const sy = ((1 - vProj.y) / 2) * window.innerHeight;
+    const rxPx = Math.max(rx * pxProEinheit, 1);
+    const ryPx = Math.max(ry * pxProEinheit, 1);
     for (let k = 0; k < textFlaechen.length; k++) {
       const t = textFlaechen[k];
       const cx = Math.max(t.l, Math.min(sx, t.r));
       const cy = Math.max(t.o, Math.min(sy, t.u));
-      const dx = sx - cx, dy = sy - cy;
-      if (dx * dx + dy * dy < rPx * rPx) return true;
+      const dx = (sx - cx) / rxPx, dy = (sy - cy) / ryPx;
+      if (dx * dx + dy * dy < 1) return true;
     }
     return false;
   }
@@ -271,12 +359,18 @@ function init() {
     const fov = (kamera.fov * Math.PI) / 180;
     const wh = 2 * Math.tan(fov / 2) * kamera.position.z;
     pxProEinheit = window.innerHeight / wh;
-    const blende = 1 - Math.exp(-dt * 10);
+    textFlaechenMessen();
+
+    // Über Text schnell verschwinden, danach langsam zurückkommen. Sonst blitzt
+    // ein vorbeiziehender Tropfen mitten im Wort auf.
+    const blendeWeg = 1 - Math.exp(-dt * 14);
+    const blendeZurueck = 1 - Math.exp(-dt * 3);
+    const reibung = Math.exp(-REIBUNG * dt);
 
     // --- Cursor-Schieber ---
     strahl.setFromCamera(zeiger, kamera);
     strahl.ray.intersectPlane(ebene, zentrum);
-    vA.fromArray(pos, 0).lerp(zentrum, 0.15).toArray(pos, 0);
+    vA.fromArray(pos, 0).lerp(zentrum, 1 - Math.exp(-9 * dt)).toArray(pos, 0);
     zeigerlicht.position.set(pos[0], pos[1], pos[2] + 2);
 
     // --- Schwebende Tropfen ---
@@ -285,9 +379,9 @@ function init() {
       vA.fromArray(pos, b); vB.fromArray(geschw, b);
       vDiff.subVectors(zentrum, vA);
       vB.addScaledVector(vDiff.normalize(), FOLGEN * dt);
-      vB.y += schub * groesse[i];
-      vB.multiplyScalar(REIBUNG).clampLength(0, MAXV);
-      vA.add(vB);
+      vB.y += schub * groesse[i] * SCHUB_KRAFT * dt;
+      vB.multiplyScalar(reibung).clampLength(0, MAXV);
+      vA.addScaledVector(vB, dt);
       for (let j = 0; j < ANZAHL; j++) {
         if (j === i) continue;
         const ob = j * 3;
@@ -296,8 +390,8 @@ function init() {
         if (d > 0 && d < rSumme) {
           const druck = (rSumme - d) * 0.5;
           vDiff.normalize();
-          vA.addScaledVector(vDiff, -druck);
-          vB.addScaledVector(vDiff, -druck * 0.6);
+          vA.addScaledVector(vDiff, -druck);                  // Lagekorrektur
+          vB.addScaledVector(vDiff, -druck * TRENN_KRAFT * dt); // Rückstoß
         }
       }
       if (Math.abs(vA.x) + groesse[i] > raum.x) { vA.x = Math.sign(vA.x) * (raum.x - groesse[i]); vB.x *= -ABPRALL; }
@@ -305,12 +399,13 @@ function init() {
       if (Math.abs(vA.z) + groesse[i] > raum.z) { vA.z = Math.sign(vA.z) * (raum.z - groesse[i]); vB.z *= -ABPRALL; }
       vA.toArray(pos, b); vB.toArray(geschw, b);
 
-      const ziel = ueberText(vA, groesse[i]) ? ALPHA_TEXT : ALPHA_VOLL;
-      alpha[i] += (ziel - alpha[i]) * blende;
+      const ziel = ueberText(vA, groesse[i], groesse[i]) ? alphaText[i] : ALPHA_VOLL;
+      alpha[i] += (ziel - alpha[i]) * (ziel < alpha[i] ? blendeWeg : blendeZurueck);
     }
-    schub *= 0.88;
+    schub *= Math.exp(-7.6 * dt);
 
     // --- Regen ---
+    const stoss = pumpenStoss();
     for (let i = 0; i < REGEN_ANZAHL; i++) {
       const b = i * 3;
       if (rWartet[i] > 0) {
@@ -318,18 +413,24 @@ function init() {
         rAlpha[i] = 0;
         continue;
       }
-      rGeschw[b + 1] -= SCHWERKRAFT * dt;             // beschleunigtes Fallen
+      // Gebremstes Fallen mit Endgeschwindigkeit
+      rGeschw[b + 1] = Math.max(rGeschw[b + 1] - SCHWERKRAFT * dt, -MAX_FALL);
       rPos[b] += rGeschw[b] * dt;
       rPos[b + 1] += rGeschw[b + 1] * dt;
 
       if (rPos[b + 1] < -raum.y - 1.5) {
         regenSetzen(i);
-        rWartet[i] = Math.random() * 1.8;             // ungleichmäßig, sonst wirkt es wie ein Vorhang
+        // Beim Pumpen kommen die Tropfen dichter — ungleichmäßig, sonst wirkt
+        // es wie ein Vorhang statt wie Wasser.
+        rWartet[i] = MathUtils.randFloat(0.5, 2.6) * (1 - 0.85 * stoss);
         continue;
       }
+      // Fallende Tropfen ziehen sich in die Länge, je schneller sie werden.
+      // In Zeitlupe fällt das milder aus — langsame Tropfen sind runder.
+      rStreckung[i] = MathUtils.clamp(1 + Math.abs(rGeschw[b + 1]) * 0.09, 1, 1.6);
       vA.set(rPos[b], rPos[b + 1], rPos[b + 2]);
-      const ziel = ueberText(vA, rGroesse[i]) ? ALPHA_TEXT : ALPHA_VOLL;
-      rAlpha[i] += (ziel - rAlpha[i]) * blende;
+      const ziel = ueberText(vA, rGroesse[i], rGroesse[i] * rStreckung[i]) ? rAlphaText[i] : ALPHA_VOLL;
+      rAlpha[i] += (ziel - rAlpha[i]) * (ziel < rAlpha[i] ? blendeWeg : blendeZurueck);
     }
 
     // --- Matrizen schreiben ---
@@ -349,9 +450,7 @@ function init() {
     for (let i = 0; i < REGEN_ANZAHL; i++) {
       platzhalter.position.fromArray(rPos, i * 3);
       platzhalter.rotation.set(0, 0, 0);
-      // Fallende Tropfen ziehen sich in die Länge, je schneller sie werden
-      const streckung = MathUtils.clamp(1 + Math.abs(rGeschw[i * 3 + 1]) * 0.18, 1, 2.4);
-      platzhalter.scale.set(rGroesse[i], rGroesse[i] * streckung, rGroesse[i]);
+      platzhalter.scale.set(rGroesse[i], rGroesse[i] * rStreckung[i], rGroesse[i]);
       platzhalter.updateMatrix();
       regenMesh.setMatrixAt(i, platzhalter.matrix);
     }

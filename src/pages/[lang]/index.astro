@@ -33,17 +33,29 @@ const produkte = alle
       <div class="hero-klebrig">
         <canvas></canvas>
 
-        {/* Die Duschbrause ist die Quelle des Regens: data-duese gibt an, wo
-            am Bild die Düse sitzt (in Prozent der Bildmaße). Die Tropfen-Ebene
-            liest das aus und lässt die Tropfen genau dort austreten. */}
-        <img
-          class="hero-produkt"
-          src={datei("bilder/produkte/handy-shower-foto.png")}
-          alt="Handy Shower"
-          data-tropfen-quelle
-          data-duese="40.6,98"
-          fetchpriority="high"
-        />
+        {/* Die Handpumpe: zwei Ebenen desselben Bildes (eine Datei, ein Abruf).
+            Der Körper ist unbeweglich und trägt die Düse — data-duese sagt, wo
+            am Bild sie sitzt (in Prozent der Bildmaße); die Tropfen-Ebene liest
+            das aus und lässt die Tropfen genau dort austreten. Der blaue
+            Druckkopf liegt darüber und sinkt beim Scrollen ein (pumpe.js).
+            Die Quelle bleibt bewusst am Körper: Die Düse pumpt nicht mit. */}
+        <div class="hero-produkt">
+          <img
+            class="hero-produkt__koerper"
+            src={datei("bilder/produkte/handy-shower-foto.png")}
+            alt="Handy Shower"
+            data-tropfen-quelle
+            data-duese="40.6,98"
+            fetchpriority="high"
+          />
+          <img
+            class="hero-produkt__kopf"
+            src={datei("bilder/produkte/handy-shower-foto.png")}
+            alt=""
+            aria-hidden="true"
+            data-pumpen-kopf
+          />
+        </div>
 
         <div class="hero-inhalt">
           <div class="behaelter">
@@ -187,6 +199,7 @@ const produkte = alle
   </section>
 
   <Fragment slot="skripte">
+    <script is:inline src={datei("effekte/pumpe.js")}></script>
     <script is:inline src={datei("effekte/hero-szene.js")}></script>
     <script is:inline src={datei("effekte/vendor/lenis.min.js")}></script>
     <script is:inline define:vars={{ }}>

@@ -97,7 +97,8 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 
 | Datei | Was sie macht |
 |---|---|
-| `public/effekte/tropfen.js` | Fixe Ebene über der ganzen Seite (Three.js, lokal gevendort) mit zwei Gruppen echter Tropfenformen: **schwebende** Tropfen folgen der Maus und bekommen beim Scrollen Schub, **fallende** treten an der Düse der Duschbrause im Hero aus und regnen über die Seite. Beide **werden über Text durchsichtig**, damit alles lesbar bleibt. |
+| `public/effekte/tropfen.js` | Fixe Ebene über der ganzen Seite (Three.js, lokal gevendort) mit zwei Gruppen echter Tropfenformen: **schwebende** Tropfen folgen der Maus und bekommen beim Scrollen Schub, **fallende** treten an der Düse der Brause im Hero aus und regnen über die Seite. Alles in **Zeitlupe** — der Regen braucht rund fünf Sekunden über die Bildhöhe. Beide Gruppen **werden über Text durchsichtig**, damit alles lesbar bleibt. |
+| `public/effekte/pumpe.js` | Der blaue Druckkopf im Hero sinkt beim Runterscrollen ein und kommt beim Hochscrollen zurück — du pumpst mit dem Mausrad. Beim Drücken spritzt es, sonst tropft es langsam weiter. |
 | `public/effekte/hero-szene.js` | Zeichnet den Hero prozedural: ein Tropfen fällt, trifft auf, wirft Krone und Ringe — gesteuert allein vom Scroll-Fortschritt. |
 | `public/effekte/ripple.js` | Wasserwellen auf Bildflächen (`data-ripple`). Gedämpftes Höhenfeld auf Canvas 2D, rechnet auf 220 px und wird hochskaliert. |
 | `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch, der an der Düse der Brause ansetzt und über die ganze Seite nach unten läuft. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
@@ -106,6 +107,37 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 Alle Effekte schalten sich ab bei `prefers-reduced-motion: reduce`, bei
 verstecktem Tab und außerhalb des Sichtbereichs. Ohne WebGL bleibt die Seite
 still, aber vollständig.
+
+**Alles rechnet in Sekunden, nichts je Bild.** Geschwindigkeiten stehen in
+Einheiten pro Sekunde und werden mit `dt` verrechnet, Dämpfungen laufen über
+`Math.exp(-k * dt)`. Wer hier eine Zeile ergänzt, muss das mitmachen: Wird je
+*Bild* gerechnet, läuft die Szene auf einem 120-Hz-Bildschirm doppelt so
+schnell wie auf einem 60-Hz-Gerät. Genau dieser Fehler steckte vorher in der
+Tropfen-Physik.
+
+### Die Pumpe im Hero
+
+Das Produkt im Hero ist eine Handpumpe. Im Markup (`src/pages/[lang]/index.astro`)
+liegen dafür **zwei Ebenen desselben Bildes** übereinander — eine Datei, ein
+Abruf, getrennt per `clip-path` bei 28,3 % der Bildhöhe. Dort endet im Foto der
+blaue Kopf und beginnt der weiße Körper.
+
+- `.hero-produkt__koerper` — unbeweglich, trägt `data-tropfen-quelle` und
+  `data-duese`. **Die Quelle gehört an den Körper, nicht an den Kopf:** Die Düse
+  sitzt unten und pumpt nicht mit. Weil `clip-path` nur ein Malfilter ist und
+  `getBoundingClientRect()` unverändert lässt, stimmt die Prozentrechnung für
+  die Düse weiterhin auf das ganze Bild.
+- `.hero-produkt__kopf` — trägt `data-pumpen-kopf`, wird über die
+  CSS-Variable `--druck` nach unten geschoben. Der Kopf ist an der Naht breiter
+  als der Körper, deshalb bleibt sie in jeder Stellung gedeckt.
+
+`pumpe.js` veröffentlicht `window.WI_PUMPE = { druck, stoss }`. `tropfen.js`
+liest daraus nur `stoss` und prüft den Wert, bevor er verrechnet wird — er
+fließt direkt in Positionen und Wartezeiten, ein einziger ungültiger Wert würde
+den Regen dauerhaft anhalten.
+
+Ein anderes Foto bedeutet: Trennkante neu ausmessen (`clip-path` in
+`design.css`) und `data-duese` anpassen.
 
 ### Echte Videos statt der gezeichneten Hero-Szene
 

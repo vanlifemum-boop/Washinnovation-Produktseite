@@ -77,7 +77,9 @@
 
     // Weicher S-Bogen bis unter den unteren Rand. Der Schlauch schwingt
     // seitlich aus, damit er nicht wie ein gerader Strich wirkt.
-    var schwung = Math.sin(zeit * 0.5) * 14;
+    // Bewusst langsam — der Schlauch darf nicht schneller wirken als der Regen,
+    // der in Zeitlupe fällt (siehe tropfen.js).
+    var schwung = Math.sin(zeit * 0.28) * 14;
     var ende = h + 60;
     var laenge = ende - startY;
 
