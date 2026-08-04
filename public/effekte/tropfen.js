@@ -378,7 +378,12 @@ function init() {
       const b = i * 3;
       vA.fromArray(pos, b); vB.fromArray(geschw, b);
       vDiff.subVectors(zentrum, vA);
-      vB.addScaledVector(vDiff.normalize(), FOLGEN * dt);
+      /* Anziehung zum Zeiger, aber in seiner Nähe abgeschaltet. Sonst sammeln
+         sich alle Tropfen auf dem Mauszeiger zu einem dichten Klumpen, sobald
+         er einen Moment stillsteht — in Zeitlupe fehlt ihnen das Tempo, sich
+         wieder auseinanderzuschieben. */
+      const naehe = MathUtils.clamp((vDiff.length() - 2.5) / 4, 0, 1);
+      vB.addScaledVector(vDiff.normalize(), FOLGEN * naehe * dt);
       vB.y += schub * groesse[i] * SCHUB_KRAFT * dt;
       vB.multiplyScalar(reibung).clampLength(0, MAXV);
       vA.addScaledVector(vB, dt);
@@ -388,7 +393,9 @@ function init() {
         vDiff.set(pos[ob] - vA.x, pos[ob + 1] - vA.y, pos[ob + 2] - vA.z);
         const d = vDiff.length(), rSumme = groesse[i] + groesse[j];
         if (d > 0 && d < rSumme) {
-          const druck = (rSumme - d) * 0.5;
+          // Überlappung fast vollständig auflösen. Bei 0,5 blieben die Tropfen
+          // in Zeitlupe ineinander stecken, statt sich zu berühren.
+          const druck = (rSumme - d) * 0.9;
           vDiff.normalize();
           vA.addScaledVector(vDiff, -druck);                  // Lagekorrektur
           vB.addScaledVector(vDiff, -druck * TRENN_KRAFT * dt); // Rückstoß
