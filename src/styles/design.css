@@ -319,13 +319,33 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
    Bildhöhe — dort endet im Foto der blaue Kopf und beginnt der weiße Körper.
    Der Kopf ist an der Naht breiter als der Körper, deshalb bleibt sie beim
    Einsinken in jeder Stellung gedeckt. */
+/* Die aufgehängte Flasche: Der Wasserbehälter hängt höher als der Duschkopf —
+   das Funktionsprinzip. Die Kordel läuft oben aus dem Bild heraus, deshalb der
+   negative Versatz: Sie hängt von irgendwo über dem Bildrand. */
+/* Zur Stapelreihenfolge, damit es niemand erneut versucht: Über die
+   Tropfen-Ebene kommen diese beiden Bilder von hier aus **nicht**. Sie stecken
+   in .hero-klebrig, und `position: sticky` erzeugt immer einen eigenen
+   Stapelkontext — egal wie hoch der z-index hier steht, er gilt nur innerhalb
+   des Heros. Die Tropfen ziehen deshalb vor dem Produkt vorbei. Das ist in
+   Ordnung, solange sie klein genug sind; dafür sorgt die Größenstaffelung nach
+   Bildschirmbreite in tropfen.js. */
+.hero-flasche {
+  position: absolute;
+  right: clamp(30px, 10vw, 168px);
+  top: -3%;
+  width: clamp(64px, 8vw, 104px);
+  z-index: 3;
+  pointer-events: none;
+  filter: drop-shadow(0 18px 30px rgba(3, 25, 44, 0.5));
+}
+
 .hero-produkt {
   position: absolute;
   right: clamp(16px, 9vw, 150px);
-  top: 46%;
+  top: 40%;
   transform: translateY(-50%);
-  width: clamp(96px, 15vw, 230px);
-  z-index: 2;
+  width: clamp(80px, 12vw, 170px);
+  z-index: 3;
   pointer-events: none;
   filter: drop-shadow(0 26px 40px rgba(3, 25, 44, 0.55));
 }
@@ -346,13 +366,30 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
   will-change: transform;
 }
 @media (max-width: 860px) {
+  /* Auf dem Handy war die Brause vorher mit bottom: 8% fast am unteren Rand —
+     den Tropfen blieb kaum Fallstrecke. Jetzt hängt die Flasche oben und die
+     Brause steht bei gut einem Drittel, sodass das Wasser fast über den ganzen
+     Bildschirm fallen kann. Beide schmal am rechten Rand, damit sie der
+     Überschrift nicht ins Gehege kommen. */
+  .hero-flasche {
+    right: 8px;
+    top: -2%;
+    width: clamp(50px, 16vw, 64px);
+    opacity: 0.94;
+  }
   .hero-produkt {
-    top: auto;
-    bottom: 8%;
-    right: 6%;
+    top: 34%;
+    bottom: auto;
+    right: 2px;
     transform: none;
-    width: clamp(74px, 20vw, 120px);
+    width: clamp(64px, 20vw, 82px);
     opacity: 0.92;
+  }
+  /* Der Aufbau bekommt eine eigene Spalte am rechten Rand. Ohne das läuft der
+     Fließtext darunter durch — und anders als bei den Tropfen gibt es hier
+     keine Ausblendung über Text, das Bild deckt ihn schlicht zu. */
+  .hero-inhalt .behaelter {
+    padding-right: 96px;
   }
 }
 

@@ -33,12 +33,31 @@ const produkte = alle
       <div class="hero-klebrig">
         <canvas></canvas>
 
+        {/* Der Hero zeigt das Funktionsprinzip, nicht nur ein Produktfoto:
+            Der Wasserbehälter hängt höher als der Duschkopf, den Rest macht die
+            Schwerkraft. Genau so steht es im Katalog, und genau so sieht das
+            Foto zum Pocket Bottle Shower Mini aus.
+
+            Alle Anschlusspunkte stehen als Prozent der Bildmaße im Markup —
+            schlauch.js und tropfen.js lesen sie von dort, statt Zahlen im
+            Skript zu verstecken. */}
+        <img
+          class="hero-flasche"
+          src={datei("bilder/produkte/flasche-aufhaengung.png")}
+          alt=""
+          aria-hidden="true"
+          data-schlauch-start
+          data-auslass="46,99.5"
+        />
+
         {/* Die Handpumpe: zwei Ebenen desselben Bildes (eine Datei, ein Abruf).
-            Der Körper ist unbeweglich und trägt die Düse — data-duese sagt, wo
-            am Bild sie sitzt (in Prozent der Bildmaße); die Tropfen-Ebene liest
-            das aus und lässt die Tropfen genau dort austreten. Der blaue
-            Druckkopf liegt darüber und sinkt beim Scrollen ein (pumpe.js).
-            Die Quelle bleibt bewusst am Körper: Die Düse pumpt nicht mit. */}
+            Der Körper ist unbeweglich und trägt die Düse; die Tropfen-Ebene
+            lässt die Tropfen genau dort austreten. Der blaue Druckkopf liegt
+            darüber und sinkt beim Scrollen ein (pumpe.js).
+
+            Die Düse sitzt am Körper und pumpt nicht mit. Der Schlauchanschluss
+            dagegen sitzt am Kopf — er wandert beim Pumpen also mit, und der
+            Schlauch zuckt leicht. Das ist so gewollt. */}
         <div class="hero-produkt">
           <img
             class="hero-produkt__koerper"
@@ -54,6 +73,8 @@ const produkte = alle
             alt=""
             aria-hidden="true"
             data-pumpen-kopf
+            data-schlauch-ende
+            data-einlass="27.3,14"
           />
         </div>
 

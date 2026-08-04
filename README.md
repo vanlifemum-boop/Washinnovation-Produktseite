@@ -101,7 +101,7 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 | `public/effekte/pumpe.js` | Der blaue Druckkopf im Hero sinkt beim Runterscrollen ein und kommt beim Hochscrollen zurück — du pumpst mit dem Mausrad. Beim Drücken spritzt es, sonst tropft es langsam weiter. |
 | `public/effekte/hero-szene.js` | Zeichnet den Hero prozedural: ein Tropfen fällt, trifft auf, wirft Krone und Ringe — gesteuert allein vom Scroll-Fortschritt. |
 | `public/effekte/ripple.js` | Wasserwellen auf Bildflächen (`data-ripple`). Gedämpftes Höhenfeld auf Canvas 2D, rechnet auf 220 px und wird hochskaliert. |
-| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch, der an der Düse der Brause ansetzt und über die ganze Seite nach unten läuft. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
+| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch von der aufgehängten Flasche zur Brause. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
 | `public/effekte/seite.js` | Menü, Reveals, Parallax (`data-parallax`), hochzählender Zähler. |
 
 Alle Effekte schalten sich ab bei `prefers-reduced-motion: reduce`, bei
@@ -114,6 +114,45 @@ Einheiten pro Sekunde und werden mit `dt` verrechnet, Dämpfungen laufen über
 *Bild* gerechnet, läuft die Szene auf einem 120-Hz-Bildschirm doppelt so
 schnell wie auf einem 60-Hz-Gerät. Genau dieser Fehler steckte vorher in der
 Tropfen-Physik.
+
+### Der Aufbau im Hero: warum ein Liter reicht
+
+Der Hero zeigt das Funktionsprinzip, nicht nur ein Produktfoto. Aus dem Katalog
+(`src/content/produkte/de/pocket-bath-plus.md`):
+
+> „Schwerkraftbetrieben: Der Wasserbehälter wird einfach höher aufgehängt als der
+> Duschkopf — ganz ohne Pumpe und Strom."
+
+Genau das steht im Hero: Flasche oben, Schlauch hinunter, Brause tiefer, Tropfen
+fallen über die ganze Seite. Drei Bausteine, deren Anschlusspunkte **im Markup**
+als Prozent der Bildmaße stehen — nicht als Zahlen in den Skripten:
+
+| Element | Attribut | Wert | Wer liest es |
+|---|---|---|---|
+| `.hero-flasche` | `data-auslass` | `46,99.5` | `schlauch.js` (Anfang) |
+| `.hero-produkt__kopf` | `data-einlass` | `27.3,14` | `schlauch.js` (Ende) |
+| `.hero-produkt__koerper` | `data-duese` | `40.6,98` | `tropfen.js` (Austritt) |
+
+Der Schlauch endet **am Einlass der Brause**, nicht am unteren Seitenrand: Beim
+echten Produkt führt er von der Flasche zum Duschkopf, und das Wasser verlässt
+ihn erst an der Düse.
+
+Warum das Ende am **Kopf** hängt und die Düse am **Körper**: Der Kopf sinkt beim
+Scrollen ein, der Körper nicht. So wandert der Schlauchanschluss beim Pumpen mit
+(der Schlauch zuckt leicht), während die Düse ruhig stehen bleibt — genau wie bei
+einer echten Handpumpe.
+
+Das Bild der Flasche stammt aus dem Katalogfoto zum Pocket Bottle Shower Mini,
+zugeschnitten auf x 320–525 / y 0–518 und freigestellt (siehe `werkzeuge/`).
+
+**Zur Stapelreihenfolge, damit es niemand erneut versucht:** Flasche und Brause
+lassen sich von ihrem CSS aus **nicht** über die Tropfen-Ebene heben. Sie stecken
+in `.hero-klebrig`, und `position: sticky` erzeugt immer einen eigenen
+Stapelkontext — ein `z-index` dort wirkt nur innerhalb des Heros. Die Tropfen
+ziehen deshalb vor dem Produkt vorbei. Damit sie es nicht zudecken, staffelt
+`tropfen.js` die Tropfengröße nach Bildschirmbreite: Die Welt ist immer gleich
+hoch, ein Tropfen misst also überall rund 70 Pixel — auf 1280 px sind das 5 % der
+Breite, auf 360 px aber 16 %.
 
 ### Die Pumpe im Hero
 

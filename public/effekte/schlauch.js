@@ -1,17 +1,25 @@
-/* WashInnovation — Silikonschlauch an der Duschbrause
+/* WashInnovation — Silikonschlauch zwischen Flasche und Brause
  *
- * Zeichnet einen durchsichtigen Schlauch, der an der Düse der Brause ansetzt und
- * in einem weichen Bogen bis zum unteren Bildrand läuft — und damit über die
- * ganze Seite, weil die Ebene mitscrollt. Ist die Brause weggescrollt, kommt der
- * Schlauch von der oberen Kante herunter, so wie eine Leitung von oben.
+ * Verbindet den Auslass der aufgehängten Flasche mit dem Anschlussstück der
+ * Duschbrause — also genau die Strecke, die beim echten Produkt der Schlauch
+ * zurücklegt. Das Wasser läuft von oben nach unten, angetrieben allein von der
+ * Schwerkraft; darunter kommen die Tropfen aus der Düse (tropfen.js).
  *
  * Umgesetzt als fixes SVG mit drei übereinanderliegenden Linien: eine breite
  * milchige für den Schlauchkörper, eine schmale helle als Glanzkante und eine
  * dunklere für die Schattenseite. Das ergibt die Silikon-Anmutung, ohne ein
  * einziges Bild zu laden.
  *
- * Die Quelle ist dasselbe Element wie beim Regen: [data-tropfen-quelle] mit
- * data-duese="x%,y%".
+ * Die beiden Enden stehen im Markup, nicht hier:
+ *   [data-schlauch-start] + data-auslass="x%,y%"   — an der Flasche
+ *   [data-schlauch-ende]  + data-einlass="x%,y%"   — an der Brause
+ *
+ * Das Ende sitzt bewusst am Druckkopf und nicht am Körper der Brause: Der Kopf
+ * sinkt beim Scrollen ein (pumpe.js), und weil getBoundingClientRect()
+ * Transformationen mitrechnet, zuckt der Schlauch beim Pumpen leicht mit.
+ *
+ * Fehlt eines der beiden Enden, wird nichts gezeichnet. Ein Schlauch, der aus
+ * dem Nichts kommt oder ins Leere läuft, ist schlechter als gar keiner.
  *
  * Abschaltung: prefers-reduced-motion lässt den Schlauch stehen, aber ohne das
  * langsame Schwingen — er ist Deko, kein Inhalt.
@@ -19,8 +27,9 @@
 (function () {
   "use strict";
 
-  var quelleEl = document.querySelector("[data-tropfen-quelle]");
-  if (!quelleEl) return;
+  var startEl = document.querySelector("[data-schlauch-start]");
+  var endeEl = document.querySelector("[data-schlauch-ende]");
+  if (!startEl || !endeEl) return;
 
   var bewegungOk = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
@@ -28,7 +37,9 @@
   var huelle = document.createElement("div");
   huelle.id = "schlauch-ebene";
   huelle.setAttribute("aria-hidden", "true");
-  huelle.style.cssText = "position:fixed;inset:0;z-index:29;pointer-events:none;";
+  // Über der Tropfen-Ebene (30), aber unter Flasche und Brause (32): Der
+  // Schlauch gehört sichtbar zum Aufbau, steckt aber in beiden Bildern.
+  huelle.style.cssText = "position:fixed;inset:0;z-index:31;pointer-events:none;";
 
   var svg = document.createElementNS(NS, "svg");
   svg.setAttribute("width", "100%");
@@ -47,19 +58,20 @@
   }
 
   // Reihenfolge = Zeichenreihenfolge: Körper, Schattenseite, Glanzkante
-  var koerper = linie(15, "rgba(226,242,252,0.20)", 0.6);
-  var schatten = linie(5, "rgba(10,60,105,0.16)", 0.4);
-  var glanz = linie(3.5, "rgba(255,255,255,0.42)", 0.2);
+  var koerper = linie(13, "rgba(226,242,252,0.22)", 0.6);
+  var schatten = linie(4.5, "rgba(10,60,105,0.18)", 0.4);
+  var glanz = linie(3, "rgba(255,255,255,0.45)", 0.2);
 
   huelle.appendChild(svg);
   document.body.appendChild(huelle);
 
   var zeit = 0;
 
-  function duese() {
-    var kasten = quelleEl.getBoundingClientRect();
+  /** Punkt auf einem Element aus einer Prozentangabe im Markup. */
+  function punkt(el, attribut, vorgabe) {
+    var kasten = el.getBoundingClientRect();
     if (kasten.width < 4) return null;
-    var roh = (quelleEl.getAttribute("data-duese") || "50,100").split(",");
+    var roh = (el.getAttribute(attribut) || vorgabe).split(",");
     return {
       x: kasten.left + kasten.width * (parseFloat(roh[0]) / 100),
       y: kasten.top + kasten.height * (parseFloat(roh[1]) / 100),
@@ -67,45 +79,46 @@
   }
 
   function zeichnen() {
-    var h = window.innerHeight;
-    var b = window.innerWidth;
-    var d = duese();
+    var a = punkt(startEl, "data-auslass", "50,100");
+    var b = punkt(endeEl, "data-einlass", "50,0");
+    if (!a || !b) {
+      koerper.removeAttribute("d");
+      schatten.removeAttribute("d");
+      glanz.removeAttribute("d");
+      return;
+    }
 
-    // Brause weggescrollt → der Schlauch kommt von oben herein
-    var startX = d ? d.x : b * 0.82;
-    var startY = d ? d.y : -40;
+    // Ein hängender Schlauch ist an beiden Enden fest und schwingt nur in der
+    // Mitte. Deshalb wirkt das Schwingen auf die Kontrollpunkte, nie auf die
+    // Endpunkte — sonst löste er sich sichtbar von der Flasche.
+    var laenge = b.y - a.y;
+    var bauch = Math.max(18, Math.abs(laenge) * 0.22);
+    var schwung = Math.sin(zeit * 0.28) * Math.min(9, Math.abs(laenge) * 0.05);
 
-    // Weicher S-Bogen bis unter den unteren Rand. Der Schlauch schwingt
-    // seitlich aus, damit er nicht wie ein gerader Strich wirkt.
-    // Bewusst langsam — der Schlauch darf nicht schneller wirken als der Regen,
-    // der in Zeitlupe fällt (siehe tropfen.js).
-    var schwung = Math.sin(zeit * 0.28) * 14;
-    var ende = h + 60;
-    var laenge = ende - startY;
+    var x1 = a.x + bauch * 0.5 + schwung;
+    var y1 = a.y + laenge * 0.38;
+    var x2 = b.x + bauch * 0.7 - schwung;
+    var y2 = a.y + laenge * 0.72;
 
-    var x1 = startX - 70 + schwung;
-    var y1 = startY + laenge * 0.32;
-    var x2 = startX + 90 - schwung;
-    var y2 = startY + laenge * 0.68;
-    var endeX = startX - 30 + schwung * 0.5;
-
-    var pfad = "M " + startX + " " + startY +
-      " C " + x1 + " " + y1 + ", " + x2 + " " + y2 + ", " + endeX + " " + ende;
+    var pfad = "M " + a.x + " " + a.y +
+      " C " + x1 + " " + y1 + ", " + x2 + " " + y2 + ", " + b.x + " " + b.y;
 
     koerper.setAttribute("d", pfad);
     schatten.setAttribute("d", pfad);
     glanz.setAttribute("d", pfad);
     // Die Glanzkante sitzt leicht versetzt — das macht aus der Linie einen Schlauch
-    glanz.setAttribute("transform", "translate(-3.5,0)");
-    schatten.setAttribute("transform", "translate(4,0)");
+    glanz.setAttribute("transform", "translate(-3,0)");
+    schatten.setAttribute("transform", "translate(3.5,0)");
   }
 
   zeichnen();
   window.addEventListener("scroll", zeichnen, { passive: true });
   window.addEventListener("resize", zeichnen);
-  if (quelleEl.tagName === "IMG" && !quelleEl.complete) {
-    quelleEl.addEventListener("load", zeichnen, { once: true });
-  }
+  [startEl, endeEl].forEach(function (el) {
+    if (el.tagName === "IMG" && !el.complete) {
+      el.addEventListener("load", zeichnen, { once: true });
+    }
+  });
 
   if (bewegungOk) {
     var laeuft = true;

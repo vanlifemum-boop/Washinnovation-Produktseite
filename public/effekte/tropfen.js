@@ -45,8 +45,19 @@ function init() {
   const schmal = window.innerWidth < 760;
   const ANZAHL = schmal ? 40 : 78;        // schwebende Tropfen inkl. Cursor-Schieber
   const REGEN_ANZAHL = schmal ? 26 : 55;  // fallende Tropfen
-  const CURSOR_R = 1.4;
+  const CURSOR_R = schmal ? 0.85 : 1.4;
   const ALPHA_VOLL = 0.9;
+
+  /* Tropfengröße nach Bildschirmbreite.
+     Die Welt ist immer gleich hoch, egal wie breit das Fenster ist — ein
+     Tropfen mit Radius 0,72 misst deshalb auf jedem Gerät rund 70 Pixel. Auf
+     einem 1280er Schirm sind das 5 % der Breite, auf einem 360er aber 16 %:
+     Dort begraben ein paar Tropfen den halben Hero samt Produktbild. Auf
+     schmalen Geräten fallen sie deshalb kleiner aus. */
+  const R_MIN = schmal ? 0.16 : 0.26;
+  const R_MAX = schmal ? 0.40 : 0.72;
+  const REGEN_R_MIN = schmal ? 0.08 : 0.12;
+  const REGEN_R_MAX = schmal ? 0.18 : 0.30;
 
   /* Restdeckung über Text, je Farbe aus FARBEN — je dunkler das Blau, desto
      stärker verschwindet der Tropfen. Die hellen Tropfen stören auf Text kaum,
@@ -162,7 +173,7 @@ function init() {
   const alphaText = new Float32Array(ANZAHL);
   const raum = { x: 12, y: 6, z: 4 };
   groesse[0] = CURSOR_R;
-  for (let i = 1; i < ANZAHL; i++) groesse[i] = MathUtils.randFloat(0.26, 0.72);
+  for (let i = 1; i < ANZAHL; i++) groesse[i] = MathUtils.randFloat(R_MIN, R_MAX);
   for (let i = 0; i < ANZAHL; i++) {
     alphaText[i] = ALPHA_TEXT_JE_FARBE[i % ALPHA_TEXT_JE_FARBE.length];
     pos[i * 3] = MathUtils.randFloatSpread(raum.x * 2);
@@ -195,7 +206,7 @@ function init() {
   const MAX_FALL = 5.5;      // Einheiten/s — Weg über die Bildhöhe ≈ 5 s
 
   for (let i = 0; i < REGEN_ANZAHL; i++) {
-    rGroesse[i] = MathUtils.randFloat(0.12, 0.3);
+    rGroesse[i] = MathUtils.randFloat(REGEN_R_MIN, REGEN_R_MAX);
     rAlphaText[i] = ALPHA_TEXT_JE_FARBE[i % 3];
     rWartet[i] = Math.random() * 3.5;
   }
