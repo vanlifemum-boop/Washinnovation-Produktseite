@@ -1,0 +1,12 @@
+# Vorschau-Betrieb: Die Seite ist erreichbar, soll aber noch nicht in Suchmaschinen
+# auftauchen — Impressum, Kontaktdaten und Preise sind noch Platzhalter.
+#
+# Zum Freigeben: diese Datei durch die Fassung unten ersetzen und in
+# src/seite.config.ts VORSCHAU auf false setzen.
+
+User-agent: *
+Disallow: /
+
+# --- Fassung für den Livegang ---
+# User-agent: *
+# Allow: /

@@ -4,6 +4,7 @@ import {
   AKTIVE_SPRACHEN, SPRACH_NAMEN, STANDARD_SPRACHE, uebersetzer, pfad, datei,
   type Sprache,
 } from "../i18n/ui";
+import { VORSCHAU } from "../seite.config";
 
 interface Props {
   sprache: Sprache;
@@ -67,6 +68,10 @@ function istAktiv(ziel: string) {
     <meta name="description" content={beschreibungText} />
     <link rel="canonical" href={kanonisch} />
 
+    {/* Solange Impressum, Kontaktdaten und Preise Platzhalter sind, soll die Seite
+        nicht in Suchmaschinen auftauchen. Schalter: src/seite.config.ts */}
+    {VORSCHAU && <meta name="robots" content="noindex, nofollow" />}
+
     {sprachZiele.map((z) => (
       <link rel="alternate" hreflang={z.sprache} href={new URL(z.url, seite).toString()} />
     ))}
@@ -85,6 +90,12 @@ function istAktiv(ziel: string) {
 
   <body>
     <a class="sprunglink" href="#inhalt">{t("nav.zum-inhalt")}</a>
+
+    {VORSCHAU && (
+      <div class="vorschau-streifen" role="status">
+        <div class="behaelter">{t("vorschau.hinweis")}</div>
+      </div>
+    )}
 
     <header class="kopf">
       <div class="behaelter">
@@ -153,6 +164,7 @@ function istAktiv(ziel: string) {
             <h4>{t("footer.entdecken")}</h4>
             <ul>
               <li><a href={pfad(sprache, "produkte")}>{t("nav.produkte")}</a></li>
+              <li><a href={pfad(sprache, "wasser")}>{t("nav.wasser")}</a></li>
               <li><a href={pfad(sprache, "journal")}>{t("nav.blog")}</a></li>
               <li><a href={pfad(sprache, "unterwegs")}>{t("nav.unterwegs")}</a></li>
               <li><a href={pfad(sprache, "haendler")}>{t("nav.haendler")}</a></li>

@@ -1,10 +1,8 @@
 {
   "_hinweis": "VORBEREITET, NOCH NICHT AKTIV. Nur die Navigation ist übersetzt; alle übrigen Schlüssel fallen auf Englisch, dann Deutsch zurück. Zum Freischalten: Datei nach dem Muster von de.json vervollständigen, dann 'it' in src/i18n/ui.ts (AKTIVE_SPRACHEN) und in astro.config.mjs (i18n.locales) eintragen.",
-
   "meta.marke": "WashInnovation",
   "meta.claim": "L'acqua sempre con te.",
   "meta.beschreibung": "Sistemi portatili per doccia e lavaggio che risparmiano acqua e funzionano senza corrente né allacciamento. Per vanlife, campeggio, viaggi e luoghi senza acqua corrente.",
-
   "nav.produkte": "Prodotti",
   "nav.1plus1": "1+1",
   "nav.projekte": "Progetti",
@@ -13,11 +11,13 @@
   "nav.blog": "Diario",
   "nav.ueber-uns": "Chi siamo",
   "nav.haendler": "Rivenditori",
+  "nav.wasser": "L’acqua in cifre",
   "nav.spenden": "Regalare",
   "nav.bestellen": "Ordina",
   "nav.kontakt": "Contatti",
   "nav.menue-oeffnen": "Apri il menu",
   "nav.menue-schliessen": "Chiudi il menu",
   "nav.sprache": "Lingua",
-  "nav.zum-inhalt": "Vai al contenuto"
+  "nav.zum-inhalt": "Vai al contenuto",
+  "vorschau.hinweis": "Anteprima — mancano ancora note legali, contatti e prezzi."
 }

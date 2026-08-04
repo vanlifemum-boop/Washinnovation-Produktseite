@@ -80,7 +80,7 @@ ausliefert.
 public/effekte/     Die Wasser-Effekte (reines JS, gehen nicht durchs Bundling)
 public/bilder/      Produktfotos aus dem Katalog, freigestellte Brause, Symbole
 src/i18n/           Übersetzungen und Sprachhilfen
-src/data/           Projekte, Lieferungen, Veranstaltungen (JSON)
+src/data/           Projekte, Lieferungen, Veranstaltungen, Wasserzahlen (JSON)
 src/content/        Produkte und Journalbeiträge (Markdown, je Sprache ein Ordner)
 src/inhalte/        Rechtstexte
 src/components/     Zähler, Produktkarte, Bildfläche
@@ -180,6 +180,47 @@ der Nennung von Name und Logo zugestimmt hat. In `src/data/projekte.json` unter
 `eintraege` ergänzen und `"aktiv": true` setzen — das Schema mit Beispiel steht
 in derselben Datei unter `_schema`. Damit verschwindet automatisch der Hinweis
 „Modell startet demnächst“ von der Seite.
+
+---
+
+## Die Seite „Wasser in Zahlen“ (`/wasser`)
+
+Die Seite begründet mit belegten Zahlen, warum ein Liter ein Thema ist. Sie ist
+im Fuß unter „Entdecken“ verlinkt, von der Startseite und von `/1plus1` — in der
+Hauptnavigation steht sie bewusst nicht, die ist mit sechs Punkten voll.
+
+Alle Zahlen stehen in `src/data/wasserzahlen.json`. **Pflichtfelder sind `quelle`
+und `stand`** — dieselbe Regel wie beim Spendenzähler. Einträge ohne diese beiden
+Felder werden in `wasserzahlen()` stillschweigend übergangen und erscheinen nicht
+auf der Seite. Das Schema mit Beispiel steht in der Datei unter `_schema`.
+
+```jsonc
+// src/data/wasserzahlen.json → "eintraege"
+{
+  "id": "ohne-trinkwasser",
+  "wert": "2,2 Mrd.",              // Text, damit „~70 %“ und „121–125 L“ gleich behandelt werden
+  "gruppe": "welt",                // welt | nutzung | deutschland — bestimmt den Abschnitt
+  "titel":        { "de": "…", "pl": "…", "en": "…" },
+  "erlaeuterung": { "de": "…", "pl": "…", "en": "…" },   // optional
+  "quelle": "WHO/UNICEF Joint Monitoring Programme (JMP)",
+  "stand": "2026-08"
+}
+```
+
+Die Startseite zieht sich zwei einzelne Zahlen über `wasserzahl("<id>")`
+(`ohne-trinkwasser` und `pro-kopf`). Fehlt eine davon, fällt sie dort weg, ohne
+den Abschnitt zu beschädigen.
+
+**Herkunft der Zahlen, ehrlich gesagt:** Sie stammen aus
+`unterlagen/wasserstatistik_bericht.pdf`, einer Zusammenstellung — nicht aus einer
+eigenen Auswertung der Primärquellen. Deshalb trägt jede Zahl Quelle und Stand,
+und deshalb steht dieser Vorbehalt auch sichtbar auf der Seite selbst. **Vor
+Presse- oder Kampagnenverwendung gegen die dann aktuelle Fassung von JMP,
+UN-Weltwasserbericht und Destatis gegenprüfen.**
+
+Zwei Regeln für neue Texte auf dieser Seite: keine Zahl ohne Beleg, und keine
+Zahl als Vorwurf formuliert. Nicht „wir verschwenden“, sondern „wir haben viel —
+und können klug damit umgehen“.
 
 ---
 

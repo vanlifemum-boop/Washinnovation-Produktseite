@@ -8,6 +8,7 @@
 import projekteDatei from "./projekte.json";
 import lieferungenDatei from "./lieferungen.json";
 import eventsDatei from "./events.json";
+import wasserDatei from "./wasserzahlen.json";
 import type { Sprache } from "../i18n/ui";
 
 export type MehrsprachigerText = Partial<Record<Sprache, string>>;
@@ -46,6 +47,30 @@ export interface Veranstaltung {
   verkauft: number | null;
   gespendet: number | null;
   text: MehrsprachigerText;
+}
+
+/**
+ * Eine belegte Zahl für die Seite /wasser.
+ *
+ * `quelle` und `stand` sind Pflichtfelder — dieselbe Regel wie beim
+ * Spendenzähler: ohne Beleg kommt keine Zahl auf die Seite. Deshalb sind sie
+ * hier nicht optional, und `wasserzahlen()` wirft Einträge weg, denen sie fehlen.
+ */
+export interface Wasserzahl {
+  id: string;
+  wert: string;
+  gruppe: "welt" | "nutzung" | "deutschland";
+  titel: MehrsprachigerText;
+  erlaeuterung?: MehrsprachigerText;
+  quelle: string;
+  stand: string;
+}
+
+export interface Wasserquelle {
+  id: string;
+  name: string;
+  beschreibung: MehrsprachigerText;
+  url?: string;
 }
 
 export const projekte = (projekteDatei.eintraege ?? []) as Projekt[];
@@ -97,6 +122,36 @@ export function vergangeneVeranstaltungen(): Veranstaltung[] {
   return veranstaltungen
     .filter((v) => (v.datumBis ?? v.datum) < heute)
     .sort((a, b) => b.datum.localeCompare(a.datum));
+}
+
+/**
+ * Zahlen einer Gruppe, in der Reihenfolge der Datei.
+ *
+ * Einträge ohne Quelle oder ohne Stand werden stillschweigend übergangen —
+ * lieber eine Kachel weniger als eine Zahl ohne Beleg.
+ */
+export function wasserzahlen(gruppe: Wasserzahl["gruppe"]): Wasserzahl[] {
+  return ((wasserDatei.eintraege ?? []) as Wasserzahl[]).filter(
+    (z) => z.gruppe === gruppe && Boolean(z.quelle) && Boolean(z.stand),
+  );
+}
+
+/** Die Quellenangaben für den Nachweis am Fuß der Seite. */
+export function wasserquellen(): Wasserquelle[] {
+  return (wasserDatei.quellen ?? []) as Wasserquelle[];
+}
+
+/** Eine einzelne Zahl, etwa für die Startseite. Fehlt sie, kommt undefined zurück. */
+export function wasserzahl(id: string): Wasserzahl | undefined {
+  return ((wasserDatei.eintraege ?? []) as Wasserzahl[]).find(
+    (z) => z.id === id && Boolean(z.quelle) && Boolean(z.stand),
+  );
+}
+
+/** „2026-08" → „08/2026". Der Stand steht neben jeder Zahl. */
+export function standLesbar(stand: string): string {
+  const [jahr, monat] = stand.split("-");
+  return monat ? `${monat}/${jahr}` : stand;
 }
 
 /** Text in der gewünschten Sprache, sonst Englisch, sonst Deutsch, sonst leer. */

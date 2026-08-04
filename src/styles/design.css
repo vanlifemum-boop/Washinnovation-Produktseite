@@ -161,6 +161,19 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 
 .knopfreihe { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 1.4rem; }
 
+/* ---- Vorschau-Streifen (nur solange VORSCHAU in src/seite.config.ts gilt) ---- */
+.vorschau-streifen {
+  background: #ffe9b8;
+  color: #6b4400;
+  font-size: 0.88rem;
+  font-weight: 600;
+  padding: 9px 0;
+  text-align: center;
+  border-bottom: 1px solid #e6c983;
+  position: relative;
+  z-index: 110; /* über der Tropfen-Ebene, sonst wird der Hinweis überdeckt */
+}
+
 /* ============================== Navigation =============================== */
 
 .kopf {
@@ -692,3 +705,57 @@ figure { margin: 0; }
   font-size: 1.1rem;
 }
 .prosa a { color: var(--blau); }
+
+/* ============================ Wasserzahlen =============================== */
+
+/* Eine Kachel je belegter Zahl. Die Quellenzeile gehört zur Kachel, nicht in
+   eine Fußnote — eine Zahl ohne sichtbaren Beleg soll es hier nicht geben. */
+.zahlkarte { display: flex; flex-direction: column; }
+.zahlkarte .zahl {
+  font-family: var(--schrift-display);
+  font-weight: 800;
+  font-size: clamp(2.4rem, 6vw, 3.4rem);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  color: var(--blau);
+  margin-bottom: 0.25em;
+}
+.sek--tief .zahlkarte .zahl { color: var(--blau-hell); }
+.zahlkarte h3 { font-size: 1.02rem; line-height: 1.35; }
+.zahlkarte .beleg {
+  margin-top: auto;
+  padding-top: 14px;
+  font-size: 0.78rem;
+  line-height: 1.45;
+  color: var(--text-leise);
+}
+.sek--tief .zahlkarte .beleg { color: var(--text-invers-leise); }
+
+/* Anteile am Verbrauch — der Balken ist reine Dekoration der Zahl daneben
+   und deshalb aus dem Vorlesefluss genommen. */
+.anteil { margin-bottom: 22px; }
+.anteil:last-child { margin-bottom: 0; }
+.anteil-kopf { display: flex; justify-content: space-between; gap: 16px; align-items: baseline; }
+.anteil-kopf strong { font-size: 1.05rem; }
+.anteil-kopf span { font-weight: 800; color: var(--blau); }
+.sek--tief .anteil-kopf span { color: var(--blau-hell); }
+.anteil-balken {
+  height: 10px;
+  margin: 8px 0 6px;
+  border-radius: 999px;
+  background: rgba(15, 111, 196, 0.14);
+  overflow: hidden;
+}
+.sek--tief .anteil-balken { background: rgba(234, 244, 251, 0.16); }
+.anteil-balken i {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--blau), var(--blau-hell));
+}
+
+/* Quellenverzeichnis */
+.quellenliste { display: grid; gap: 18px; }
+.quellenliste li { list-style: none; }
+.quellenliste .name { font-weight: 700; display: block; }
+.quellenliste p { margin: 0.2em 0 0; font-size: 0.94rem; }

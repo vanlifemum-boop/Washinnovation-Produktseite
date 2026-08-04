@@ -5,6 +5,7 @@ import ProduktKarte from "../../components/ProduktKarte.astro";
 import Zaehler from "../../components/Zaehler.astro";
 import Bildflaeche from "../../components/Bildflaeche.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, datei, type Sprache } from "../../i18n/ui";
+import { wasserzahl, standLesbar, text } from "../../data/daten";
 
 export function getStaticPaths() {
   return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
@@ -12,6 +13,12 @@ export function getStaticPaths() {
 
 const sprache = Astro.params.lang as Sprache;
 const t = uebersetzer(sprache);
+
+// Zwei belegte Zahlen statt allgemeiner Sätze. Fehlt eine in wasserzahlen.json,
+// fällt sie hier stillschweigend weg — der Abschnitt bleibt trotzdem heil.
+const startZahlen = ["ohne-trinkwasser", "pro-kopf"]
+  .map((id) => wasserzahl(id))
+  .filter((z) => z !== undefined);
 
 const alle = await getCollection("produkte");
 const produkte = alle
@@ -77,6 +84,23 @@ const produkte = alle
           <h3>{t("start.problem.punkt3.titel")}</h3>
           <p class="leise">{t("start.problem.punkt3.text")}</p>
         </div>
+      </div>
+
+      {startZahlen.length > 0 && (
+        <div class="raster raster--2" style="margin-top:clamp(28px,4vw,44px)">
+          {startZahlen.map((z) => (
+            <div class="karte zahlkarte" data-reveal>
+              <p class="zahl">{z.wert}</p>
+              <h3>{text(z.titel, sprache)}</h3>
+              {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
+              <p class="beleg">{z.quelle} · {t("wasser.stand")} {standLesbar(z.stand)}</p>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <div class="knopfreihe" data-reveal>
+        <a class="btn btn--rand" href={pfad(sprache, "wasser")}>{t("start.problem.zahlen.link")}</a>
       </div>
     </div>
   </section>

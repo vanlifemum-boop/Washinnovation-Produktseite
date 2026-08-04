@@ -1,0 +1,147 @@
+---
+import Basis from "../../layouts/Basis.astro";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+import {
+  wasserzahlen, wasserquellen, standLesbar, text, type Wasserzahl,
+} from "../../data/daten";
+
+export function getStaticPaths() {
+  return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
+}
+
+const sprache = Astro.params.lang as Sprache;
+const t = uebersetzer(sprache);
+
+const welt = wasserzahlen("welt");
+const nutzung = wasserzahlen("nutzung");
+const deutschland = wasserzahlen("deutschland");
+const quellen = wasserquellen();
+
+/** Beleg unter jeder Zahl: „Quelle, Stand 08/2026". */
+function beleg(z: Wasserzahl) {
+  return `${z.quelle} · ${t("wasser.stand")} ${standLesbar(z.stand)}`;
+}
+
+/**
+ * Balkenbreite aus dem Wert. Die Anteile sind gerundet und ergeben in Summe
+ * etwas mehr als 100 % — der Balken zeigt deshalb das Verhältnis, nicht eine
+ * Aufteilung eines Ganzen. Steht so auch als Hinweis auf der Seite.
+ */
+function anteil(z: Wasserzahl) {
+  const zahl = Number.parseFloat(z.wert.replace(/[^0-9.,]/g, "").replace(",", "."));
+  return Number.isFinite(zahl) ? Math.min(100, zahl) : 0;
+}
+---
+
+<Basis
+  sprache={sprache}
+  titel={t("wasser.titel")}
+  beschreibung={t("wasser.untertitel")}
+  seitenpfad="wasser"
+>
+  <!-- ============================ Weltweit ============================ -->
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="sek-kopf schmal">
+        <p class="augenbraue" data-reveal>{t("wasser.welt.augenbraue")}</p>
+        <h2 class="gross" data-reveal>{t("wasser.welt.titel")}</h2>
+        <p class="lead" data-reveal>{t("wasser.welt.text")}</p>
+      </div>
+      <div class="raster raster--3">
+        {welt.map((z) => (
+          <div class="karte zahlkarte" data-reveal>
+            <p class="zahl">{z.wert}</p>
+            <h3>{text(z.titel, sprache)}</h3>
+            {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
+            <p class="beleg">{beleg(z)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ Nutzung ============================= -->
+  <section class="sek sek--tief">
+    <div class="behaelter">
+      <div class="sek-kopf schmal">
+        <h2 class="gross" data-reveal>{t("wasser.nutzung.titel")}</h2>
+        <p class="lead" data-reveal>{t("wasser.nutzung.text")}</p>
+      </div>
+      <div class="behaelter schmal" style="padding:0">
+        {nutzung.map((z) => (
+          <div class="anteil" data-reveal>
+            <div class="anteil-kopf">
+              <strong>{text(z.titel, sprache)}</strong>
+              <span>{z.wert}</span>
+            </div>
+            <div class="anteil-balken" aria-hidden="true">
+              <i style={`width:${anteil(z)}%`}></i>
+            </div>
+            {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
+            <p class="beleg">{beleg(z)}</p>
+          </div>
+        ))}
+        <p class="leise" data-reveal style="margin-top:22px">{t("wasser.nutzung.rundung")}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- =========================== Deutschland ========================== -->
+  <section class="sek sek--weiss">
+    <div class="behaelter">
+      <div class="sek-kopf schmal">
+        <h2 class="gross" data-reveal>{t("wasser.deutschland.titel")}</h2>
+        <p class="lead" data-reveal>{t("wasser.deutschland.text")}</p>
+      </div>
+      <div class="raster raster--3">
+        {deutschland.map((z) => (
+          <div class="karte zahlkarte" data-reveal>
+            <p class="zahl">{z.wert}</p>
+            <h3>{text(z.titel, sprache)}</h3>
+            {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
+            <p class="beleg">{beleg(z)}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================== Bogen ============================= -->
+  <section class="sek sek--eis">
+    <div class="behaelter schmal">
+      <div class="sek-kopf">
+        <h2 class="gross" data-reveal>{t("wasser.bogen.titel")}</h2>
+      </div>
+      <p data-reveal>{t("wasser.bogen.text1")}</p>
+      <p data-reveal>{t("wasser.bogen.text2")}</p>
+      <div class="knopfreihe" data-reveal>
+        <a class="btn" href={pfad(sprache, "1plus1")}>{t("nav.1plus1")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "produkte")}>{t("start.produkte.alle")}</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================= Quellen ============================ -->
+  <section class="sek sek--schaum">
+    <div class="behaelter schmal">
+      <div class="sek-kopf">
+        <h2 data-reveal>{t("wasser.quellen.titel")}</h2>
+        <p class="lead" data-reveal>{t("wasser.quellen.text")}</p>
+      </div>
+      <ul class="quellenliste" data-reveal>
+        {quellen.map((q) => (
+          <li>
+            <span class="name">{q.name}</span>
+            <p class="leise">{text(q.beschreibung, sprache)}</p>
+            {q.url && (
+              <p><a href={q.url} rel="noopener noreferrer" target="_blank">{q.url}</a></p>
+            )}
+          </li>
+        ))}
+      </ul>
+      <div class="hinweis" data-reveal style="margin-top:26px">
+        <p>{t("wasser.quellen.hinweis")}</p>
+      </div>
+    </div>
+  </section>
+</Basis>
