@@ -1,14 +1,17 @@
 name: Website auf GitHub Pages veröffentlichen
 
-# Baut die Astro-Seite und veröffentlicht sie. Läuft auf dem Standard-Branch und
-# auf dem Arbeitsbranch, damit das Ergebnis schon vor dem Merge sichtbar ist.
+# Baut die Astro-Seite und veröffentlicht sie.
 # `configure-pages` mit enablement:true schaltet Pages beim ersten Lauf selbst ein.
+#
+# Nur auf main: Die Umgebung `github-pages` lässt ausschließlich den
+# Standard-Branch deployen. Ein Lauf auf einem Arbeitsbranch scheitert also
+# ohnehin — und würde durch die Nebenläufigkeitsgruppe unten sogar den echten
+# Lauf auf main abbrechen. Genau das ist zweimal passiert.
 
 on:
   push:
     branches:
       - main
-      - claude/washinnovation-website-plan-fgetso
   workflow_dispatch:
 
 permissions:
