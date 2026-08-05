@@ -33,23 +33,16 @@ const produkte = alle
       <div class="hero-klebrig">
         <canvas></canvas>
 
-        {/* Der Hero zeigt das Funktionsprinzip, nicht nur ein Produktfoto:
-            Der Wasserbehälter hängt höher als der Duschkopf, den Rest macht die
-            Schwerkraft. Genau so steht es im Katalog, und genau so sieht das
-            Foto zum Pocket Bottle Shower Mini aus.
+        {/* Der Schlauch kommt von oben aus dem Bild: Der Wasserbehälter hängt
+            höher als der Duschkopf, den Rest macht die Schwerkraft. Ein Bild
+            des Beutels steht hier bewusst nicht — die Brause ist 375 px hoch,
+            ein Beutel darüber 321, und ein Hero von 100vh abzüglich Navigation
+            hat dafür keinen Platz. Der Beutel gehört in einen eigenen
+            Abschnitt, wo er groß genug ist, um etwas zu erklären.
 
             Alle Anschlusspunkte stehen als Prozent der Bildmaße im Markup —
             schlauch.js und tropfen.js lesen sie von dort, statt Zahlen im
             Skript zu verstecken. */}
-        <img
-          class="hero-flasche"
-          src={datei("bilder/produkte/flasche-aufhaengung.png")}
-          alt=""
-          aria-hidden="true"
-          data-schlauch-start
-          data-auslass="46,99.5"
-        />
-
         {/* Die Handpumpe: zwei Ebenen desselben Bildes (eine Datei, ein Abruf).
             Der Körper ist unbeweglich und trägt die Düse; die Tropfen-Ebene
             lässt die Tropfen genau dort austreten. Der blaue Druckkopf liegt
@@ -64,7 +57,7 @@ const produkte = alle
             src={datei("bilder/produkte/handy-shower-foto.png")}
             alt="Handy Shower"
             data-tropfen-quelle
-            data-duese="40.6,98"
+            data-duese="58.2,98.6"
             fetchpriority="high"
           />
           <img
@@ -74,7 +67,7 @@ const produkte = alle
             aria-hidden="true"
             data-pumpen-kopf
             data-schlauch-ende
-            data-einlass="27.3,14"
+            data-einlass="17.1,13.7"
           />
         </div>
 

@@ -57,26 +57,36 @@ const istHintergrund = NACH_FARBE
   : (i) => hell(i) >= SCHWELLE;
 
 const hintergrund = new Uint8Array(b * h);
-const stapel = [];
 
-// Startpunkte: alle Randpixel
-for (let x = 0; x < b; x++) {
-  stapel.push(x, (h - 1) * b + x);
-}
-for (let y = 0; y < h; y++) {
-  stapel.push(y * b, y * b + b - 1);
-}
+if (NACH_FARBE) {
+  /* Im Farbmodus wird jedes passende Pixel entfernt, auch eingeschlossene.
+     Die Flutfüllung gibt es nur, um im Helligkeitsmodus einen weißen
+     Produktkörper zu schützen — bei einer eigenen Hintergrundfarbe braucht es
+     diesen Schutz nicht, und sie richtet sogar Schaden an: Löcher *im* Produkt
+     sind vom Rand aus nicht erreichbar und blieben als farbige Flecken stehen.
+     Beim hängenden Wasserbeutel ist das der Spalt zwischen den beiden Gurten. */
+  for (let i = 0; i < b * h; i++) if (istHintergrund(i)) hintergrund[i] = 1;
+} else {
+  const stapel = [];
+  // Startpunkte: alle Randpixel
+  for (let x = 0; x < b; x++) {
+    stapel.push(x, (h - 1) * b + x);
+  }
+  for (let y = 0; y < h; y++) {
+    stapel.push(y * b, y * b + b - 1);
+  }
 
-while (stapel.length) {
-  const i = stapel.pop();
-  if (hintergrund[i]) continue;
-  if (!istHintergrund(i)) continue;
-  hintergrund[i] = 1;
-  const x = i % b, y = (i / b) | 0;
-  if (x > 0) stapel.push(i - 1);
-  if (x < b - 1) stapel.push(i + 1);
-  if (y > 0) stapel.push(i - b);
-  if (y < h - 1) stapel.push(i + b);
+  while (stapel.length) {
+    const i = stapel.pop();
+    if (hintergrund[i]) continue;
+    if (!istHintergrund(i)) continue;
+    hintergrund[i] = 1;
+    const x = i % b, y = (i / b) | 0;
+    if (x > 0) stapel.push(i - 1);
+    if (x < b - 1) stapel.push(i + 1);
+    if (y > 0) stapel.push(i - b);
+    if (y < h - 1) stapel.push(i + b);
+  }
 }
 
 // Kanten weich machen: Hintergrundpixel mit Produktnachbarn bekommen Teilalpha,

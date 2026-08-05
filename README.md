@@ -98,10 +98,10 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 | Datei | Was sie macht |
 |---|---|
 | `public/effekte/tropfen.js` | Fixe Ebene über der ganzen Seite (Three.js, lokal gevendort) mit zwei Gruppen echter Tropfenformen: **schwebende** Tropfen folgen der Maus und bekommen beim Scrollen Schub, **fallende** treten an der Düse der Brause im Hero aus und regnen über die Seite. Alles in **Zeitlupe** — der Regen braucht rund fünf Sekunden über die Bildhöhe. Beide Gruppen **werden über Text durchsichtig**, damit alles lesbar bleibt. |
-| `public/effekte/pumpe.js` | Der blaue Druckkopf im Hero sinkt beim Runterscrollen ein und kommt beim Hochscrollen zurück — du pumpst mit dem Mausrad. Beim Drücken spritzt es, sonst tropft es langsam weiter. |
+| `public/effekte/pumpe.js` | Der blaue Druckkopf im Hero sinkt beim Runterscrollen ein und kommt beim Hochscrollen zurück — du pumpst mit dem Mausrad. Zusätzlich pumpt er alle 4,5 Sekunden von selbst, damit man es auch im Stillstand sieht. Beim Drücken spritzt es, sonst tropft es langsam weiter. |
 | `public/effekte/hero-szene.js` | Zeichnet den Hero prozedural: ein Tropfen fällt, trifft auf, wirft Krone und Ringe — gesteuert allein vom Scroll-Fortschritt. |
 | `public/effekte/ripple.js` | Wasserwellen auf Bildflächen (`data-ripple`). Gedämpftes Höhenfeld auf Canvas 2D, rechnet auf 220 px und wird hochskaliert. |
-| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch von der aufgehängten Flasche zur Brause. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
+| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch, der von oben ins Bild kommt und an der Brause endet. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
 | `public/effekte/seite.js` | Menü, Reveals, Parallax (`data-parallax`), hochzählender Zähler. |
 
 Alle Effekte schalten sich ab bei `prefers-reduced-motion: reduce`, bei
@@ -123,31 +123,44 @@ Der Hero zeigt das Funktionsprinzip, nicht nur ein Produktfoto. Aus dem Katalog
 > „Schwerkraftbetrieben: Der Wasserbehälter wird einfach höher aufgehängt als der
 > Duschkopf — ganz ohne Pumpe und Strom."
 
-Genau das steht im Hero: Flasche oben, Schlauch hinunter, Brause tiefer, Tropfen
-fallen über die ganze Seite. Drei Bausteine, deren Anschlusspunkte **im Markup**
-als Prozent der Bildmaße stehen — nicht als Zahlen in den Skripten:
+Genau das steht im Hero: Der Schlauch kommt von oben ins Bild — der Behälter
+hängt also höher, als man sieht —, führt zur Brause, und von deren Düse fallen
+die Tropfen über die ganze Seite. Die Anschlusspunkte stehen **im Markup** als
+Prozent der Bildmaße, nicht als Zahlen in den Skripten:
 
 | Element | Attribut | Wert | Wer liest es |
 |---|---|---|---|
-| `.hero-flasche` | `data-auslass` | `46,99.5` | `schlauch.js` (Anfang) |
-| `.hero-produkt__kopf` | `data-einlass` | `27.3,14` | `schlauch.js` (Ende) |
-| `.hero-produkt__koerper` | `data-duese` | `40.6,98` | `tropfen.js` (Austritt) |
+| `.hero-produkt__kopf` | `data-einlass` | `17.1,13.7` | `schlauch.js` (Ende) |
+| `.hero-produkt__koerper` | `data-duese` | `58.2,98.6` | `tropfen.js` (Austritt) |
 
-Der Schlauch endet **am Einlass der Brause**, nicht am unteren Seitenrand: Beim
-echten Produkt führt er von der Flasche zum Duschkopf, und das Wasser verlässt
-ihn erst an der Düse.
+Ein `[data-schlauch-start]` mit `data-auslass` ist **optional**: Gibt es eins,
+beginnt der Schlauch dort; fehlt es, kommt er von oberhalb des Sichtfelds.
 
-Warum das Ende am **Kopf** hängt und die Düse am **Körper**: Der Kopf sinkt beim
-Scrollen ein, der Körper nicht. So wandert der Schlauchanschluss beim Pumpen mit
+**Warum kein Behälterbild im Hero.** Es war eines drin, zweimal — erst die
+Flasche des Pocket Bottle Shower Mini, dann der 4-Liter-Beutel des Pocket Bath
+Plus. Beide sahen schlecht aus, und zwar aus einem messbaren Grund: Die Brause
+ist bei 112 px Breite **375 px hoch**, ein Beutel darüber wäre 321 px hoch, und
+ein Hero von 100 vh abzüglich Navigation hat rund 830 px. Damit der Behälter
+sichtbar *über* dem Schlaucheinlass hängt, bleibt kein Platz — auf dem Handy
+schrumpfte er auf einen schwarzen Splitter. Der Behälter gehört in einen eigenen
+Abschnitt „So funktioniert's", wo er groß genug ist, um etwas zu erklären. Die
+Zuschnitte dafür sind in `werkzeuge/README.md` als Einzeiler dokumentiert.
+
+Warum das Schlauchende am **Kopf** hängt und die Düse am **Körper**: Der Kopf
+sinkt beim Pumpen ein, der Körper nicht. So wandert der Schlauchanschluss mit
 (der Schlauch zuckt leicht), während die Düse ruhig stehen bleibt — genau wie bei
 einer echten Handpumpe.
 
-Das Bild der Flasche stammt aus dem Katalogfoto zum Pocket Bottle Shower Mini,
-zugeschnitten auf x 320–525 / y 0–518 und freigestellt (siehe `werkzeuge/`).
+**Das Produktfoto ist beschnitten, und das ist wichtig.** Vorher war
+`handy-shower-foto.png` 451 × 501 px groß, das sichtbare Produkt steckte aber nur
+in x 104–237 — **keine 30 % der Bildbreite**. Von `width: 170px` blieben also
+50 px Brause übrig, und niemand verstand, warum sie so klein wirkt. Seit dem
+Beschnitt auf **146 × 489** heißt 112 px auch 112 px. Wer das Foto austauscht,
+muss es genauso eng beschneiden — sonst kehrt der Fehler zurück.
 
-**Zur Stapelreihenfolge, damit es niemand erneut versucht:** Flasche und Brause
-lassen sich von ihrem CSS aus **nicht** über die Tropfen-Ebene heben. Sie stecken
-in `.hero-klebrig`, und `position: sticky` erzeugt immer einen eigenen
+**Zur Stapelreihenfolge, damit es niemand erneut versucht:** Die Brause lässt
+sich von ihrem CSS aus **nicht** über die Tropfen-Ebene heben. Sie steckt in
+`.hero-klebrig`, und `position: sticky` erzeugt immer einen eigenen
 Stapelkontext — ein `z-index` dort wirkt nur innerhalb des Heros. Die Tropfen
 ziehen deshalb vor dem Produkt vorbei. Damit sie es nicht zudecken, staffelt
 `tropfen.js` die Tropfengröße nach Bildschirmbreite: Die Welt ist immer gleich
@@ -169,6 +182,11 @@ blaue Kopf und beginnt der weiße Körper.
 - `.hero-produkt__kopf` — trägt `data-pumpen-kopf`, wird über die
   CSS-Variable `--druck` nach unten geschoben. Der Kopf ist an der Naht breiter
   als der Körper, deshalb bleibt sie in jeder Stellung gedeckt.
+
+Der Druck kommt aus **zwei** Quellen — dem Scroll-Fortschritt und einem eigenen
+Takt alle 4,5 Sekunden. Sie werden über `Math.max` verrechnet, nicht addiert:
+Addiert schöbe ein Eigenstoß während des Scrollens den Kopf über den vollen Weg
+hinaus, und er stünde tiefer, als das Bild es hergibt.
 
 `pumpe.js` veröffentlicht `window.WI_PUMPE = { druck, stoss }`. `tropfen.js`
 liest daraus nur `stoss` und prüft den Wert, bevor er verrechnet wird — er

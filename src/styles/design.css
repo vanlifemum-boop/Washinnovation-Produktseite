@@ -280,6 +280,16 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
   .nav-links a { padding: 11px 12px; }
 }
 
+/* Auf sehr schmalen Geräten passten Marke, Sprachschalter und Menüknopf nicht
+   mehr nebeneinander — bei 320 px ragte der Kopf 29 px über den rechten Rand,
+   und damit ließ sich die ganze Seite seitlich schieben. */
+@media (max-width: 420px) {
+  .kopf .behaelter { gap: 10px; padding-inline: 16px; }
+  .marke { font-size: 1.02rem; gap: 7px; }
+  .sprache-schalter { padding: 6px 10px; }
+  .nav-schalter { padding: 7px 9px; }
+}
+
 /* ================================= Hero ================================== */
 
 .hero {
@@ -315,7 +325,7 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 /* Die Handpumpe im Hero — Quelle des Tropfenregens (siehe tropfen.js).
    Zwei Ebenen desselben Bildes: Der Körper liegt im Fluss und gibt dem
    Umschlag seine Höhe, der blaue Druckkopf liegt absolut darüber und wird von
-   pumpe.js über --druck nach unten geschoben. Getrennt wird bei 28,3 % der
+   pumpe.js über --druck nach unten geschoben. Getrennt wird bei 28,4 % der
    Bildhöhe — dort endet im Foto der blaue Kopf und beginnt der weiße Körper.
    Der Kopf ist an der Naht breiter als der Körper, deshalb bleibt sie beim
    Einsinken in jeder Stellung gedeckt. */
@@ -329,22 +339,15 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
    des Heros. Die Tropfen ziehen deshalb vor dem Produkt vorbei. Das ist in
    Ordnung, solange sie klein genug sind; dafür sorgt die Größenstaffelung nach
    Bildschirmbreite in tropfen.js. */
-.hero-flasche {
-  position: absolute;
-  right: clamp(30px, 10vw, 168px);
-  top: -3%;
-  width: clamp(64px, 8vw, 104px);
-  z-index: 3;
-  pointer-events: none;
-  filter: drop-shadow(0 18px 30px rgba(3, 25, 44, 0.5));
-}
-
+/* Die Breite ist jetzt wirklich die Breite der Brause: Das Foto war 451 px
+   breit, das Produkt darin nur 134 px — von jeder CSS-Breite blieben keine
+   30 % übrig. Seit dem Beschnitt auf 146 × 489 heißt 112 px auch 112 px. */
 .hero-produkt {
   position: absolute;
-  right: clamp(16px, 9vw, 150px);
-  top: 40%;
+  right: clamp(12px, 4vw, 52px);
+  top: 34%;
   transform: translateY(-50%);
-  width: clamp(80px, 12vw, 170px);
+  width: clamp(74px, 9vw, 112px);
   z-index: 3;
   pointer-events: none;
   filter: drop-shadow(0 26px 40px rgba(3, 25, 44, 0.55));
@@ -352,16 +355,16 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .hero-produkt__koerper {
   display: block;
   width: 100%;
-  clip-path: inset(28.3% 0 0 0);
+  clip-path: inset(28.4% 0 0 0);
 }
 .hero-produkt__kopf {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
-  /* 71,5 statt 71,7 — die 0,2 % Überlappung verhindert eine Haarlinie
+  /* 71,4 statt 71,6 — die 0,2 % Überlappung verhindert eine Haarlinie
      zwischen den beiden Ebenen bei krummen Zoomstufen. */
-  clip-path: inset(0 0 71.5% 0);
+  clip-path: inset(0 0 71.4% 0);
   transform: translateY(var(--druck, 0%));
   will-change: transform;
 }
@@ -371,25 +374,19 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
      Brause steht bei gut einem Drittel, sodass das Wasser fast über den ganzen
      Bildschirm fallen kann. Beide schmal am rechten Rand, damit sie der
      Überschrift nicht ins Gehege kommen. */
-  .hero-flasche {
-    right: 8px;
-    top: -2%;
-    width: clamp(50px, 16vw, 64px);
-    opacity: 0.94;
-  }
   .hero-produkt {
-    top: 34%;
+    top: 32%;
     bottom: auto;
-    right: 2px;
-    transform: none;
-    width: clamp(64px, 20vw, 82px);
-    opacity: 0.92;
+    right: 4px;
+    transform: translateY(-50%);
+    width: clamp(56px, 17vw, 74px);
+    opacity: 0.94;
   }
   /* Der Aufbau bekommt eine eigene Spalte am rechten Rand. Ohne das läuft der
      Fließtext darunter durch — und anders als bei den Tropfen gibt es hier
      keine Ausblendung über Text, das Bild deckt ihn schlicht zu. */
   .hero-inhalt .behaelter {
-    padding-right: 96px;
+    padding-right: 92px;
   }
 }
 

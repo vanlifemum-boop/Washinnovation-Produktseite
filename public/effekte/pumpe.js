@@ -31,14 +31,33 @@
   var buehne = document.querySelector("#hero") || document.querySelector(".hero-buehne");
   if (!buehne) return;
 
-  // Wie weit der Kopf maximal einsinkt, in Prozent der Bildhöhe. Bei 230 px
-  // Bildbreite sind das rund 11 px — spürbar, aber nicht comichaft.
+  // Wie weit der Kopf maximal einsinkt, in Prozent der Bildhöhe.
   var HUB = 4.5;
+
+  // Eigener Takt: Alle TAKT Sekunden drückt sich der Kopf von selbst herunter
+  // und kommt wieder hoch. Ohne das sieht das Pumpen nur, wer gerade scrollt.
+  var TAKT = 4.5;
+  var RUNTER = 0.16;   // Anteil des Takts fürs Herunterdrücken
+  var HOCH = 0.42;     // … bis hierhin ist er wieder oben, danach Ruhe
 
   var letzterDruck = 0;
   var letzteZeit = 0;
+  var uhr = 0;         // Sekunden seit dem Start, für den Eigentakt
   var laeuft = false;
   var raf = 0;
+
+  /** Weiches Ein- und Ausfahren statt linear. */
+  function weich(x) {
+    return x * x * (3 - 2 * x);
+  }
+
+  /** Der Druck aus dem Eigentakt, 0…1. */
+  function eigenTakt() {
+    var z = (uhr % TAKT) / TAKT;
+    if (z < RUNTER) return weich(z / RUNTER);
+    if (z < HOCH) return 1 - weich((z - RUNTER) / (HOCH - RUNTER));
+    return 0;
+  }
 
   /** Fortschritt des Heros durch das Bild, 0…1 — dieselbe Rechnung wie in
    *  scroll-cinematic.js, damit sich beide Effekte gleich anfühlen. */
@@ -62,20 +81,27 @@
     // doppelt so kräftig wie ein 60-Hz-Gerät.
     var dt = letzteZeit ? Math.min((jetzt - letzteZeit) / 1000, 0.05) : 0.016;
     letzteZeit = jetzt;
+    uhr += dt;
 
-    var p = fortschritt();
-    var druck = p * p * (3 - 2 * p);          // weiches Ein- und Ausfahren
+    // Zwei Quellen, verrechnet über das Maximum und nicht addiert: Sonst
+    // schöbe ein Eigenstoß während des Scrollens den Kopf über den vollen Weg
+    // hinaus, und er stünde tiefer, als das Bild es hergibt.
+    var druck = Math.max(weich(fortschritt()), eigenTakt());
     kopf.style.setProperty("--druck", (druck * HUB).toFixed(3) + "%");
 
     // Stoß nur beim Runterdrücken. Hochscrollen entlastet die Pumpe, spritzt
-    // aber nicht — genau wie bei einer echten Handpumpe.
+    // aber nicht — genau wie bei einer echten Handpumpe. Weil der Wert aus der
+    // *Zunahme* des Drucks entsteht, spritzt der Eigentakt von allein mit,
+    // ohne dass tropfen.js etwas davon wissen muss.
     var tempo = dt > 0 ? (druck - letzterDruck) / dt : 0;   // Druck je Sekunde
     letzterDruck = druck;
     var neu = tempo > 0 ? Math.min(1, tempo) : 0;
     window.WI_PUMPE.druck = druck;
     window.WI_PUMPE.stoss = Math.max(window.WI_PUMPE.stoss * Math.exp(-5 * dt), neu);
 
-    // Ist der Hero weggescrollt, gibt es nichts mehr zu rechnen
+    // Ist der Hero weggescrollt, gibt es nichts mehr zu rechnen. Der Eigentakt
+    // darf das nicht aushebeln — sonst liefe dauerhaft ein Timer für etwas,
+    // das niemand sieht.
     if (!imBild() && window.WI_PUMPE.stoss < 0.01) laufen(false);
   }
 

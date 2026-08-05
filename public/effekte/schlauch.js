@@ -1,25 +1,32 @@
-/* WashInnovation — Silikonschlauch zwischen Flasche und Brause
+/* WashInnovation — Silikonschlauch zur Brause
  *
- * Verbindet den Auslass der aufgehängten Flasche mit dem Anschlussstück der
- * Duschbrause — also genau die Strecke, die beim echten Produkt der Schlauch
- * zurücklegt. Das Wasser läuft von oben nach unten, angetrieben allein von der
- * Schwerkraft; darunter kommen die Tropfen aus der Düse (tropfen.js).
+ * Läuft von oben ins Bild herein bis zum Anschlussstück der Duschbrause — also
+ * genau die Strecke, die beim echten Produkt der Schlauch zurücklegt. Das
+ * Wasser kommt von einem Behälter, der höher hängt als der Duschkopf, und läuft
+ * allein durch die Schwerkraft; darunter treten die Tropfen aus der Düse aus
+ * (tropfen.js).
  *
  * Umgesetzt als fixes SVG mit drei übereinanderliegenden Linien: eine breite
  * milchige für den Schlauchkörper, eine schmale helle als Glanzkante und eine
  * dunklere für die Schattenseite. Das ergibt die Silikon-Anmutung, ohne ein
  * einziges Bild zu laden.
  *
- * Die beiden Enden stehen im Markup, nicht hier:
- *   [data-schlauch-start] + data-auslass="x%,y%"   — an der Flasche
- *   [data-schlauch-ende]  + data-einlass="x%,y%"   — an der Brause
+ * Die Enden stehen im Markup, nicht hier:
+ *   [data-schlauch-ende]  + data-einlass="x%,y%"   — an der Brause, Pflicht
+ *   [data-schlauch-start] + data-auslass="x%,y%"   — am Behälter, optional
+ *
+ * Fehlt der Behälter, beginnt der Schlauch oberhalb des Sichtfelds. Das ist
+ * kein Notbehelf, sondern der Normalfall im Hero: Ein Beutel wäre dort 321 px
+ * hoch, die Brause ist 375 px hoch, und ein Hero von 100vh abzüglich
+ * Navigation hat für beide übereinander keinen Platz.
  *
  * Das Ende sitzt bewusst am Druckkopf und nicht am Körper der Brause: Der Kopf
  * sinkt beim Scrollen ein (pumpe.js), und weil getBoundingClientRect()
  * Transformationen mitrechnet, zuckt der Schlauch beim Pumpen leicht mit.
  *
- * Fehlt eines der beiden Enden, wird nichts gezeichnet. Ein Schlauch, der aus
- * dem Nichts kommt oder ins Leere läuft, ist schlechter als gar keiner.
+ * Fehlt die Brause, wird nichts gezeichnet. Ein Schlauch, der ins Leere läuft,
+ * ist schlechter als gar keiner — auf allen Seiten außer der Startseite gibt es
+ * deshalb keine Schlauch-Ebene.
  *
  * Abschaltung: prefers-reduced-motion lässt den Schlauch stehen, aber ohne das
  * langsame Schwingen — er ist Deko, kein Inhalt.
@@ -29,7 +36,7 @@
 
   var startEl = document.querySelector("[data-schlauch-start]");
   var endeEl = document.querySelector("[data-schlauch-ende]");
-  if (!startEl || !endeEl) return;
+  if (!endeEl) return;   // ohne Brause kein Schlauch
 
   var bewegungOk = window.matchMedia("(prefers-reduced-motion: no-preference)").matches;
 
@@ -37,8 +44,8 @@
   var huelle = document.createElement("div");
   huelle.id = "schlauch-ebene";
   huelle.setAttribute("aria-hidden", "true");
-  // Über der Tropfen-Ebene (30), aber unter Flasche und Brause (32): Der
-  // Schlauch gehört sichtbar zum Aufbau, steckt aber in beiden Bildern.
+  // Über der Tropfen-Ebene (30): Der Schlauch gehört zum Aufbau und soll nicht
+  // hinter jedem vorbeitreibenden Tropfen verschwinden.
   huelle.style.cssText = "position:fixed;inset:0;z-index:31;pointer-events:none;";
 
   var svg = document.createElementNS(NS, "svg");
@@ -79,8 +86,20 @@
   }
 
   function zeichnen() {
-    var a = punkt(startEl, "data-auslass", "50,100");
     var b = punkt(endeEl, "data-einlass", "50,0");
+
+    /* Zur Seite, auf die der Schlauch ausbaucht: Sitzt die Brause am rechten
+       Rand — auf dem Handy sind es 4 px —, muss der Bogen nach innen gehen.
+       Nach außen liefe er aus dem Bild, das SVG schnitte ihn ab, und übrig
+       bliebe ein an die Kante gepresster gerader Strich. */
+    var nachInnen = b && b.x > window.innerWidth * 0.6 ? -1 : 1;
+
+    // Ohne Behälter im Bild kommt der Schlauch von oberhalb des Sichtfelds
+    // herein — der Wasserbehälter hängt dann eben höher, als man sieht. Der
+    // Startpunkt sitzt leicht seitlich über dem Einlass, damit die Kurve einen
+    // Bogen bekommt und nicht als gerader Strich herunterfällt.
+    var a = startEl ? punkt(startEl, "data-auslass", "50,100")
+                    : (b ? { x: b.x + 26 * nachInnen, y: -90 } : null);
     if (!a || !b) {
       koerper.removeAttribute("d");
       schatten.removeAttribute("d");
@@ -95,9 +114,9 @@
     var bauch = Math.max(18, Math.abs(laenge) * 0.22);
     var schwung = Math.sin(zeit * 0.28) * Math.min(9, Math.abs(laenge) * 0.05);
 
-    var x1 = a.x + bauch * 0.5 + schwung;
+    var x1 = a.x + (bauch * 0.5) * nachInnen + schwung;
     var y1 = a.y + laenge * 0.38;
-    var x2 = b.x + bauch * 0.7 - schwung;
+    var x2 = b.x + (bauch * 0.7) * nachInnen - schwung;
     var y2 = a.y + laenge * 0.72;
 
     var pfad = "M " + a.x + " " + a.y +
@@ -114,8 +133,9 @@
   zeichnen();
   window.addEventListener("scroll", zeichnen, { passive: true });
   window.addEventListener("resize", zeichnen);
+  // startEl kann fehlen — dann hängt der Behälter über dem Sichtfeld.
   [startEl, endeEl].forEach(function (el) {
-    if (el.tagName === "IMG" && !el.complete) {
+    if (el && el.tagName === "IMG" && !el.complete) {
       el.addEventListener("load", zeichnen, { once: true });
     }
   });
