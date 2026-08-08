@@ -97,7 +97,7 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 
 | Datei | Was sie macht |
 |---|---|
-| `public/effekte/tropfen.js` | Fixe Ebene über der ganzen Seite (Three.js, lokal gevendort) mit zwei Gruppen echter Tropfenformen: **schwebende** Tropfen folgen der Maus und bekommen beim Scrollen Schub, **fallende** treten an der Düse der Brause im Hero aus und regnen über die Seite. Alles in **Zeitlupe** — der Regen braucht rund fünf Sekunden über die Bildhöhe. Beide Gruppen **werden über Text durchsichtig**, damit alles lesbar bleibt. |
+| `public/effekte/tropfen.js` | Fixe Ebene über der ganzen Seite (Three.js, lokal gevendort) mit zwei Gruppen echter Tropfenformen: **schwebende** Tropfen folgen der Maus und bekommen beim Scrollen Schub, **fallende** treten an der Düse der Brause im Hero aus und regnen über die Seite. Beide nutzen dieselbe Palette von Weiß bis Tiefblau. Alles in **Zeitlupe** — der Regen braucht rund fünf Sekunden über die Bildhöhe. Beide Gruppen **werden über Text durchsichtig**, damit alles lesbar bleibt. |
 | `public/effekte/pumpe.js` | Der blaue Druckkopf im Hero sinkt beim Runterscrollen ein und kommt beim Hochscrollen zurück — du pumpst mit dem Mausrad. Zusätzlich pumpt er alle 4,5 Sekunden von selbst, damit man es auch im Stillstand sieht. Beim Drücken spritzt es, sonst tropft es langsam weiter. |
 | `public/effekte/hero-szene.js` | Zeichnet den Hero prozedural: ein Tropfen fällt, trifft auf, wirft Krone und Ringe — gesteuert allein vom Scroll-Fortschritt. |
 | `public/effekte/ripple.js` | Wasserwellen auf Bildflächen (`data-ripple`). Gedämpftes Höhenfeld auf Canvas 2D, rechnet auf 220 px und wird hochskaliert. |
@@ -107,6 +107,14 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 Alle Effekte schalten sich ab bei `prefers-reduced-motion: reduce`, bei
 verstecktem Tab und außerhalb des Sichtbereichs. Ohne WebGL bleibt die Seite
 still, aber vollständig.
+
+**Farben und Lesbarkeit hängen zusammen.** `FARBEN` reicht von Weiß bis
+Tiefblau, und parallel dazu steht `ALPHA_TEXT_JE_FARBE`: Je dunkler ein Tropfen,
+desto stärker verschwindet er über Text. Wer eine Farbe ergänzt, muss dort einen
+Wert ergänzen — sonst greift für die neue Farbe der Wert einer fremden. Genau
+darum darf der Regen inzwischen die volle Palette nutzen: Die Lesbarkeit hängt an
+der Farbe, nicht an der Gruppe. Nachgemessen über Hero, `/wasser` und
+`/produkte`: Buchstaben ändern sich um höchstens 17 von 255.
 
 **Alles rechnet in Sekunden, nichts je Bild.** Geschwindigkeiten stehen in
 Einheiten pro Sekunde und werden mit `dt` verrechnet, Dämpfungen laufen über

@@ -40,11 +40,11 @@ if (window.matchMedia("(prefers-reduced-motion: no-preference)").matches) {
 function init() {
   // Weiß-Blau: von fast weißem Schaum bis Tiefsee. Bewusst wenig Sättigung —
   // es soll nach Wasser aussehen, nicht nach Murmeln.
-  const FARBEN = ["#ffffff", "#dcefff", "#9ed2f5", "#4aa8e8", "#0f6fc4"];
+  const FARBEN = ["#ffffff", "#dcefff", "#9ed2f5", "#4aa8e8", "#0f6fc4", "#0b568f"];
 
   const schmal = window.innerWidth < 760;
   const ANZAHL = schmal ? 40 : 78;        // schwebende Tropfen inkl. Cursor-Schieber
-  const REGEN_ANZAHL = schmal ? 26 : 55;  // fallende Tropfen
+  const REGEN_ANZAHL = schmal ? 38 : 78;  // fallende Tropfen
   const CURSOR_R = schmal ? 0.85 : 1.4;
   const ALPHA_VOLL = 0.9;
 
@@ -56,14 +56,14 @@ function init() {
      schmalen Geräten fallen sie deshalb kleiner aus. */
   const R_MIN = schmal ? 0.16 : 0.26;
   const R_MAX = schmal ? 0.40 : 0.72;
-  const REGEN_R_MIN = schmal ? 0.08 : 0.12;
-  const REGEN_R_MAX = schmal ? 0.18 : 0.30;
+  const REGEN_R_MIN = schmal ? 0.09 : 0.14;
+  const REGEN_R_MAX = schmal ? 0.20 : 0.34;
 
   /* Restdeckung über Text, je Farbe aus FARBEN — je dunkler das Blau, desto
      stärker verschwindet der Tropfen. Die hellen Tropfen stören auf Text kaum,
      die dunklen sehr; deshalb werden sie ungleich behandelt statt alle über
      einen Kamm geschoren. */
-  const ALPHA_TEXT_JE_FARBE = [0.10, 0.09, 0.06, 0.035, 0.02];
+  const ALPHA_TEXT_JE_FARBE = [0.10, 0.09, 0.06, 0.035, 0.02, 0.02];
 
   /* Sicherheitsrand um jede Textfläche. Damit verblasst ein Tropfen, *bevor* er
      die Buchstaben erreicht, statt mitten über dem Wort auszugehen. */
@@ -159,8 +159,12 @@ function init() {
   regenGeo.setAttribute("aAlpha", regenAlphaAttr);
   const regenMesh = new InstancedMesh(regenGeo, regenMat, REGEN_ANZAHL);
   for (let i = 0; i < REGEN_ANZAHL; i++) {
-    // Regen etwas heller als die schwebenden Tropfen — er soll vor allem lesbar bleiben
-    regenMesh.setColorAt(i, farbObjekte[i % 3]);
+    /* Der Regen bekommt dieselbe volle Palette wie die schwebenden Tropfen.
+       Vorher waren es nur die ersten drei Farben — aus der Brause kam damit
+       ausschließlich Weiß und helles Blau, während das kräftige Dunkelblau nur
+       oben herumtrieb. Über Text bleibt es trotzdem lesbar: Die Restdeckung
+       hängt an der Farbe, nicht an der Gruppe. */
+    regenMesh.setColorAt(i, farbObjekte[i % farbObjekte.length]);
   }
   regenMesh.instanceColor.needsUpdate = true;
   szene.add(regenMesh);
@@ -207,8 +211,8 @@ function init() {
 
   for (let i = 0; i < REGEN_ANZAHL; i++) {
     rGroesse[i] = MathUtils.randFloat(REGEN_R_MIN, REGEN_R_MAX);
-    rAlphaText[i] = ALPHA_TEXT_JE_FARBE[i % 3];
-    rWartet[i] = Math.random() * 3.5;
+    rAlphaText[i] = ALPHA_TEXT_JE_FARBE[i % ALPHA_TEXT_JE_FARBE.length];
+    rWartet[i] = Math.random() * 2.0;   // gestaffelter Start, aber nicht zu zäh
   }
 
   /** Stärke des Pumpenstoßes, 0…1. Fehlt die Pumpe (alle Seiten außer der
@@ -440,7 +444,7 @@ function init() {
         regenSetzen(i);
         // Beim Pumpen kommen die Tropfen dichter — ungleichmäßig, sonst wirkt
         // es wie ein Vorhang statt wie Wasser.
-        rWartet[i] = MathUtils.randFloat(0.5, 2.6) * (1 - 0.85 * stoss);
+        rWartet[i] = MathUtils.randFloat(0.25, 1.5) * (1 - 0.85 * stoss);
         continue;
       }
       // Fallende Tropfen ziehen sich in die Länge, je schneller sie werden.
