@@ -33,24 +33,17 @@ const produkte = alle
       <div class="hero-klebrig">
         <canvas></canvas>
 
-        {/* Der Schlauch kommt von oben aus dem Bild: Der Wasserbehälter hängt
-            höher als der Duschkopf, den Rest macht die Schwerkraft. Ein Bild
-            des Beutels steht hier bewusst nicht — die Brause ist 375 px hoch,
-            ein Beutel darüber 321, und ein Hero von 100vh abzüglich Navigation
-            hat dafür keinen Platz. Der Beutel gehört in einen eigenen
-            Abschnitt, wo er groß genug ist, um etwas zu erklären.
-
-            Alle Anschlusspunkte stehen als Prozent der Bildmaße im Markup —
-            schlauch.js und tropfen.js lesen sie von dort, statt Zahlen im
-            Skript zu verstecken. */}
         {/* Die Handpumpe: zwei Ebenen desselben Bildes (eine Datei, ein Abruf).
-            Der Körper ist unbeweglich und trägt die Düse; die Tropfen-Ebene
-            lässt die Tropfen genau dort austreten. Der blaue Druckkopf liegt
-            darüber und sinkt beim Scrollen ein (pumpe.js).
+            Der blaue Druckkopf liegt über dem Körper und sinkt beim Scrollen
+            ein (pumpe.js) — sowie alle 4,5 Sekunden von selbst.
 
-            Die Düse sitzt am Körper und pumpt nicht mit. Der Schlauchanschluss
-            dagegen sitzt am Kopf — er wandert beim Pumpen also mit, und der
-            Schlauch zuckt leicht. Das ist so gewollt. */}
+            Der Körper ist unbeweglich und trägt beides: die Düse, an der die
+            Tropfen austreten, und den Schlauch, der von dort die Seite
+            hinunterläuft. Beide sitzen bewusst am Körper und nicht am Kopf —
+            sonst zappelte der Schlauch bei jedem Pumpstoß mit.
+
+            Die Anschlusspunkte stehen als Prozent der Bildmaße im Markup,
+            damit sie nicht als Zahlen in den Skripten verschwinden. */}
         <div class="hero-produkt">
           <img
             class="hero-produkt__koerper"
@@ -58,6 +51,8 @@ const produkte = alle
             alt="Handy Shower"
             data-tropfen-quelle
             data-duese="58.2,98.6"
+            data-schlauch-start
+            data-auslass="58.2,98.6"
             fetchpriority="high"
           />
           <img
@@ -66,8 +61,6 @@ const produkte = alle
             alt=""
             aria-hidden="true"
             data-pumpen-kopf
-            data-schlauch-ende
-            data-einlass="17.1,13.7"
           />
         </div>
 

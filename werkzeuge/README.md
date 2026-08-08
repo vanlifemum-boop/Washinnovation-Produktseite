@@ -80,7 +80,7 @@ schwarze Hülle 205. Toleranz 30 trennt das sauber.
 sichtbare Produkt steckte aber nur in x 104–237 — keine 30 % der Bildbreite. Von
 jeder CSS-Breite blieb weniger als ein Drittel Brause übrig. Jetzt ist die Datei
 auf **146 × 489** beschnitten. Wer sie ersetzt, muss genauso eng beschneiden und
-danach die Prozentwerte im Markup neu ausmessen: `data-duese`, `data-einlass`
+danach die Prozentwerte im Markup neu ausmessen: `data-duese`, `data-auslass`
 und die beiden `clip-path`-Werte in `design.css`.
 
 **Das Ergebnis immer einzeln ansehen, bevor es eingebaut wird** — und zwar auf

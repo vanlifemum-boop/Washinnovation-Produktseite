@@ -341,13 +341,13 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
    Bildschirmbreite in tropfen.js. */
 /* Die Breite ist jetzt wirklich die Breite der Brause: Das Foto war 451 px
    breit, das Produkt darin nur 134 px — von jeder CSS-Breite blieben keine
-   30 % übrig. Seit dem Beschnitt auf 146 × 489 heißt 112 px auch 112 px. */
+   30 % übrig. Seit dem Beschnitt auf 146 × 489 heißt 132 px auch 132 px. */
 .hero-produkt {
   position: absolute;
-  right: clamp(12px, 4vw, 52px);
-  top: 34%;
+  right: clamp(10px, 3.5vw, 46px);
+  top: 35%;
   transform: translateY(-50%);
-  width: clamp(74px, 9vw, 112px);
+  width: clamp(88px, 10.5vw, 132px);
   z-index: 3;
   pointer-events: none;
   filter: drop-shadow(0 26px 40px rgba(3, 25, 44, 0.55));
@@ -377,9 +377,9 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
   .hero-produkt {
     top: 32%;
     bottom: auto;
-    right: 4px;
+    right: 2px;
     transform: translateY(-50%);
-    width: clamp(56px, 17vw, 74px);
+    width: clamp(66px, 20vw, 90px);
     opacity: 0.94;
   }
   /* Der Aufbau bekommt eine eigene Spalte am rechten Rand. Ohne das läuft der

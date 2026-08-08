@@ -101,7 +101,7 @@ Vorbild ist die Kugel-Ebene der WowMoman-Seite, umgebaut auf Wasser.
 | `public/effekte/pumpe.js` | Der blaue Druckkopf im Hero sinkt beim Runterscrollen ein und kommt beim Hochscrollen zurück — du pumpst mit dem Mausrad. Zusätzlich pumpt er alle 4,5 Sekunden von selbst, damit man es auch im Stillstand sieht. Beim Drücken spritzt es, sonst tropft es langsam weiter. |
 | `public/effekte/hero-szene.js` | Zeichnet den Hero prozedural: ein Tropfen fällt, trifft auf, wirft Krone und Ringe — gesteuert allein vom Scroll-Fortschritt. |
 | `public/effekte/ripple.js` | Wasserwellen auf Bildflächen (`data-ripple`). Gedämpftes Höhenfeld auf Canvas 2D, rechnet auf 220 px und wird hochskaliert. |
-| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch, der von oben ins Bild kommt und an der Brause endet. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
+| `public/effekte/schlauch.js` | Durchsichtiger Silikonschlauch, der am unteren Ende der Brause ansetzt und die Seite hinunterläuft. Reines SVG, drei Linien übereinander für die Silikon-Anmutung. |
 | `public/effekte/seite.js` | Menü, Reveals, Parallax (`data-parallax`), hochzählender Zähler. |
 
 Alle Effekte schalten sich ab bei `prefers-reduced-motion: reduce`, bei
@@ -123,39 +123,40 @@ Der Hero zeigt das Funktionsprinzip, nicht nur ein Produktfoto. Aus dem Katalog
 > „Schwerkraftbetrieben: Der Wasserbehälter wird einfach höher aufgehängt als der
 > Duschkopf — ganz ohne Pumpe und Strom."
 
-Genau das steht im Hero: Der Schlauch kommt von oben ins Bild — der Behälter
-hängt also höher, als man sieht —, führt zur Brause, und von deren Düse fallen
-die Tropfen über die ganze Seite. Die Anschlusspunkte stehen **im Markup** als
-Prozent der Bildmaße, nicht als Zahlen in den Skripten:
+Im Hero steht davon die Brause: Am **unteren Ende** treten die Tropfen aus und
+setzt der Schlauch an, der von dort die Seite hinunterläuft. Die Anschlusspunkte
+stehen **im Markup** als Prozent der Bildmaße, nicht als Zahlen in den Skripten:
 
 | Element | Attribut | Wert | Wer liest es |
 |---|---|---|---|
-| `.hero-produkt__kopf` | `data-einlass` | `17.1,13.7` | `schlauch.js` (Ende) |
 | `.hero-produkt__koerper` | `data-duese` | `58.2,98.6` | `tropfen.js` (Austritt) |
+| `.hero-produkt__koerper` | `data-auslass` | `58.2,98.6` | `schlauch.js` (Ansatz) |
 
-Ein `[data-schlauch-start]` mit `data-auslass` ist **optional**: Gibt es eins,
-beginnt der Schlauch dort; fehlt es, kommt er von oberhalb des Sichtfelds.
+Beide zeigen absichtlich auf **denselben Punkt**: Das Wasser läuft am Schlauch
+entlang nach unten. Ein `[data-schlauch-ende]` mit `data-einlass` ist optional —
+fehlt es, läuft der Schlauch über den unteren Bildrand hinaus.
+
+**Beide sitzen am Körper, nicht am Druckkopf.** Der Kopf sinkt beim Pumpen ein,
+und weil `getBoundingClientRect()` Transformationen mitrechnet, würden Düse und
+Schlauch bei jedem Stoß mitzappeln. Am Körper bleiben sie ruhig — nachgemessen:
+Der Schlauchansatz steht über einen ganzen Pumpzyklus (Druck 0 → 0,99) auf
+derselben Bildzeile.
 
 **Warum kein Behälterbild im Hero.** Es war eines drin, zweimal — erst die
 Flasche des Pocket Bottle Shower Mini, dann der 4-Liter-Beutel des Pocket Bath
 Plus. Beide sahen schlecht aus, und zwar aus einem messbaren Grund: Die Brause
-ist bei 112 px Breite **375 px hoch**, ein Beutel darüber wäre 321 px hoch, und
-ein Hero von 100 vh abzüglich Navigation hat rund 830 px. Damit der Behälter
-sichtbar *über* dem Schlaucheinlass hängt, bleibt kein Platz — auf dem Handy
-schrumpfte er auf einen schwarzen Splitter. Der Behälter gehört in einen eigenen
+ist bei 132 px Breite **442 px hoch**, ein Beutel darüber wäre über 300 px hoch,
+und ein Hero von 100 vh abzüglich Navigation hat rund 830 px. Für einen
+Behälter, der sichtbar *über* der Brause hängt, bleibt kein Platz — auf dem
+Handy schrumpfte er auf einen schwarzen Splitter. Er gehört in einen eigenen
 Abschnitt „So funktioniert's", wo er groß genug ist, um etwas zu erklären. Die
 Zuschnitte dafür sind in `werkzeuge/README.md` als Einzeiler dokumentiert.
-
-Warum das Schlauchende am **Kopf** hängt und die Düse am **Körper**: Der Kopf
-sinkt beim Pumpen ein, der Körper nicht. So wandert der Schlauchanschluss mit
-(der Schlauch zuckt leicht), während die Düse ruhig stehen bleibt — genau wie bei
-einer echten Handpumpe.
 
 **Das Produktfoto ist beschnitten, und das ist wichtig.** Vorher war
 `handy-shower-foto.png` 451 × 501 px groß, das sichtbare Produkt steckte aber nur
 in x 104–237 — **keine 30 % der Bildbreite**. Von `width: 170px` blieben also
 50 px Brause übrig, und niemand verstand, warum sie so klein wirkt. Seit dem
-Beschnitt auf **146 × 489** heißt 112 px auch 112 px. Wer das Foto austauscht,
+Beschnitt auf **146 × 489** heißt 132 px auch 132 px. Wer das Foto austauscht,
 muss es genauso eng beschneiden — sonst kehrt der Fehler zurück.
 
 **Zur Stapelreihenfolge, damit es niemand erneut versucht:** Die Brause lässt
