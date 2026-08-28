@@ -6,8 +6,8 @@ import { defineConfig } from "astro/config";
 // heißen wie das Repository.
 // Sobald eine eigene Domain eingerichtet ist: BASE auf "/" setzen, SITE auf die
 // Domain ändern und public/CNAME anlegen.
-const SITE = "https://vanlifemum-boop.github.io";
-const BASE = "/Washinnovation-Produktseite";
+const SITE = "https://washinovation.de";
+const BASE = "/";
 
 export default defineConfig({
   site: SITE,
