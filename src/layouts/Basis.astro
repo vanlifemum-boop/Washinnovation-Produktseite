@@ -5,6 +5,8 @@ import {
   type Sprache,
 } from "../i18n/ui";
 import { VORSCHAU_STREIFEN, SUCHMASCHINEN_SPERREN } from "../seite.config";
+import { RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink } from "../inhalte/kontakt";
+import WhatsappSchweber from "../components/WhatsappSchweber.astro";
 
 interface Props {
   sprache: Sprache;
@@ -160,6 +162,14 @@ function istAktiv(ziel: string) {
           <div>
             <h4>{marke}</h4>
             <p>{t("footer.marke.text")}</p>
+            <ul class="fuss-kontakt">
+              <li>
+                <a href={whatsappLink(t("whatsapp.nachricht"))} target="_blank" rel="noopener noreferrer">
+                  {t("kontakt.whatsapp")}: {RUFNUMMER_LESBAR}
+                </a>
+              </li>
+              <li><a href={TELEFON_LINK}>{t("kontakt.telefon")}: {RUFNUMMER_LESBAR}</a></li>
+            </ul>
           </div>
           <div>
             <h4>{t("footer.entdecken")}</h4>
@@ -198,6 +208,8 @@ function istAktiv(ziel: string) {
         </div>
       </div>
     </footer>
+
+    <WhatsappSchweber sprache={sprache} />
 
     <script is:inline src={datei("effekte/seite.js")}></script>
     <script is:inline src={datei("effekte/ripple.js")}></script>

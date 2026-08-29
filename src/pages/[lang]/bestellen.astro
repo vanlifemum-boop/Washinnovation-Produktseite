@@ -1,7 +1,9 @@
 ---
 import { getCollection } from "astro:content";
 import Basis from "../../layouts/Basis.astro";
+import WhatsappKnopf from "../../components/WhatsappKnopf.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, datei, type Sprache } from "../../i18n/ui";
+import { RUFNUMMER_LESBAR, TELEFON_LINK } from "../../inhalte/kontakt";
 import { sichtbareProjekte, modellAktiv } from "../../data/daten";
 
 export function getStaticPaths() {
@@ -46,9 +48,22 @@ const bestellTexte = {
         <p style="margin:0">
           <span class="platzhalter">{t("platzhalter.hinweis")}</span>
           {" "}Bevor diese Seite öffentlich beworben wird: Empfängeradresse in
-          <code>src/pages/[lang]/bestellen.astro</code> eintragen und Preise in den
+          {" "}<code>src/pages/[lang]/bestellen.astro</code> eintragen und Preise in den
           Produktdateien ergänzen.
         </p>
+      </div>
+
+      {/* Der Weg für alle, die kein Formular ausfüllen wollen. Er steht vor dem
+          Formular, weil er der schnellere ist — und weil das Formular ohne
+          hinterlegte Empfängeradresse noch gar nicht ankommt. */}
+      <div class="kontaktkasten" data-reveal>
+        <h2>{t("kontakt.direkt.titel")}</h2>
+        <p>{t("kontakt.direkt.text")}</p>
+        <div class="knopfreihe">
+          <WhatsappKnopf sprache={sprache} nachricht={t("whatsapp.nachricht.bestellen")} />
+          <a class="btn btn--rand" href={TELEFON_LINK}>{t("kontakt.telefon")}: {RUFNUMMER_LESBAR}</a>
+        </div>
+        <p class="leise kontaktkasten-fussnote">{t("whatsapp.hinweis")}</p>
       </div>
 
       <form class="formular" data-bestellformular novalidate>

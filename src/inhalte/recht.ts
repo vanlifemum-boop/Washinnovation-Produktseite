@@ -15,6 +15,8 @@
  *   - Warenspenden sind umsatzsteuerlich nicht neutral (Steuerberatung).
  */
 
+import { RUFNUMMER_LESBAR, ANSPRECHPERSON } from "./kontakt";
+
 export interface Abschnitt {
   titel: string;
   absaetze: string[];
@@ -51,7 +53,11 @@ const de: Record<RechtSchluessel, Rechtsseite> = {
       },
       {
         titel: "Kontakt",
-        absaetze: [`E-Mail: ${P}`, `Telefon: ${P}`],
+        absaetze: [
+          `E-Mail: ${P}`,
+          `Telefon und WhatsApp: ${RUFNUMMER_LESBAR}`,
+          `Ansprechpartnerin: ${ANSPRECHPERSON}`,
+        ],
       },
       {
         titel: "Umsatzsteuer",
@@ -101,6 +107,15 @@ const de: Record<RechtSchluessel, Rechtsseite> = {
         titel: "Schriften und externe Inhalte",
         absaetze: [
           "Es werden ausschließlich Schriften des Betriebssystems verwendet. Es findet keine Verbindung zu Google Fonts oder einem anderen fremden Server statt.",
+        ],
+      },
+      {
+        titel: "Kontakt über WhatsApp",
+        absaetze: [
+          "Auf mehreren Seiten steht ein Knopf, der einen WhatsApp-Chat öffnet. Es handelt sich um einen gewöhnlichen Link auf wa.me. Solange er nicht angeklickt wird, lädt diese Seite nichts von WhatsApp oder Meta und übermittelt auch nichts dorthin — es gibt kein eingebundenes Widget und kein Zählpixel.",
+          "Wer den Knopf anklickt, verlässt diese Seite. Ab dann gilt die Datenschutzerklärung von WhatsApp Ireland Ltd. Übermittelt werden dabei die eigene Rufnummer, der Nachrichtentext und die üblichen Verbindungsdaten. Anbieter ist ein Unternehmen der Meta-Gruppe; eine Verarbeitung außerhalb der EU ist nicht ausgeschlossen.",
+          "Wer das nicht möchte, erreicht uns genauso per Telefon oder E-Mail. Über WhatsApp geführte Anfragen werden nur zur Bearbeitung genutzt, Rechtsgrundlage ist Art. 6 Abs. 1 lit. b bzw. lit. f DSGVO.",
+          `Aufbewahrungsdauer der Chatverläufe: ${P}`,
         ],
       },
       {
@@ -241,7 +256,7 @@ const en: Record<RechtSchluessel, Rechtsseite> = {
     einleitung: "Information according to § 5 DDG (German Digital Services Act).",
     abschnitte: [
       { titel: "Provider", absaetze: [`${P} Name or company`, `${P} Street`, `${P} Postcode and town`, `${P} Country`] },
-      { titel: "Contact", absaetze: [`Email: ${P}`, `Phone: ${P}`] },
+      { titel: "Contact", absaetze: [`Email: ${P}`, `Phone and WhatsApp: ${RUFNUMMER_LESBAR}`, `Contact person: ${ANSPRECHPERSON}`] },
       { titel: "VAT", absaetze: [`VAT identification number: ${P}`] },
       { titel: "Responsible for the content", absaetze: [`${P}`] },
       {
@@ -276,6 +291,15 @@ const en: Record<RechtSchluessel, Rechtsseite> = {
       {
         titel: "Fonts and external content",
         absaetze: ["Only system fonts are used. No connection is made to Google Fonts or any other third-party server."],
+      },
+      {
+        titel: "Contact via WhatsApp",
+        absaetze: [
+          "Several pages carry a button that opens a WhatsApp chat. It is an ordinary link to wa.me. Until it is clicked, this site loads nothing from WhatsApp or Meta and transmits nothing there — there is no embedded widget and no tracking pixel.",
+          "Clicking the button takes you off this site. From that point WhatsApp Ireland Ltd.'s privacy policy applies. Your phone number, the message text and the usual connection data are transmitted. The provider is a Meta company; processing outside the EU cannot be ruled out.",
+          "If you would rather not use it, phone and email reach us just as well. Enquiries received via WhatsApp are used solely to handle the enquiry; the legal basis is Art. 6(1)(b) or (f) GDPR.",
+          `Retention period for chat histories: ${P}`,
+        ],
       },
       { titel: "Cookies", absaetze: ["The site sets no cookies and uses no comparable storage for analytics or advertising."] },
       {
@@ -362,7 +386,7 @@ const pl: Record<RechtSchluessel, Rechtsseite> = {
     einleitung: "Informacje zgodnie z § 5 niemieckiej ustawy DDG.",
     abschnitte: [
       { titel: "Sprzedawca", absaetze: [`${P} Nazwa lub firma`, `${P} Ulica i numer`, `${P} Kod pocztowy i miejscowość`, `${P} Kraj`] },
-      { titel: "Kontakt", absaetze: [`E-mail: ${P}`, `Telefon: ${P}`] },
+      { titel: "Kontakt", absaetze: [`E-mail: ${P}`, `Telefon i WhatsApp: ${RUFNUMMER_LESBAR}`, `Osoba kontaktowa: ${ANSPRECHPERSON}`] },
       { titel: "Podatek VAT", absaetze: [`Numer identyfikacyjny VAT: ${P}`] },
       { titel: "Odpowiedzialność za treść", absaetze: [`${P}`] },
       {
@@ -395,6 +419,15 @@ const pl: Record<RechtSchluessel, Rechtsseite> = {
         ],
       },
       { titel: "Czcionki i treści zewnętrzne", absaetze: ["Używane są wyłącznie czcionki systemowe. Nie następuje połączenie z Google Fonts ani innym zewnętrznym serwerem."] },
+      {
+        titel: "Kontakt przez WhatsApp",
+        absaetze: [
+          "Na kilku stronach znajduje się przycisk otwierający czat WhatsApp. To zwykły link do wa.me. Dopóki nie zostanie kliknięty, strona nie pobiera niczego z WhatsAppa ani Meta i niczego tam nie przekazuje — nie ma osadzonego widżetu ani piksela śledzącego.",
+          "Kliknięcie przycisku oznacza opuszczenie tej strony. Od tego momentu obowiązuje polityka prywatności WhatsApp Ireland Ltd. Przekazywane są: własny numer telefonu, treść wiadomości i zwykłe dane połączenia. Dostawcą jest spółka z grupy Meta; nie można wykluczyć przetwarzania poza UE.",
+          "Kto sobie tego nie życzy, może skorzystać z telefonu lub e-maila. Zapytania z WhatsAppa wykorzystujemy wyłącznie do ich obsługi, podstawa prawna: art. 6 ust. 1 lit. b lub f RODO.",
+          `Okres przechowywania historii czatu: ${P}`,
+        ],
+      },
       { titel: "Pliki cookie", absaetze: ["Strona nie zapisuje plików cookie ani podobnych technologii do celów analitycznych czy reklamowych."] },
       {
         titel: "Zapytania o zamówienie",

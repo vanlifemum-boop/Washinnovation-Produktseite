@@ -1,6 +1,10 @@
 ---
 import Basis from "../../layouts/Basis.astro";
+import WhatsappKnopf from "../../components/WhatsappKnopf.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+import {
+  ANSPRECHPERSON, RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink,
+} from "../../inhalte/kontakt";
 
 export function getStaticPaths() {
   return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
@@ -9,7 +13,8 @@ export function getStaticPaths() {
 const sprache = Astro.params.lang as Sprache;
 const t = uebersetzer(sprache);
 
-// [PLATZHALTER] Echte Kontaktadresse eintragen.
+// [PLATZHALTER] Echte Kontaktadresse eintragen. Telefon und WhatsApp stehen in
+// src/inhalte/kontakt.ts und sind echt — nur die E-Mail fehlt noch.
 const email = "BITTE-EINTRAGEN@example.com";
 ---
 
@@ -21,15 +26,33 @@ const email = "BITTE-EINTRAGEN@example.com";
 >
   <section class="sek sek--weiss">
     <div class="behaelter schmal">
-      <div class="hinweis hinweis--warnung" data-reveal>
-        <p style="margin:0">
-          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
-          {" "}E-Mail-Adresse in <code>src/pages/[lang]/kontakt.astro</code> und
-          <code>src/pages/[lang]/bestellen.astro</code> eintragen.
-        </p>
+      <div class="kontaktkasten" data-reveal>
+        <h2>{t("kontakt.direkt.titel")}</h2>
+        <p>{t("kontakt.direkt.text")}</p>
+        <div class="knopfreihe">
+          <WhatsappKnopf sprache={sprache} />
+          <a class="btn btn--rand" href={TELEFON_LINK}>{t("kontakt.telefon")}: {RUFNUMMER_LESBAR}</a>
+        </div>
+        <p class="leise kontaktkasten-fussnote">{t("whatsapp.hinweis")}</p>
       </div>
 
       <dl class="datenliste" data-reveal>
+        <div>
+          <dt>{t("kontakt.ansprechperson")}</dt>
+          <dd>{ANSPRECHPERSON}</dd>
+        </div>
+        <div>
+          <dt>{t("kontakt.telefon")}</dt>
+          <dd><a href={TELEFON_LINK}>{RUFNUMMER_LESBAR}</a></dd>
+        </div>
+        <div>
+          <dt>{t("kontakt.whatsapp")}</dt>
+          <dd>
+            <a href={whatsappLink(t("whatsapp.nachricht"))} target="_blank" rel="noopener noreferrer">
+              {RUFNUMMER_LESBAR}
+            </a>
+          </dd>
+        </div>
         <div>
           <dt>{t("kontakt.email")}</dt>
           <dd><a href={`mailto:${email}`}>{email}</a></dd>
@@ -37,6 +60,16 @@ const email = "BITTE-EINTRAGEN@example.com";
       </dl>
 
       <p class="leise" data-reveal style="margin-top:1.2rem">{t("kontakt.antwortzeit")}</p>
+
+      <div class="hinweis hinweis--warnung" data-reveal>
+        <p style="margin:0">
+          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
+          {" "}Telefon und WhatsApp sind echt und stehen in
+          {" "}<code>src/inhalte/kontakt.ts</code>. Es fehlt nur noch die E-Mail-Adresse — in
+          {" "}<code>src/pages/[lang]/kontakt.astro</code> und
+          {" "}<code>src/pages/[lang]/bestellen.astro</code> eintragen.
+        </p>
+      </div>
 
       <div class="knopfreihe" data-reveal>
         <a class="btn" href={pfad(sprache, "bestellen")}>{t("start.cta.button")}</a>
