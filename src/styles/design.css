@@ -161,7 +161,7 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 
 .knopfreihe { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 1.4rem; }
 
-/* ---- Vorschau-Streifen (nur solange VORSCHAU in src/seite.config.ts gilt) ---- */
+/* ---- Vorschau-Streifen (Schalter VORSCHAU_STREIFEN in src/seite.config.ts) ---- */
 .vorschau-streifen {
   background: #ffe9b8;
   color: #6b4400;

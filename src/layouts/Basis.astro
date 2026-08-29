@@ -4,7 +4,7 @@ import {
   AKTIVE_SPRACHEN, SPRACH_NAMEN, STANDARD_SPRACHE, uebersetzer, pfad, datei,
   type Sprache,
 } from "../i18n/ui";
-import { VORSCHAU } from "../seite.config";
+import { VORSCHAU_STREIFEN, SUCHMASCHINEN_SPERREN } from "../seite.config";
 
 interface Props {
   sprache: Sprache;
@@ -69,8 +69,9 @@ function istAktiv(ziel: string) {
     <link rel="canonical" href={kanonisch} />
 
     {/* Solange Impressum, Kontaktdaten und Preise Platzhalter sind, soll die Seite
-        nicht in Suchmaschinen auftauchen. Schalter: src/seite.config.ts */}
-    {VORSCHAU && <meta name="robots" content="noindex, nofollow" />}
+        nicht in Suchmaschinen auftauchen. Das hängt an einem eigenen Schalter und
+        nicht am Hinweisstreifen — siehe src/seite.config.ts. */}
+    {SUCHMASCHINEN_SPERREN && <meta name="robots" content="noindex, nofollow" />}
 
     {sprachZiele.map((z) => (
       <link rel="alternate" hreflang={z.sprache} href={new URL(z.url, seite).toString()} />
@@ -91,7 +92,7 @@ function istAktiv(ziel: string) {
   <body>
     <a class="sprunglink" href="#inhalt">{t("nav.zum-inhalt")}</a>
 
-    {VORSCHAU && (
+    {VORSCHAU_STREIFEN && (
       <div class="vorschau-streifen" role="status">
         <div class="behaelter">{t("vorschau.hinweis")}</div>
       </div>
