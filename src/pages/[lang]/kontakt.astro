@@ -5,6 +5,7 @@ import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui"
 import {
   ANSPRECHPERSON, RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink,
 } from "../../inhalte/kontakt";
+import { FIRMA } from "../../inhalte/firma";
 
 export function getStaticPaths() {
   return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
@@ -13,9 +14,10 @@ export function getStaticPaths() {
 const sprache = Astro.params.lang as Sprache;
 const t = uebersetzer(sprache);
 
-// [PLATZHALTER] Echte Kontaktadresse eintragen. Telefon und WhatsApp stehen in
-// src/inhalte/kontakt.ts und sind echt — nur die E-Mail fehlt noch.
-const email = "BITTE-EINTRAGEN@example.com";
+/* Die E-Mail-Zeile erscheint nur, wenn in src/inhalte/firma.ts eine Adresse
+   steht. Eine Zeile mit einer erfundenen Adresse wäre schlimmer als keine:
+   Post daran käme nie an. Telefon und WhatsApp sind hinterlegt und echt. */
+const email = FIRMA.email;
 ---
 
 <Basis
@@ -53,23 +55,15 @@ const email = "BITTE-EINTRAGEN@example.com";
             </a>
           </dd>
         </div>
-        <div>
-          <dt>{t("kontakt.email")}</dt>
-          <dd><a href={`mailto:${email}`}>{email}</a></dd>
-        </div>
+        {email && (
+          <div>
+            <dt>{t("kontakt.email")}</dt>
+            <dd><a href={`mailto:${email}`}>{email}</a></dd>
+          </div>
+        )}
       </dl>
 
       <p class="leise" data-reveal style="margin-top:1.2rem">{t("kontakt.antwortzeit")}</p>
-
-      <div class="hinweis hinweis--warnung" data-reveal>
-        <p style="margin:0">
-          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
-          {" "}Telefon und WhatsApp sind echt und stehen in
-          {" "}<code>src/inhalte/kontakt.ts</code>. Es fehlt nur noch die E-Mail-Adresse — in
-          {" "}<code>src/pages/[lang]/kontakt.astro</code> und
-          {" "}<code>src/pages/[lang]/bestellen.astro</code> eintragen.
-        </p>
-      </div>
 
       <div class="knopfreihe" data-reveal>
         <a class="btn" href={pfad(sprache, "bestellen")}>{t("start.cta.button")}</a>

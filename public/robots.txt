@@ -1,8 +1,10 @@
-# Vorschau-Betrieb: Die Seite ist erreichbar, soll aber noch nicht in Suchmaschinen
-# auftauchen — Impressum, Kontaktdaten und Preise sind noch Platzhalter.
+# Die Seite ist erreichbar, soll aber noch nicht in Suchmaschinen auftauchen:
+# Firmendaten und Preise sind noch nicht vollständig.
 #
 # Zum Freigeben: diese Datei durch die Fassung unten ersetzen und in
-# src/seite.config.ts SUCHMASCHINEN_SPERREN auf false setzen.
+# src/seite.config.ts SUCHMASCHINEN_SPERREN auf false setzen. Der Schalter
+# prüft dabei selbst, ob die Pflichtangaben in src/inhalte/firma.ts vollständig
+# sind, und bricht den Build sonst ab.
 
 User-agent: *
 Disallow: /

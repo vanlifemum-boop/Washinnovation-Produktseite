@@ -4,7 +4,7 @@ import {
   AKTIVE_SPRACHEN, SPRACH_NAMEN, STANDARD_SPRACHE, uebersetzer, pfad, datei,
   type Sprache,
 } from "../i18n/ui";
-import { VORSCHAU_STREIFEN, SUCHMASCHINEN_SPERREN } from "../seite.config";
+import { SUCHMASCHINEN_SPERREN } from "../seite.config";
 import { RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink } from "../inhalte/kontakt";
 import WhatsappSchweber from "../components/WhatsappSchweber.astro";
 
@@ -70,9 +70,8 @@ function istAktiv(ziel: string) {
     <meta name="description" content={beschreibungText} />
     <link rel="canonical" href={kanonisch} />
 
-    {/* Solange Impressum, Kontaktdaten und Preise Platzhalter sind, soll die Seite
-        nicht in Suchmaschinen auftauchen. Das hängt an einem eigenen Schalter und
-        nicht am Hinweisstreifen — siehe src/seite.config.ts. */}
+    {/* Solange Firmendaten und Preise fehlen, soll die Seite nicht in
+        Suchmaschinen auftauchen — siehe src/seite.config.ts. */}
     {SUCHMASCHINEN_SPERREN && <meta name="robots" content="noindex, nofollow" />}
 
     {sprachZiele.map((z) => (
@@ -93,12 +92,6 @@ function istAktiv(ziel: string) {
 
   <body>
     <a class="sprunglink" href="#inhalt">{t("nav.zum-inhalt")}</a>
-
-    {VORSCHAU_STREIFEN && (
-      <div class="vorschau-streifen" role="status">
-        <div class="behaelter">{t("vorschau.hinweis")}</div>
-      </div>
-    )}
 
     <header class="kopf">
       <div class="behaelter">

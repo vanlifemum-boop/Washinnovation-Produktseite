@@ -175,19 +175,6 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 
 .knopfreihe { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 1.4rem; }
 
-/* ---- Vorschau-Streifen (Schalter VORSCHAU_STREIFEN in src/seite.config.ts) ---- */
-.vorschau-streifen {
-  background: #ffe9b8;
-  color: #6b4400;
-  font-size: 0.88rem;
-  font-weight: 600;
-  padding: 9px 0;
-  text-align: center;
-  border-bottom: 1px solid #e6c983;
-  position: relative;
-  z-index: 110; /* über der Tropfen-Ebene, sonst wird der Hinweis überdeckt */
-}
-
 /* ============================== Navigation =============================== */
 
 .kopf {
@@ -526,19 +513,6 @@ p { margin: 0 0 1.1em; max-width: 68ch; }
 .hinweis p:last-child { margin-bottom: 0; }
 .hinweis--warnung { border-left-color: #d08300; background: #fff8ec; }
 
-/* Platzhalter sichtbar machen — sie sollen auffallen, nicht sich verstecken */
-.platzhalter {
-  display: inline-block;
-  font-size: 0.7rem;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  background: #ffe9b8;
-  color: #7a4d00;
-  border-radius: 5px;
-  padding: 2px 7px;
-  vertical-align: middle;
-}
-
 /* ============================= Fortschritt =============================== */
 
 .fortschritt {
@@ -723,17 +697,6 @@ figure { margin: 0; }
   background: var(--eis);
 }
 .bildflaeche img { width: 100%; }
-.bild-hinweis {
-  position: absolute;
-  left: 12px;
-  bottom: 12px;
-  z-index: 2; /* über dem Ripple-Canvas, sonst verschwindet der Hinweis */
-  background: rgba(6, 42, 74, 0.8);
-  color: var(--weiss);
-  font-size: 0.74rem;
-  padding: 5px 10px;
-  border-radius: 6px;
-}
 
 /* Ripple: das Canvas legt sich über das Bild und wird hochskaliert */
 .ripple-canvas {

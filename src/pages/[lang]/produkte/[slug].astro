@@ -20,10 +20,6 @@ const t = uebersetzer(sprache);
 const d = eintrag.data;
 const { Content } = await render(eintrag);
 
-// Platzhalter-Fähnchen nur, solange noch die gezeichnete SVG-Attrappe steht.
-// Sobald ein echtes Foto hinterlegt ist, verschwindet der Hinweis von selbst.
-const istAttrappe = d.bild.endsWith(".svg");
-
 // Freigestellte PNGs bleiben ohne Ripple: Der Effekt rechnet ohne Alphakanal
 // und würde die durchsichtigen Flächen schwarz füllen.
 const hatTransparenz = d.bild.endsWith(".png");
@@ -51,12 +47,7 @@ const preisFormat =
             bild={d.bild}
             alt={d.name}
             ripple={!hatTransparenz}
-            platzhalter={istAttrappe}
-            hinweis={t("platzhalter.bild")}
           />
-          <p class="leise" style="margin-top:14px;font-size:0.92rem">
-            <span class="platzhalter">{t("platzhalter.hinweis")}</span> {t("produkte.video-folgt")}
-          </p>
         </div>
 
         <div data-reveal>

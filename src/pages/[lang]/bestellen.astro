@@ -3,7 +3,8 @@ import { getCollection } from "astro:content";
 import Basis from "../../layouts/Basis.astro";
 import WhatsappKnopf from "../../components/WhatsappKnopf.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, datei, type Sprache } from "../../i18n/ui";
-import { RUFNUMMER_LESBAR, TELEFON_LINK } from "../../inhalte/kontakt";
+import { RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink } from "../../inhalte/kontakt";
+import { FIRMA } from "../../inhalte/firma";
 import { sichtbareProjekte, modellAktiv } from "../../data/daten";
 
 export function getStaticPaths() {
@@ -20,9 +21,13 @@ const produkte = alle
 
 const projekte = sichtbareProjekte();
 
-// [PLATZHALTER] Empfängeradresse für Bestellungen eintragen, bevor die Seite live geht.
+/* Wohin die fertige Anfrage geht. Ohne hinterlegte E-Mail-Adresse übernimmt
+   WhatsApp: Das Skript öffnet dann wa.me mit der zusammengestellten Bestellung
+   im Textfeld. Vorher öffnete sich ein leeres Mailfenster ohne Empfänger —
+   die Anfrage wäre nirgends angekommen. */
 const bestellKonfig = {
-  email: "BITTE-EINTRAGEN@example.com",
+  email: FIRMA.email,
+  whatsapp: whatsappLink(""),
   betreff: `${t("bestellen.titel")} — ${t("meta.marke")}`,
   endpunkt: null,
 };
@@ -34,6 +39,9 @@ const bestellTexte = {
   datenschutz: t("bestellen.fehler.datenschutz"),
   kopiert: t("bestellen.erfolg.kopiert"),
 };
+
+/* Die Bestätigung nennt den Weg, der tatsächlich geöffnet wurde. */
+const erfolgText = FIRMA.email ? t("bestellen.erfolg.text") : t("bestellen.erfolg.text.whatsapp");
 ---
 
 <Basis
@@ -44,15 +52,6 @@ const bestellTexte = {
 >
   <section class="sek sek--weiss">
     <div class="behaelter">
-      <div class="hinweis hinweis--warnung" data-reveal>
-        <p style="margin:0">
-          <span class="platzhalter">{t("platzhalter.hinweis")}</span>
-          {" "}Bevor diese Seite öffentlich beworben wird: Empfängeradresse in
-          {" "}<code>src/pages/[lang]/bestellen.astro</code> eintragen und Preise in den
-          Produktdateien ergänzen.
-        </p>
-      </div>
-
       {/* Der Weg für alle, die kein Formular ausfüllen wollen. Er steht vor dem
           Formular, weil er der schnellere ist — und weil das Formular ohne
           hinterlegte Empfängeradresse noch gar nicht ankommt. */}
@@ -170,7 +169,7 @@ const bestellTexte = {
 
       <div class="bestellergebnis" data-bestellergebnis hidden>
         <h3>{t("bestellen.erfolg.titel")}</h3>
-        <p>{t("bestellen.erfolg.text")}</p>
+        <p>{erfolgText}</p>
         <textarea data-bestelltext readonly aria-label={t("bestellen.nachricht")}></textarea>
         <button class="btn btn--rand" type="button" data-kopieren>
           {t("bestellen.erfolg.kopieren")}

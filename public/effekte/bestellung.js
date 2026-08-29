@@ -2,12 +2,18 @@
  *
  * Abgeleitet vom booking.js des scroll-cinematic-Werkzeugs, umgebaut auf
  * Produktbestellungen: Validierung mit Fehlern direkt am Feld, Bestätigung ohne
- * Seitenwechsel, vorbefüllte E-Mail als Standardweg und optional ein POST an
+ * Seitenwechsel, vorbefüllte Nachricht als Standardweg und optional ein POST an
  * einen Formulardienst. Kein Backend nötig.
  *
  * Konfiguration im Seitenkopf, vor diesem Script:
- *   window.BESTELL_KONFIG = { email: "…", betreff: "…", endpunkt: null };
+ *   window.BESTELL_KONFIG = { email: "…", whatsapp: "…", betreff: "…", endpunkt: null };
  *   window.BESTELL_TEXTE  = { pflicht: "…", email: "…", menge: "…", … };
+ *
+ * Ist `email` leer, geht die fertige Anfrage über `whatsapp`. Das ist kein
+ * Notbehelf, sondern der Normalfall, solange keine Postadresse hinterlegt ist:
+ * Ohne Empfänger öffnete mailto: früher ein leeres Mailfenster, und die
+ * ausgefüllte Bestellung war weg. Fehlt beides, bleibt die Bestätigung mit dem
+ * Text zum Kopieren stehen — dann ist wenigstens nichts verloren.
  */
 (function () {
   "use strict";
@@ -112,9 +118,16 @@
       }).catch(function () { /* Fehler ist unkritisch — die E-Mail geht trotzdem auf */ });
     }
 
-    var mailto = "mailto:" + encodeURIComponent(konfig.email || "")
-      + "?subject=" + encodeURIComponent(betreff)
-      + "&body=" + encodeURIComponent(nachricht);
+    // Wohin die fertige Anfrage geht: E-Mail, wenn eine Adresse hinterlegt ist,
+    // sonst WhatsApp. encodeURIComponent gehört nicht um die Adresse selbst —
+    // das @ würde zu %40 und manche Mailprogramme stolpern darüber.
+    var ziel = konfig.email
+      ? "mailto:" + konfig.email
+        + "?subject=" + encodeURIComponent(betreff)
+        + "&body=" + encodeURIComponent(nachricht)
+      : (konfig.whatsapp
+        ? konfig.whatsapp + "?text=" + encodeURIComponent(betreff + "\n\n" + nachricht)
+        : null);
 
     if (ergebnis) {
       ergebnis.hidden = false;
@@ -143,6 +156,14 @@
       ergebnis.focus({ preventScroll: true });
     }
 
-    window.location.href = mailto;
+    // Ohne Ziel bleibt die Bestätigung mit dem Text zum Kopieren stehen.
+    if (!ziel) return;
+    if (konfig.email) {
+      window.location.href = ziel;
+    } else {
+      // WhatsApp in einem neuen Tab: Die ausgefüllte Bestellseite bleibt so
+      // stehen, falls der Chat nicht aufgeht.
+      window.open(ziel, "_blank", "noopener");
+    }
   });
 })();

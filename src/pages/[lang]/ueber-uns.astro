@@ -23,32 +23,14 @@ const t = uebersetzer(sprache);
         <div data-reveal data-parallax="0.04">
           <Bildflaeche
             bild="bilder/produkte/einsatz.svg"
-            alt={t("platzhalter.bild")}
+            alt={t("bild.tropfen.alt")}
             ripple={true}
-            platzhalter={true}
-            hinweis={t("platzhalter.bild")}
           />
         </div>
 
         <div data-reveal>
-          <div class="hinweis hinweis--warnung">
-            <p style="margin:0">
-              <span class="platzhalter">{t("platzhalter.hinweis")}</span>
-              {" "}{t("platzhalter.text")} Hier gehört eure Geschichte hin: wer ihr seid,
-              warum ihr diese Produkte vertreibt und was das Fahrzeug damit zu tun hat.
-            </p>
-          </div>
-
           <h2>{t("ueber.hersteller.titel")}</h2>
           <p class="leise">{t("ueber.hersteller.text")}</p>
-
-          <div class="hinweis">
-            <p style="margin:0">
-              Vor dem Livegang: schriftliche Zustimmung des Herstellers zur Nutzung von Marke
-              und Produktnamen sowie zur Spendenkommunikation einholen.
-              <span class="platzhalter">{t("platzhalter.hinweis")}</span>
-            </p>
-          </div>
 
           <div class="knopfreihe">
             <a class="btn" href={pfad(sprache, "1plus1")}>{t("start.hero.cta2")}</a>

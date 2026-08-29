@@ -7,16 +7,16 @@ interface Props {
   alt: string;
   /** Wasser-Ripple auf der Fläche aktivieren */
   ripple?: boolean;
-  /** Platzhalter-Fähnchen einblenden, solange kein echtes Foto da ist */
-  platzhalter?: boolean;
-  hinweis?: string;
   klasse?: string;
 }
 
-const { bild, alt, ripple = false, platzhalter = false, hinweis, klasse = "" } = Astro.props;
+/* Hier saß einmal ein „Platzhalter“-Fähnchen über dem Bild, für die Zeit ohne
+   echte Produktfotos. Alle sieben Sets haben inzwischen ihr Katalogfoto, und
+   das Fähnchen zeigte nur noch auf der Grafik im Hero — es ist ersatzlos
+   entfallen. */
+const { bild, alt, ripple = false, klasse = "" } = Astro.props;
 ---
 
 <figure class={`bildflaeche ${klasse}`} data-ripple={ripple ? "" : undefined}>
   <img src={datei(bild)} alt={alt} loading="lazy" decoding="async" />
-  {platzhalter && hinweis && <figcaption class="bild-hinweis">{hinweis}</figcaption>}
 </figure>
