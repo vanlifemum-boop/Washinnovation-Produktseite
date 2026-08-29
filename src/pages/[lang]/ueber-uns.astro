@@ -1,6 +1,7 @@
 ---
 import Basis from "../../layouts/Basis.astro";
 import Bildflaeche from "../../components/Bildflaeche.astro";
+import WhatsappKnopf from "../../components/WhatsappKnopf.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
 
 export function getStaticPaths() {
@@ -9,6 +10,18 @@ export function getStaticPaths() {
 
 const sprache = Astro.params.lang as Sprache;
 const t = uebersetzer(sprache);
+
+/**
+ * Die Seite erzählt zwei Geschichten und hält sie auseinander.
+ *
+ * Oben die Entstehung des Produkts — die gehört WaSH Innovation in Warschau,
+ * nicht diesem Vertrieb. Sie steht deshalb unter einer eigenen Überschrift, mit
+ * Namen und Jahreszahlen und einem Link zur Herstellerseite. Unter „Über uns“
+ * die Erfindungsgeschichte eines anderen zu erzählen, ohne das zu sagen, wäre
+ * eine Anmaßung: Es liest sich sonst, als hätten wir das Gerät entwickelt.
+ *
+ * Darunter, klar getrennt, was dieser Vertrieb tatsächlich tut.
+ */
 ---
 
 <Basis
@@ -17,6 +30,7 @@ const t = uebersetzer(sprache);
   beschreibung={t("ueber.untertitel")}
   seitenpfad="ueber-uns"
 >
+  <!-- ===================== Die Erfindung (Hersteller) ==================== -->
   <section class="sek sek--weiss">
     <div class="behaelter">
       <div class="raster raster--2" style="align-items:start">
@@ -29,14 +43,33 @@ const t = uebersetzer(sprache);
         </div>
 
         <div data-reveal>
-          <h2>{t("ueber.hersteller.titel")}</h2>
-          <p class="leise">{t("ueber.hersteller.text")}</p>
-
-          <div class="knopfreihe">
-            <a class="btn" href={pfad(sprache, "1plus1")}>{t("start.hero.cta2")}</a>
-            <a class="btn btn--rand" href={pfad(sprache, "kontakt")}>{t("nav.kontakt")}</a>
-          </div>
+          <p class="augenbraue">{t("ueber.geschichte.augenbraue")}</p>
+          <h2>{t("ueber.geschichte.titel")}</h2>
+          <p>{t("ueber.geschichte.p1")}</p>
+          <p>{t("ueber.geschichte.p2")}</p>
+          <p>{t("ueber.geschichte.p3")}</p>
+          <p>
+            <a href="https://washinnovation.com" rel="noopener noreferrer" target="_blank">
+              {t("ueber.geschichte.quelle")}
+            </a>
+          </p>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================= Dieser Vertrieb ============================= -->
+  <section class="sek sek--eis">
+    <div class="behaelter schmal">
+      <p class="augenbraue" data-reveal>{t("ueber.vertrieb.augenbraue")}</p>
+      <h2 class="gross" data-reveal>{t("ueber.vertrieb.titel")}</h2>
+      <p class="lead" data-reveal>{t("ueber.vertrieb.text")}</p>
+      <p data-reveal>{t("ueber.vertrieb.text2")}</p>
+
+      <div class="knopfreihe" data-reveal>
+        <WhatsappKnopf sprache={sprache} />
+        <a class="btn btn--rand" href={pfad(sprache, "1plus1")}>{t("start.hero.cta2")}</a>
+        <a class="btn btn--rand" href={pfad(sprache, "kontakt")}>{t("nav.kontakt")}</a>
       </div>
     </div>
   </section>
