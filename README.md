@@ -349,9 +349,44 @@ Sprachumschalter.
 
 ## Eigene Domain
 
-1. `public/CNAME` mit der Domain anlegen
-2. In `astro.config.mjs` `SITE` auf die Domain und `BASE` auf `"/"` setzen
-3. DNS beim Anbieter auf GitHub Pages zeigen lassen
+Die Seite läuft unter **washinnovation.de** (Registrar: one.com). Die Domain steht
+an genau zwei Stellen:
+
+| Datei | Inhalt |
+|---|---|
+| `public/CNAME` | `washinnovation.de` |
+| `astro.config.mjs` | `SITE = "https://washinnovation.de"`, `BASE = "/"` |
+
+Aus `SITE` werden alle `canonical`-Adressen und `hreflang`-Verweise berechnet,
+aus `BASE` sämtliche internen Links und Dateipfade.
+
+**Zwei Fallen, in die dieses Projekt schon getappt ist:**
+
+1. **Die Datei muss exakt `CNAME` heißen** — Großbuchstaben, ohne Endung. Sie hieß
+   einmal `washinovation.de`; GitHub Pages ignoriert jeden anderen Namen
+   kommentarlos, die Domain blieb dadurch inaktiv.
+2. **Sie gehört nach `public/`**, nicht ins Repo-Wurzelverzeichnis. Bei einem
+   Actions-Deploy überschreibt das gebaute Artefakt sonst die Datei, die GitHub
+   beim Eintragen der Domain selbst anlegt — die Domain fällt beim nächsten Push
+   wieder weg.
+
+Dazu kommt: `BASE = "/"` und eine nicht funktionierende Domain vertragen sich
+nicht. Dann zeigen alle Pfade auf die Wurzel, während die Seite noch unter
+`/Washinnovation-Produktseite/` liegt, und nichts lädt mehr. Beides gehört in
+denselben Schritt.
+
+**DNS bei one.com** — vier A-Einträge auf die GitHub-Pages-Server:
+
+```
+A      @      185.199.108.153
+A      @      185.199.109.153
+A      @      185.199.110.153
+A      @      185.199.111.153
+CNAME  www    vanlifemum-boop.github.io.
+```
+
+Die vorbelegten A-Einträge von one.com müssen dafür abgeschaltet werden, der
+**MX-Eintrag bleibt an** — sonst ist die E-Mail für die Domain tot.
 
 ---
 
