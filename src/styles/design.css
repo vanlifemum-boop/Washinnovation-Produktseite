@@ -90,11 +90,21 @@ h1, h2, h3, h4 {
   letter-spacing: -0.02em;
   margin: 0 0 0.5em;
   text-wrap: balance;
+  /* Deutsche Komposita sprengen schmale Bildschirme: „Verbraucherstreit-
+     beilegung“ ragte bei 320 px um 111 px über den Rand, und overflow-x:hidden
+     am body schnitt es einfach ab — sichtbar war „Verbraucherstreitbeilegu“.
+     hyphens trennt sauber (die Seite setzt lang="de"), overflow-wrap ist das
+     Netz darunter, falls kein Trennmuster greift. */
+  hyphens: auto;
+  overflow-wrap: break-word;
 }
 
-.display { font-size: clamp(2.6rem, 8vw, 5.2rem); }
-.gross { font-size: clamp(1.9rem, 4.4vw, 3.1rem); }
-h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); }
+/* Die unteren Grenzwerte sind für schmale Geräte gesenkt. Bei 320 px kamen
+   vorher 30 px Schriftgröße heraus, in die keine deutsche Rechtsüberschrift
+   passt — „Datenschutzerklärung“ allein misst dort 320 px bei 280 px Platz. */
+.display { font-size: clamp(2.3rem, 9vw, 5.2rem); }
+.gross { font-size: clamp(1.6rem, 7vw, 3.1rem); }
+h2 { font-size: clamp(1.45rem, 6vw, 2.5rem); }
 h3 { font-size: clamp(1.2rem, 2.2vw, 1.5rem); }
 
 p { margin: 0 0 1.1em; max-width: 68ch; }
@@ -885,7 +895,10 @@ figure { margin: 0; }
 }
 
 /* Quellenverzeichnis */
-.quellenliste { display: grid; gap: 18px; }
+.quellenliste { display: grid; gap: 18px;
+  /* Quellenangaben enthalten URLs ohne Leerzeichen. */
+  overflow-wrap: anywhere;
+}
 .quellenliste li { list-style: none; }
 .quellenliste .name { font-weight: 700; display: block; }
 .quellenliste p { margin: 0.2em 0 0; font-size: 0.94rem; }

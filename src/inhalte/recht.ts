@@ -82,18 +82,21 @@ function verantwortlich(): (string | null)[] {
   return [FIRMA.vertreten, ...zeilen.slice(1)];
 }
 
-/**
- * Überschrift für den Verantwortlichen.
+/*
+ * Der Abschnitt nach § 18 Abs. 2 MStV steht auf ausdrücklichen Wunsch fest im
+ * Impressum, unabhängig vom Sitzland.
  *
- * § 18 Abs. 2 MStV verlangt bei journalistisch-redaktionellen Angeboten die
- * Benennung einer verantwortlichen Person — das Journal dieser Seite fällt
- * darunter. Die Vorschrift ist deutsches Landesmedienrecht; bei einem Sitz in
- * Polen wird sie hier nicht zitiert, weil die Zuständigkeit dann am
- * Herkunftslandprinzip hängt und nicht ohne Prüfung zu behaupten ist.
+ * Hintergrund: § 18 Abs. 2 MStV verlangt bei journalistisch-redaktionellen
+ * Angeboten die Benennung einer verantwortlichen Person mit Namen und
+ * Anschrift — das Journal dieser Seite ist ein solches Angebot. Die Vorschrift
+ * ist deutsches Landesmedienrecht; bei einem Unternehmenssitz in Polen hinge
+ * die Zuständigkeit am Herkunftslandprinzip. Die Angabe zu machen schadet
+ * dabei nicht: Sie ist entweder Pflicht oder eine freiwillige, zutreffende
+ * Auskunft. Sie wegzulassen wäre im ersten Fall ein Verstoß.
+ *
+ * Achtung: Der Name allein genügt der Vorschrift nicht, sie verlangt auch die
+ * Anschrift. Solange FIRMA.strasse leer ist, steht dort nur der Name.
  */
-function verantwortlichTitel(mstv: string, allgemein: string): string {
-  return FIRMA.sitzland === "DE" ? mstv : allgemein;
-}
 
 const de: Record<RechtSchluessel, RechtsseiteRoh> = {
   impressum: {
@@ -121,11 +124,8 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: verantwortlichTitel(
-          "Verantwortlich für journalistisch-redaktionelle Inhalte gemäß § 18 Abs. 2 MStV",
-          "Verantwortlich für den Inhalt",
-        ),
-        absaetze: verantwortlich(),
+        titel: "Verantwortlich für journalistisch-redaktionelle Inhalte gemäß § 18 Abs. 2 MStV",
+        absaetze: [...verantwortlich(), "Darüber hinaus sind in sozialen Netzwerken automatisiert erzeugte Beiträge als solche zu kennzeichnen (§ 18 Absatz 3 MStV)."],
       },
       {
         titel: "Verhältnis zum Hersteller",
@@ -139,7 +139,9 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
            Hinweis darauf ist nicht nur entbehrlich geworden, er darf seither
            nicht mehr im Impressum stehen — der Link ging ins Leere. Geblieben
            ist die Erklärung nach § 36 VSBG. */
-        titel: "Verbraucherstreitbeilegung",
+        // Weiches Trennzeichen nach „Verbraucher“: bei 320 px bricht das Wort
+        // sonst ohne Trennstrich als „Verbraucherstreitbeile | gung“ um.
+        titel: "Verbraucher\u00ADstreitbeilegung",
         absaetze: [
           "Wir sind weder verpflichtet noch bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
         ],
@@ -343,11 +345,8 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: verantwortlichTitel(
-          "Responsible for journalistic and editorial content under § 18(2) MStV",
-          "Responsible for the content",
-        ),
-        absaetze: verantwortlich(),
+        titel: "Responsible for journalistic and editorial content under § 18(2) MStV",
+        absaetze: [...verantwortlich(), "In addition, automatically generated posts in social networks must be labelled as such (§ 18(3) MStV)."],
       },
       {
         titel: "Relationship with the manufacturer",
@@ -534,11 +533,8 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: verantwortlichTitel(
-          "Odpowiedzialny za treści dziennikarsko-redakcyjne zgodnie z § 18 ust. 2 MStV",
-          "Odpowiedzialność za treść",
-        ),
-        absaetze: verantwortlich(),
+        titel: "Odpowiedzialny za treści dziennikarsko-redakcyjne zgodnie z § 18 ust. 2 MStV",
+        absaetze: [...verantwortlich(), "Ponadto automatycznie generowane posty w sieciach społecznościowych muszą być oznaczone jako takie (§ 18 ust. 3 MStV)."],
       },
       {
         titel: "Relacja z producentem",
