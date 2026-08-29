@@ -71,17 +71,37 @@ function absender(): string {
   return [FIRMA.name, anschriftEinzeilig(), FIRMA.email].filter(Boolean).join(", ");
 }
 
-/** Verantwortliche Person mit Anschrift, sofern beides vorliegt. */
-function verantwortlich(): string | null {
-  if (!FIRMA.vertreten) return null;
-  const ort = anschriftEinzeilig();
-  return ort ? `${FIRMA.vertreten}, ${ort}` : FIRMA.vertreten;
+/**
+ * Verantwortliche Person, als Block wie im Impressum üblich: Name, dann die
+ * Anschrift zeilenweise darunter.
+ */
+function verantwortlich(): (string | null)[] {
+  if (!FIRMA.vertreten) return [null];
+  const zeilen = anschriftZeilen();
+  // anschriftZeilen() beginnt mit der Firmierung; hier steht die Person davor.
+  return [FIRMA.vertreten, ...zeilen.slice(1)];
+}
+
+/**
+ * Überschrift für den Verantwortlichen.
+ *
+ * § 18 Abs. 2 MStV verlangt bei journalistisch-redaktionellen Angeboten die
+ * Benennung einer verantwortlichen Person — das Journal dieser Seite fällt
+ * darunter. Die Vorschrift ist deutsches Landesmedienrecht; bei einem Sitz in
+ * Polen wird sie hier nicht zitiert, weil die Zuständigkeit dann am
+ * Herkunftslandprinzip hängt und nicht ohne Prüfung zu behaupten ist.
+ */
+function verantwortlichTitel(mstv: string, allgemein: string): string {
+  return FIRMA.sitzland === "DE" ? mstv : allgemein;
 }
 
 const de: Record<RechtSchluessel, RechtsseiteRoh> = {
   impressum: {
     titel: "Impressum",
-    einleitung: "Angaben gemäß § 5 DDG.",
+    /* § 5 DDG gilt für in Deutschland niedergelassene Anbieter. Sitzt das
+       Unternehmen in Polen, wäre die Angabe falsch — dann steht hier die
+       neutrale Überschrift. */
+    einleitung: FIRMA.sitzland === "DE" ? "Angaben gemäß § 5 DDG." : "Angaben zum Anbieter.",
     abschnitte: [
       { titel: "Anbieter", absaetze: anschriftZeilen() },
       {
@@ -100,7 +120,13 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
           ),
         ],
       },
-      { titel: "Verantwortlich für den Inhalt", absaetze: [verantwortlich()] },
+      {
+        titel: verantwortlichTitel(
+          "Verantwortlich für journalistisch-redaktionelle Inhalte gemäß § 18 Abs. 2 MStV",
+          "Verantwortlich für den Inhalt",
+        ),
+        absaetze: verantwortlich(),
+      },
       {
         titel: "Verhältnis zum Hersteller",
         absaetze: [
@@ -108,10 +134,14 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: "Streitbeilegung",
+        /* Die OS-Plattform der EU-Kommission ist am 20. Juli 2025 abgeschaltet
+           worden (Verordnung (EU) 2024/3228 hebt die ODR-Verordnung auf). Der
+           Hinweis darauf ist nicht nur entbehrlich geworden, er darf seither
+           nicht mehr im Impressum stehen — der Link ging ins Leere. Geblieben
+           ist die Erklärung nach § 36 VSBG. */
+        titel: "Verbraucherstreitbeilegung",
         absaetze: [
-          "Die Europäische Kommission stellt eine Plattform zur Online-Streitbeilegung bereit: https://ec.europa.eu/consumers/odr",
-          "Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
+          "Wir sind weder verpflichtet noch bereit, an einem Streitbeilegungsverfahren vor einer Verbraucherschlichtungsstelle teilzunehmen.",
         ],
       },
     ],
@@ -291,7 +321,9 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
 const en: Record<RechtSchluessel, RechtsseiteRoh> = {
   impressum: {
     titel: "Legal notice",
-    einleitung: "Information according to § 5 DDG (German Digital Services Act).",
+    einleitung: FIRMA.sitzland === "DE"
+      ? "Information according to § 5 DDG (German Digital Services Act)."
+      : "Provider information.",
     abschnitte: [
       { titel: "Provider", absaetze: anschriftZeilen() },
       {
@@ -310,7 +342,13 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
           ),
         ],
       },
-      { titel: "Responsible for the content", absaetze: [verantwortlich()] },
+      {
+        titel: verantwortlichTitel(
+          "Responsible for journalistic and editorial content under § 18(2) MStV",
+          "Responsible for the content",
+        ),
+        absaetze: verantwortlich(),
+      },
       {
         titel: "Relationship with the manufacturer",
         absaetze: [
@@ -318,9 +356,8 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: "Dispute resolution",
+        titel: "Consumer dispute resolution",
         absaetze: [
-          "The European Commission provides a platform for online dispute resolution: https://ec.europa.eu/consumers/odr",
           "We are neither willing nor obliged to take part in dispute resolution proceedings before a consumer arbitration board.",
         ],
       },
@@ -475,7 +512,9 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
 const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
   impressum: {
     titel: "Nota prawna",
-    einleitung: "Informacje zgodnie z § 5 niemieckiej ustawy DDG.",
+    einleitung: FIRMA.sitzland === "DE"
+      ? "Informacje zgodnie z § 5 niemieckiej ustawy DDG."
+      : "Dane sprzedawcy.",
     abschnitte: [
       { titel: "Sprzedawca", absaetze: anschriftZeilen() },
       {
@@ -494,7 +533,13 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
           ),
         ],
       },
-      { titel: "Odpowiedzialność za treść", absaetze: [verantwortlich()] },
+      {
+        titel: verantwortlichTitel(
+          "Odpowiedzialny za treści dziennikarsko-redakcyjne zgodnie z § 18 ust. 2 MStV",
+          "Odpowiedzialność za treść",
+        ),
+        absaetze: verantwortlich(),
+      },
       {
         titel: "Relacja z producentem",
         absaetze: [
@@ -502,9 +547,8 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: "Rozstrzyganie sporów",
+        titel: "Pozasądowe rozstrzyganie sporów konsumenckich",
         absaetze: [
-          "Komisja Europejska udostępnia platformę internetowego rozstrzygania sporów: https://ec.europa.eu/consumers/odr",
           "Nie jesteśmy zobowiązani ani gotowi do udziału w postępowaniu przed konsumenckim organem polubownym.",
         ],
       },

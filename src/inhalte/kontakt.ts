@@ -10,6 +10,7 @@
  *
  * Beim Ändern der Nummer nur RUFNUMMER anfassen. Alles andere leitet sich ab.
  */
+import { FIRMA } from "./firma";
 
 /**
  * Internationale Rufnummer, nur Ziffern, mit Ländervorwahl und ohne die
@@ -26,8 +27,16 @@ export const RUFNUMMER = "4915208643106";
 /** Lesbare Schreibweise für die Anzeige. */
 export const RUFNUMMER_LESBAR = "+49 152 08643106";
 
-/** Name der Person hinter der Nummer — steht neben dem Knopf, damit klar ist, wer antwortet. */
-export const ANSPRECHPERSON = "Justine Martynek";
+/**
+ * Name der Person hinter der Nummer — steht neben dem Knopf, damit klar ist,
+ * wer antwortet.
+ *
+ * Bewusst kein eigener Wert: Der Name steht in src/inhalte/firma.ts, weil er
+ * dort auch das Impressum speist. Zwei Schreibweisen desselben Namens auf einer
+ * Seite („Justine“ im Kontakt, „Justyna“ im Impressum) sähen aus wie ein Fehler
+ * — und eine davon wäre auch einer.
+ */
+export const ANSPRECHPERSON = FIRMA.vertreten;
 
 /** `tel:`-Ziel. E.164, also mit Plus und ohne Leerzeichen. */
 export const TELEFON_LINK = `tel:+${RUFNUMMER}`;

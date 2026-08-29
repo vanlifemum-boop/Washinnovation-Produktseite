@@ -12,25 +12,42 @@
  * Solange etwas aus PFLICHT fehlt, lässt sich die Seite nicht für Suchmaschinen
  * freigeben, ohne dass der Build abbricht.
  *
- * Ein unvollständiges Impressum ist auf einer Verkaufsseite in Deutschland
- * abmahnfähig. Der Wächter ersetzt den gelben Hinweisstreifen, der früher auf
- * der Seite selbst stand.
+ * Ein unvollständiges Impressum ist bei einem Verkaufsangebot an deutsche
+ * Verbraucher abmahnfähig. Der Wächter ersetzt den gelben Hinweisstreifen, der
+ * früher auf der Seite selbst stand.
  */
 
+/**
+ * Land, in dem das Unternehmen eingetragen ist. Nicht dasselbe wie das
+ * Liefergebiet — es bestimmt, welche Kennnummern ins Impressum gehören und
+ * worauf sich die Pflichtangaben stützen.
+ *
+ *   "PL" — Eintrag in der CEIDG oder im KRS, Kennungen NIP und REGON
+ *   "DE" — Gewerbeanmeldung in Deutschland, Kennung USt-IdNr. nach § 27a UStG
+ */
+export type Sitzland = "PL" | "DE";
+
 export interface Firmendaten {
-  /** Vollständige Firmierung, wie sie im Register bzw. auf der Rechnung steht. */
+  /** Vollständige Firmierung, wie sie im Register steht. */
   name: string;
   strasse: string;
   plz: string;
   ort: string;
+  /** Klartext, erscheint so im Impressum. */
   land: string;
+  sitzland: Sitzland;
   email: string;
-  /** Vertretungsberechtigte Person, zugleich verantwortlich für den Inhalt. */
+  /** Inhaberin bzw. vertretungsberechtigte Person, zugleich verantwortlich für den Inhalt. */
   vertreten: string;
-  /** Umsatzsteuer-Identifikationsnummer nach § 27a UStG. */
+
+  /** Polen: Steuernummer (NIP), zehnstellig. */
+  nip: string;
+  /** Polen: Statistiknummer (REGON), neun- oder vierzehnstellig. */
+  regon: string;
+  /** Deutschland: Umsatzsteuer-Identifikationsnummer nach § 27a UStG. */
   ustId: string;
   /**
-   * true  = Kleinunternehmer nach § 19 UStG, es wird keine Umsatzsteuer erhoben
+   * true  = umsatzsteuerbefreit (Kleinunternehmerregelung bzw. zwolnienie z VAT)
    * false = regelbesteuert
    * null  = noch nicht entschieden
    */
@@ -38,13 +55,16 @@ export interface Firmendaten {
 }
 
 export const FIRMA: Firmendaten = {
-  name: "",
+  name: "Wow Camp Justyna Martynek",
   strasse: "",
   plz: "",
   ort: "",
-  land: "Deutschland",
+  land: "Polen",
+  sitzland: "PL",
   email: "",
-  vertreten: "Justine Martynek",
+  vertreten: "Justyna Martynek",
+  nip: "",
+  regon: "",
   ustId: "",
   kleinunternehmer: null,
 };
@@ -58,6 +78,41 @@ export const HOSTER = {
   anschrift: "88 Colin P Kelly Jr Street, San Francisco, CA 94107, USA",
   dienst: "GitHub Pages",
 };
+
+/* ========================================================================
+   Prüfziffern
+   ------------------------------------------------------------------------
+   NIP und REGON tragen eine Prüfziffer. Eine vertauschte Ziffer ergibt fast
+   immer eine ungültige Nummer — und genau das ist der Fehler, den man sonst
+   nie bemerkt: Die Seite baut fehlerfrei, das Impressum sieht vollständig
+   aus, und die Nummer zeigt auf niemanden. Deshalb rechnet der Build nach.
+   ======================================================================== */
+
+const NIP_GEWICHTE = [6, 5, 7, 2, 3, 4, 5, 6, 7];
+
+/** Zehnstellige NIP mit gültiger Prüfziffer? Bindestriche und Leerzeichen sind erlaubt. */
+export function nipGueltig(wert: string): boolean {
+  const z = wert.replace(/[\s-]/g, "");
+  if (!/^\d{10}$/.test(z)) return false;
+  const rest = NIP_GEWICHTE.reduce((s, g, i) => s + g * Number(z[i]), 0) % 11;
+  // Rest 10 kann keine Prüfziffer sein — solche Nummern werden nicht vergeben.
+  return rest !== 10 && rest === Number(z[9]);
+}
+
+const REGON_9 = [8, 9, 2, 3, 4, 5, 6, 7];
+const REGON_14 = [2, 4, 8, 5, 0, 9, 7, 3, 6, 1, 2, 4, 8];
+
+/** Neun- oder vierzehnstelliger REGON mit gültiger Prüfziffer? */
+export function regonGueltig(wert: string): boolean {
+  const z = wert.replace(/[\s-]/g, "");
+  if (!/^\d{9}$/.test(z) && !/^\d{14}$/.test(z)) return false;
+  const ziffer = (gewichte: number[]) => {
+    const s = gewichte.reduce((a, g, i) => a + g * Number(z[i]), 0) % 11;
+    return s === 10 ? 0 : s;
+  };
+  if (ziffer(REGON_9) !== Number(z[8])) return false;
+  return z.length === 9 || ziffer(REGON_14) === Number(z[13]);
+}
 
 /** Anschrift als eine Zeile, oder "" wenn sie unvollständig ist. */
 export function anschriftEinzeilig(): string {
@@ -74,21 +129,67 @@ export function anschriftZeilen(): string[] {
 }
 
 /**
- * Pflichtangaben für ein vollständiges Impressum nach § 5 DDG und eine
- * belastbare Widerrufsbelehrung. Ohne sie darf die Seite nicht in den Index.
+ * Steuerliche Kennung des Sitzlandes, fertig beschriftet — oder null, solange
+ * sie fehlt. Die Beschriftung kommt von außen, damit sie übersetzt sein kann.
  */
-const PFLICHT: Array<[schluessel: string, vorhanden: boolean]> = [
-  ["Firmierung (FIRMA.name)", Boolean(FIRMA.name)],
-  ["Straße (FIRMA.strasse)", Boolean(FIRMA.strasse)],
-  ["PLZ (FIRMA.plz)", Boolean(FIRMA.plz)],
-  ["Ort (FIRMA.ort)", Boolean(FIRMA.ort)],
-  ["E-Mail (FIRMA.email)", Boolean(FIRMA.email)],
-  ["Vertretung (FIRMA.vertreten)", Boolean(FIRMA.vertreten)],
-  ["Umsatzsteuer: USt-IdNr. oder Kleinunternehmer-Kennzeichnung",
-    Boolean(FIRMA.ustId) || FIRMA.kleinunternehmer !== null],
-];
+export function steuerKennungen(bez: { nip: string; regon: string; ustId: string }): string[] {
+  if (FIRMA.sitzland === "PL") {
+    return [
+      FIRMA.nip && `${bez.nip}: ${FIRMA.nip}`,
+      FIRMA.regon && `${bez.regon}: ${FIRMA.regon}`,
+    ].filter((s): s is string => Boolean(s));
+  }
+  return FIRMA.ustId ? [`${bez.ustId}: ${FIRMA.ustId}`] : [];
+}
+
+/**
+ * Pflichtangaben für ein vollständiges Impressum und eine belastbare
+ * Widerrufsbelehrung. Ohne sie darf die Seite nicht in den Index.
+ */
+function pflichtliste(): Array<[name: string, erfuellt: boolean]> {
+  const kennung: [string, boolean] =
+    FIRMA.sitzland === "PL"
+      ? ["NIP (FIRMA.nip)", Boolean(FIRMA.nip)]
+      : ["USt-IdNr. oder Kleinunternehmer-Kennzeichnung (FIRMA.ustId)",
+         Boolean(FIRMA.ustId) || FIRMA.kleinunternehmer !== null];
+  return [
+    ["Firmierung (FIRMA.name)", Boolean(FIRMA.name)],
+    ["Straße (FIRMA.strasse)", Boolean(FIRMA.strasse)],
+    ["PLZ (FIRMA.plz)", Boolean(FIRMA.plz)],
+    ["Ort (FIRMA.ort)", Boolean(FIRMA.ort)],
+    ["E-Mail (FIRMA.email)", Boolean(FIRMA.email)],
+    ["Vertretung (FIRMA.vertreten)", Boolean(FIRMA.vertreten)],
+    kennung,
+  ];
+}
 
 /** Was für einen Livegang noch fehlt. Leer = vollständig. */
 export function fehlendePflichtangaben(): string[] {
-  return PFLICHT.filter(([, da]) => !da).map(([name]) => name);
+  return pflichtliste().filter(([, da]) => !da).map(([name]) => name);
+}
+
+/**
+ * Angaben, die zwar dastehen, aber nicht stimmen können. Anders als fehlende
+ * Angaben ist das immer ein Fehler — auch im Vorschaubetrieb.
+ */
+export function fehlerhafteAngaben(): string[] {
+  const fehler: string[] = [];
+  if (FIRMA.nip && !nipGueltig(FIRMA.nip)) {
+    fehler.push(`NIP „${FIRMA.nip}“ hat keine gültige Prüfziffer — bitte Ziffern vergleichen.`);
+  }
+  if (FIRMA.regon && !regonGueltig(FIRMA.regon)) {
+    fehler.push(`REGON „${FIRMA.regon}“ hat keine gültige Prüfziffer — bitte Ziffern vergleichen.`);
+  }
+  if (FIRMA.ustId && !/^[A-Z]{2}[0-9A-Z]{2,12}$/.test(FIRMA.ustId.replace(/\s/g, ""))) {
+    fehler.push(`USt-IdNr. „${FIRMA.ustId}“ sieht nicht wie eine EU-Umsatzsteuer-ID aus (Länderkürzel + Ziffern).`);
+  }
+  return fehler;
+}
+
+/* Falsche Kennnummern sind schlimmer als fehlende: Sie zeigen auf ein anderes
+   Unternehmen. Deshalb bricht der Build sofort ab, unabhängig davon, ob die
+   Seite schon freigegeben ist. */
+const kaputt = fehlerhafteAngaben();
+if (kaputt.length > 0) {
+  throw new Error("Fehlerhafte Angaben in src/inhalte/firma.ts:\n  - " + kaputt.join("\n  - "));
 }
