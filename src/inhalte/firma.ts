@@ -44,10 +44,26 @@ export interface Firmendaten {
   nip: string;
   /** Polen: Statistiknummer (REGON), neun- oder vierzehnstellig. */
   regon: string;
-  /** Deutschland: Umsatzsteuer-Identifikationsnummer nach § 27a UStG. */
+  /**
+   * Polen: In welches Register das Unternehmen eingetragen ist.
+   *   "CEIDG" — Einzelunternehmen (jednoosobowa działalność gospodarcza).
+   *             Wird über NIP oder Namen gefunden, hat keine eigene Nummer.
+   *   "KRS"   — Handelsregister für Gesellschaften, dann krsNummer setzen.
+   */
+  registerArt: "CEIDG" | "KRS" | "";
+  /** Nur bei KRS: die Registernummer. */
+  krsNummer: string;
+  /**
+   * Umsatzsteuer-Identifikationsnummer für den EU-Warenverkehr.
+   * In Polen ist das die NIP mit vorangestelltem „PL“ — aber nur, wenn eine
+   * VAT-EU-Registrierung besteht. Deshalb steht sie hier ausdrücklich und wird
+   * nicht aus der NIP errechnet: Wer nicht VAT-EU-registriert ist, hätte sonst
+   * eine Nummer im Impressum, die es nicht gibt.
+   */
   ustId: string;
   /**
-   * true  = umsatzsteuerbefreit (Kleinunternehmerregelung bzw. zwolnienie z VAT)
+   * true  = umsatzsteuerbefreit — in Polen das zwolnienie podmiotowe nach
+   *         Art. 113 des Umsatzsteuergesetzes, in Deutschland § 19 UStG
    * false = regelbesteuert
    * null  = noch nicht entschieden
    */
@@ -65,6 +81,8 @@ export const FIRMA: Firmendaten = {
   vertreten: "Justyna Martynek",
   nip: "",
   regon: "",
+  registerArt: "CEIDG",
+  krsNummer: "",
   ustId: "",
   kleinunternehmer: null,
 };
@@ -143,6 +161,17 @@ export function steuerKennungen(bez: { nip: string; regon: string; ustId: string
 }
 
 /**
+ * Satz zur Registereintragung, oder null, wenn keiner passt.
+ * Die Textbausteine kommen von außen, damit sie übersetzt sein können.
+ */
+export function registerAngabe(bez: { ceidg: string; krs: (nr: string) => string }): string | null {
+  if (FIRMA.sitzland !== "PL") return null;
+  if (FIRMA.registerArt === "CEIDG") return bez.ceidg;
+  if (FIRMA.registerArt === "KRS" && FIRMA.krsNummer) return bez.krs(FIRMA.krsNummer);
+  return null;
+}
+
+/**
  * Pflichtangaben für ein vollständiges Impressum und eine belastbare
  * Widerrufsbelehrung. Ohne sie darf die Seite nicht in den Index.
  */
@@ -152,7 +181,12 @@ function pflichtliste(): Array<[name: string, erfuellt: boolean]> {
       ? ["NIP (FIRMA.nip)", Boolean(FIRMA.nip)]
       : ["USt-IdNr. oder Kleinunternehmer-Kennzeichnung (FIRMA.ustId)",
          Boolean(FIRMA.ustId) || FIRMA.kleinunternehmer !== null];
+  const register: Array<[string, boolean]> =
+    FIRMA.sitzland === "PL" && FIRMA.registerArt === "KRS"
+      ? [["KRS-Nummer (FIRMA.krsNummer)", Boolean(FIRMA.krsNummer)]]
+      : [];
   return [
+    ...register,
     ["Firmierung (FIRMA.name)", Boolean(FIRMA.name)],
     ["Straße (FIRMA.strasse)", Boolean(FIRMA.strasse)],
     ["PLZ (FIRMA.plz)", Boolean(FIRMA.plz)],

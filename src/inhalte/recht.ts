@@ -2,6 +2,14 @@
  * Pflichtseiten eines Verkaufsangebots an Verbraucher in Deutschland:
  * Impressum, Datenschutz, AGB, Widerruf, Versand und Zahlung.
  *
+ * Der Anbieter sitzt in Polen, die Kundschaft in Deutschland. Das ist keine
+ * Randnotiz, sondern bestimmt an mehreren Stellen den Text: welche Kennnummern
+ * ins Impressum gehören (NIP und REGON statt USt-IdNr.), welches Register zu
+ * nennen ist (CEIDG), welche Datenschutz-Aufsichtsbehörde zuständig ist (UODO
+ * in Warschau) und welches Recht gilt — polnisches, aber ohne den deutschen
+ * Verbrauchern ihren zwingenden Schutz zu nehmen (Art. 6 Rom-I-Verordnung).
+ * Umgeschaltet wird das über FIRMA.sitzland in src/inhalte/firma.ts.
+ *
  * WICHTIG — bitte lesen, bevor die Seite live geht:
  * Das hier ist ein Gerüst, keine Rechtsberatung. Die AGB und die
  * Widerrufsbelehrung gehören vor der Veröffentlichung einmal durch jemanden mit
@@ -26,7 +34,9 @@
  * solange dort etwas offen ist. Der Wächter ersetzt den gelben Hinweisstreifen,
  * der früher auf der Seite selbst stand.
  */
-import { FIRMA, HOSTER, anschriftEinzeilig, anschriftZeilen } from "./firma";
+import {
+  FIRMA, HOSTER, anschriftEinzeilig, anschriftZeilen, registerAngabe, steuerKennungen,
+} from "./firma";
 import { RUFNUMMER_LESBAR, ANSPRECHPERSON } from "./kontakt";
 
 export interface Abschnitt {
@@ -59,11 +69,12 @@ function kontaktZeilen(email: string, telefon: string): (string | null)[] {
   ];
 }
 
-/** Umsatzsteuer-Absatz je nach Besteuerungsart; ohne Entscheidung kein Absatz. */
-function umsatzsteuer(mitId: (id: string) => string, klein: string): string | null {
-  if (FIRMA.ustId) return mitId(FIRMA.ustId);
-  if (FIRMA.kleinunternehmer === true) return klein;
-  return null;
+/**
+ * Satz zur Umsatzsteuerbefreiung — nur, wenn sie tatsächlich gilt.
+ * Die Kennnummern selbst liefert steuerKennungen() aus firma.ts.
+ */
+function umsatzsteuerbefreit(satz: string): string | null {
+  return FIRMA.kleinunternehmer === true ? satz : null;
 }
 
 /** Absender für Widerruf und Muster-Formular: Firmierung, Anschrift, E-Mail. */
@@ -115,12 +126,30 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: "Umsatzsteuer",
+        titel: "Register",
         absaetze: [
-          umsatzsteuer(
-            (id) => `Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG: ${id}`,
-            "Als Kleinunternehmen im Sinne des § 19 UStG wird keine Umsatzsteuer berechnet und daher auch nicht ausgewiesen.",
-          ),
+          registerAngabe({
+            ceidg: "Eingetragen in der Centralna Ewidencja i Informacja o Działalności Gospodarczej (CEIDG), dem polnischen Register für Einzelunternehmen.",
+            krs: (nr) => `Eingetragen im Krajowy Rejestr Sądowy (KRS) unter der Nummer ${nr}.`,
+          }),
+        ],
+      },
+      {
+        titel: "Steuerliche Angaben",
+        absaetze: [
+          ...steuerKennungen({
+            nip: "Steuernummer (NIP)",
+            regon: "Statistiknummer (REGON)",
+            ustId: "Umsatzsteuer-Identifikationsnummer gemäß § 27a UStG",
+          }),
+          FIRMA.sitzland === "PL" && FIRMA.ustId
+            ? `Umsatzsteuer-Identifikationsnummer für den EU-Warenverkehr: ${FIRMA.ustId}`
+            : null,
+          umsatzsteuerbefreit(
+              FIRMA.sitzland === "PL"
+                ? "Es wird keine Umsatzsteuer berechnet und daher auch nicht ausgewiesen (Umsatzsteuerbefreiung nach Art. 113 des polnischen Umsatzsteuergesetzes)."
+                : "Als Kleinunternehmen im Sinne des § 19 UStG wird keine Umsatzsteuer berechnet und daher auch nicht ausgewiesen.",
+            ),
         ],
       },
       {
@@ -200,7 +229,10 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Rechte der betroffenen Personen",
         absaetze: [
           "Es besteht ein Recht auf Auskunft, Berichtigung, Löschung, Einschränkung der Verarbeitung, Datenübertragbarkeit und Widerspruch.",
-          "Außerdem besteht ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde, in der Regel bei der des eigenen Wohnorts oder der des Unternehmenssitzes.",
+          "Außerdem besteht ein Beschwerderecht bei einer Datenschutz-Aufsichtsbehörde — wahlweise bei der des eigenen Wohnorts oder bei der für uns zuständigen.",
+          FIRMA.sitzland === "PL"
+            ? "Für uns zuständig ist der Präsident des Amts für den Schutz personenbezogener Daten (Prezes Urzędu Ochrony Danych Osobowych), ul. Stawki 2, 00-193 Warschau, Polen."
+            : null,
         ],
       },
     ],
@@ -247,6 +279,19 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         absaetze: ["Der Zahlungsweg wird in der Bestätigung der Bestellung mitgeteilt."],
       },
       { titel: "Gewährleistung", absaetze: ["Es gilt das gesetzliche Mängelhaftungsrecht."] },
+      {
+        /* Rom-I-Verordnung Art. 6: Bei Verbraucherverträgen darf eine Rechtswahl
+           dem Verbraucher nicht den Schutz nehmen, den die zwingenden
+           Vorschriften seines Aufenthaltsstaates gewähren. Eine Klausel, die nur
+           „es gilt polnisches Recht“ sagt, wäre gegenüber deutschen Kundinnen
+           und Kunden unwirksam und obendrein abmahnfähig. */
+        titel: "Anwendbares Recht",
+        absaetze: [
+          FIRMA.sitzland === "PL"
+            ? "Es gilt polnisches Recht. Verbraucherinnen und Verbrauchern bleibt dabei der Schutz erhalten, den die zwingenden Vorschriften ihres Aufenthaltsstaates gewähren — bei Bestellungen aus Deutschland also das deutsche Verbraucherschutzrecht (Art. 6 Rom-I-Verordnung)."
+            : null,
+        ],
+      },
       {
         titel: "Das 1+1-Versprechen",
         absaetze: [
@@ -336,12 +381,30 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: "VAT",
+        titel: "Register",
         absaetze: [
-          umsatzsteuer(
-            (id) => `VAT identification number under § 27a UStG: ${id}`,
-            "As a small business within the meaning of § 19 UStG, no VAT is charged and none is shown.",
-          ),
+          registerAngabe({
+            ceidg: "Registered in the Centralna Ewidencja i Informacja o Działalności Gospodarczej (CEIDG), the Polish register of sole proprietorships.",
+            krs: (nr) => `Registered in the Krajowy Rejestr Sądowy (KRS) under number ${nr}.`,
+          }),
+        ],
+      },
+      {
+        titel: "Tax details",
+        absaetze: [
+          ...steuerKennungen({
+            nip: "Tax number (NIP)",
+            regon: "Statistical number (REGON)",
+            ustId: "VAT identification number under § 27a UStG",
+          }),
+          FIRMA.sitzland === "PL" && FIRMA.ustId
+            ? `EU VAT identification number: ${FIRMA.ustId}`
+            : null,
+          umsatzsteuerbefreit(
+              FIRMA.sitzland === "PL"
+                ? "No VAT is charged and none is shown (VAT exemption under Art. 113 of the Polish VAT Act)."
+                : "As a small business within the meaning of § 19 UStG, no VAT is charged and none is shown.",
+            ),
         ],
       },
       {
@@ -409,7 +472,10 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Your rights",
         absaetze: [
           "You have the right to information, rectification, erasure, restriction of processing, data portability and objection.",
-          "You also have the right to lodge a complaint with a data protection supervisory authority, usually the one for your place of residence or for the company's registered office.",
+          "You also have the right to lodge a complaint with a data protection supervisory authority — either the one for your place of residence or the one responsible for us.",
+          FIRMA.sitzland === "PL"
+            ? "The authority responsible for us is the President of the Personal Data Protection Office (Prezes Urzędu Ochrony Danych Osobowych), ul. Stawki 2, 00-193 Warsaw, Poland."
+            : null,
         ],
       },
     ],
@@ -450,6 +516,14 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
       },
       { titel: "Payment", absaetze: ["The payment method is communicated in the order confirmation."] },
       { titel: "Warranty", absaetze: ["Statutory warranty rights apply."] },
+      {
+        titel: "Applicable law",
+        absaetze: [
+          FIRMA.sitzland === "PL"
+            ? "Polish law applies. Consumers nevertheless keep the protection afforded by the mandatory provisions of their country of residence — for orders from Germany, that means German consumer protection law (Art. 6 Rome I Regulation)."
+            : null,
+        ],
+      },
       {
         titel: "The 1+1 promise",
         absaetze: [
@@ -524,12 +598,30 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
         ],
       },
       {
-        titel: "Podatek VAT",
+        titel: "Rejestr",
         absaetze: [
-          umsatzsteuer(
-            (id) => `Numer identyfikacyjny VAT zgodnie z § 27a UStG: ${id}`,
-            "Jako małe przedsiębiorstwo w rozumieniu § 19 UStG nie naliczamy podatku VAT i go nie wykazujemy.",
-          ),
+          registerAngabe({
+            ceidg: "Wpis w Centralnej Ewidencji i Informacji o Działalności Gospodarczej (CEIDG).",
+            krs: (nr) => `Wpis w Krajowym Rejestrze Sądowym (KRS) pod numerem ${nr}.`,
+          }),
+        ],
+      },
+      {
+        titel: "Dane podatkowe",
+        absaetze: [
+          ...steuerKennungen({
+            nip: "NIP",
+            regon: "REGON",
+            ustId: "Numer identyfikacyjny VAT zgodnie z § 27a UStG",
+          }),
+          FIRMA.sitzland === "PL" && FIRMA.ustId
+            ? `Numer VAT-UE: ${FIRMA.ustId}`
+            : null,
+          umsatzsteuerbefreit(
+              FIRMA.sitzland === "PL"
+                ? "Nie naliczamy podatku VAT i go nie wykazujemy (zwolnienie podmiotowe na podstawie art. 113 ustawy o VAT)."
+                : "Jako małe przedsiębiorstwo w rozumieniu § 19 UStG nie naliczamy podatku VAT i go nie wykazujemy.",
+            ),
         ],
       },
       {
@@ -601,7 +693,10 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Prawa osób, których dane dotyczą",
         absaetze: [
           "Przysługuje prawo dostępu, sprostowania, usunięcia, ograniczenia przetwarzania, przenoszenia danych i sprzeciwu.",
-          "Przysługuje również prawo wniesienia skargi do organu nadzorczego ds. ochrony danych, zwykle właściwego dla miejsca zamieszkania lub siedziby firmy.",
+          "Przysługuje również prawo wniesienia skargi do organu nadzorczego ds. ochrony danych — właściwego dla miejsca zamieszkania albo właściwego dla nas.",
+          FIRMA.sitzland === "PL"
+            ? "Organem właściwym dla nas jest Prezes Urzędu Ochrony Danych Osobowych, ul. Stawki 2, 00-193 Warszawa."
+            : null,
         ],
       },
     ],
@@ -640,6 +735,14 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
       },
       { titel: "Płatność", absaetze: ["Sposób płatności podajemy w potwierdzeniu zamówienia."] },
       { titel: "Rękojmia", absaetze: ["Obowiązują ustawowe przepisy o rękojmi."] },
+      {
+        titel: "Prawo właściwe",
+        absaetze: [
+          FIRMA.sitzland === "PL"
+            ? "Obowiązuje prawo polskie. Konsumenci zachowują przy tym ochronę wynikającą z bezwzględnie obowiązujących przepisów państwa swojego miejsca zwykłego pobytu — w przypadku zamówień z Niemiec jest to niemieckie prawo konsumenckie (art. 6 rozporządzenia Rzym I)."
+            : null,
+        ],
+      },
       {
         titel: "Obietnica 1+1",
         absaetze: [
