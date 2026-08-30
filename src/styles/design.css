@@ -669,6 +669,37 @@ tfoot td { font-weight: 800; background: var(--schaum); }
 .datenliste dd { margin: 0; color: var(--text-leise); text-align: right; overflow-wrap: anywhere; }
 code { overflow-wrap: anywhere; }
 
+/* ---- Kontaktseite: Visitenkarte neben den Kontaktwegen ---- */
+.kontakt-raster {
+  display: grid;
+  gap: clamp(24px, 4vw, 46px);
+  align-items: start;
+  /* Feste Spalte für die Karte, der Rest nimmt den Platz. minmax(0, …) statt
+     einer blanken Breite, damit die Spalte in engen Rastern schrumpfen darf
+     statt das Raster aufzusprengen. */
+  grid-template-columns: minmax(0, 340px) minmax(0, 1fr);
+}
+@media (max-width: 880px) {
+  /* Untereinander: 340 px Karte plus Text passen hier nicht mehr nebeneinander,
+     ohne dass die Knöpfe im Kasten umbrechen. */
+  .kontakt-raster { grid-template-columns: 1fr; }
+  /* Auf dem Handy nimmt die Karte sonst den halben ersten Bildschirm ein. */
+  .visitenkarte { max-width: 420px; }
+}
+.visitenkarte {
+  margin: 0;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--schatten);
+  /* Über der Tropfen-Ebene (30) und dem Schlauch (31), unter dem klebenden
+     Kopf (100). Die Tropfen blenden sich nur über *Text* aus — eine Grafik
+     erkennen sie nicht, und so trieben sie quer über Gesicht und Aufdruck der
+     Karte. Ein solides Objekt gehört davor, nicht dahinter. */
+  position: relative;
+  z-index: 32;
+}
+.visitenkarte img { width: 100%; height: auto; display: block; }
+
 /* ---- Kasten mit dem schnellsten Kontaktweg ---- */
 .kontaktkasten {
   background: var(--eis);

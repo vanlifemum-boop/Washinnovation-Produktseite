@@ -1,7 +1,7 @@
 ---
 import Basis from "../../layouts/Basis.astro";
 import WhatsappKnopf from "../../components/WhatsappKnopf.astro";
-import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, datei, type Sprache } from "../../i18n/ui";
 import {
   ANSPRECHPERSON, RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink,
 } from "../../inhalte/kontakt";
@@ -27,47 +27,64 @@ const email = FIRMA.email;
   seitenpfad="kontakt"
 >
   <section class="sek sek--weiss">
-    <div class="behaelter schmal">
-      <div class="kontaktkasten" data-reveal>
-        <h2>{t("kontakt.direkt.titel")}</h2>
-        <p>{t("kontakt.direkt.text")}</p>
-        <div class="knopfreihe">
-          <WhatsappKnopf sprache={sprache} />
-          <a class="btn btn--rand" href={TELEFON_LINK}>{t("kontakt.telefon")}: {RUFNUMMER_LESBAR}</a>
-        </div>
-        <p class="leise kontaktkasten-fussnote">{t("whatsapp.hinweis")}</p>
-      </div>
+    <div class="behaelter">
+      <div class="kontakt-raster">
+        {/* Die Karte steht zuerst im Markup und damit auf dem Handy oben: Ein
+            Gesicht vor den Rufnummern, nicht umgekehrt. */}
+        <figure class="visitenkarte" data-reveal>
+          <img
+            src={datei("bilder/visitenkarte.jpg")}
+            alt={t("kontakt.karte.alt")}
+            width="779"
+            height="801"
+            loading="lazy"
+            decoding="async"
+          />
+        </figure>
 
-      <dl class="datenliste" data-reveal>
         <div>
-          <dt>{t("kontakt.ansprechperson")}</dt>
-          <dd>{ANSPRECHPERSON}</dd>
-        </div>
-        <div>
-          <dt>{t("kontakt.telefon")}</dt>
-          <dd><a href={TELEFON_LINK}>{RUFNUMMER_LESBAR}</a></dd>
-        </div>
-        <div>
-          <dt>{t("kontakt.whatsapp")}</dt>
-          <dd>
-            <a href={whatsappLink(t("whatsapp.nachricht"))} target="_blank" rel="noopener noreferrer">
-              {RUFNUMMER_LESBAR}
-            </a>
-          </dd>
-        </div>
-        {email && (
-          <div>
-            <dt>{t("kontakt.email")}</dt>
-            <dd><a href={`mailto:${email}`}>{email}</a></dd>
+          <div class="kontaktkasten" data-reveal>
+            <h2>{t("kontakt.direkt.titel")}</h2>
+            <p>{t("kontakt.direkt.text")}</p>
+            <div class="knopfreihe">
+              <WhatsappKnopf sprache={sprache} />
+              <a class="btn btn--rand" href={TELEFON_LINK}>{t("kontakt.telefon")}: {RUFNUMMER_LESBAR}</a>
+            </div>
+            <p class="leise kontaktkasten-fussnote">{t("whatsapp.hinweis")}</p>
           </div>
-        )}
-      </dl>
 
-      <p class="leise" data-reveal style="margin-top:1.2rem">{t("kontakt.antwortzeit")}</p>
+          <dl class="datenliste" data-reveal>
+            <div>
+              <dt>{t("kontakt.ansprechperson")}</dt>
+              <dd>{ANSPRECHPERSON}</dd>
+            </div>
+            <div>
+              <dt>{t("kontakt.telefon")}</dt>
+              <dd><a href={TELEFON_LINK}>{RUFNUMMER_LESBAR}</a></dd>
+            </div>
+            <div>
+              <dt>{t("kontakt.whatsapp")}</dt>
+              <dd>
+                <a href={whatsappLink(t("whatsapp.nachricht"))} target="_blank" rel="noopener noreferrer">
+                  {RUFNUMMER_LESBAR}
+                </a>
+              </dd>
+            </div>
+            {email && (
+              <div>
+                <dt>{t("kontakt.email")}</dt>
+                <dd><a href={`mailto:${email}`}>{email}</a></dd>
+              </div>
+            )}
+          </dl>
 
-      <div class="knopfreihe" data-reveal>
-        <a class="btn" href={pfad(sprache, "bestellen")}>{t("start.cta.button")}</a>
-        <a class="btn btn--rand" href={pfad(sprache, "haendler")}>{t("haendler.anfrage")}</a>
+          <p class="leise" data-reveal style="margin-top:1.2rem">{t("kontakt.antwortzeit")}</p>
+
+          <div class="knopfreihe" data-reveal>
+            <a class="btn" href={pfad(sprache, "bestellen")}>{t("start.cta.button")}</a>
+            <a class="btn btn--rand" href={pfad(sprache, "haendler")}>{t("haendler.anfrage")}</a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
