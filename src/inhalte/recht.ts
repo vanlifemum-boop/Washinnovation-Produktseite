@@ -261,7 +261,9 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Preise",
         absaetze: [
           FIRMA.kleinunternehmer === true
-            ? "Es wird keine Umsatzsteuer berechnet (Kleinunternehmerregelung nach § 19 UStG)."
+            ? (FIRMA.sitzland === "PL"
+                ? "Es wird keine Umsatzsteuer berechnet (Umsatzsteuerbefreiung nach Art. 113 des polnischen Umsatzsteuergesetzes)."
+                : "Es wird keine Umsatzsteuer berechnet (Kleinunternehmerregelung nach § 19 UStG).")
             : FIRMA.kleinunternehmer === false
               ? "Alle Preise verstehen sich inklusive der gesetzlichen Umsatzsteuer."
               : null,
@@ -501,7 +503,9 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Prices",
         absaetze: [
           FIRMA.kleinunternehmer === true
-            ? "No VAT is charged (small business rule under § 19 UStG)."
+            ? (FIRMA.sitzland === "PL"
+                ? "No VAT is charged (VAT exemption under Art. 113 of the Polish VAT Act)."
+                : "No VAT is charged (small business rule under § 19 UStG).")
             : FIRMA.kleinunternehmer === false
               ? "All prices include statutory VAT."
               : null,
@@ -722,7 +726,9 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Ceny",
         absaetze: [
           FIRMA.kleinunternehmer === true
-            ? "Nie naliczamy podatku VAT (zwolnienie dla małych przedsiębiorców, § 19 UStG)."
+            ? (FIRMA.sitzland === "PL"
+                ? "Nie naliczamy podatku VAT (zwolnienie podmiotowe na podstawie art. 113 ustawy o VAT)."
+                : "Nie naliczamy podatku VAT (zwolnienie dla małych przedsiębiorców, § 19 UStG).")
             : FIRMA.kleinunternehmer === false
               ? "Wszystkie ceny zawierają ustawowy podatek VAT."
               : null,

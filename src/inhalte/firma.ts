@@ -71,20 +71,22 @@ export interface Firmendaten {
 }
 
 export const FIRMA: Firmendaten = {
-  name: "Wow Camp Justyna Martynek",
-  strasse: "",
-  plz: "",
-  ort: "",
+  // Schreibweise wie im Register: „WOW CAMP“ in Versalien, dann der Name.
+  name: "WOW CAMP Justyna Martynek",
+  strasse: "ul. Kamionka 11",
+  plz: "87-300",
+  ort: "Brodnica",
   land: "Polen",
   sitzland: "PL",
   email: "",
   vertreten: "Justyna Martynek",
-  nip: "",
-  regon: "",
+  nip: "6671793054",
+  regon: "542696594",
   registerArt: "CEIDG",
   krsNummer: "",
+  // Kein VAT-EU-Eintrag, solange die Umsatzsteuerbefreiung gilt.
   ustId: "",
-  kleinunternehmer: null,
+  kleinunternehmer: true,
 };
 
 /**
