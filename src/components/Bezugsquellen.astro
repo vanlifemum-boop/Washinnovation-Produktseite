@@ -1,0 +1,76 @@
+---
+/**
+ * „Wo es die Sets gibt“ — der direkte Weg und die Läden, die sie führen.
+ *
+ * Die Läden stehen in src/data/bezugsquellen.json und erscheinen erst, wenn
+ * dort `aktiv: true` steht — also wenn die Sets dort wirklich bestellbar sind.
+ * Ein Knopf auf einen Shop ohne unsere Produkte kostet mehr Vertrauen, als der
+ * Verweis einbringt. Solange keiner aktiv ist, bleibt der direkte Weg allein
+ * stehen; der Abschnitt trägt sich auch dann.
+ *
+ * Zu jedem fremden Laden steht, mit wem der Kaufvertrag zustande kommt. Das ist
+ * kein Kleingedrucktes aus Vorsicht: WOW CAMP ist dort nicht Verkäufer, und
+ * unsere AGB und Widerrufsbelehrung gelten für diese Bestellungen nicht.
+ *
+ * Bewusst ohne fremde Logos — Namensnennung und Link sind zulässig, ein Logo
+ * bräuchte Erlaubnis. Deshalb hat der Datensatz auch kein Logo-Feld.
+ */
+import WhatsappKnopf from "./WhatsappKnopf.astro";
+import { uebersetzer, pfad, type Sprache } from "../i18n/ui";
+import { bezugsquellen, text } from "../data/daten";
+
+interface Props {
+  sprache: Sprache;
+  /** Hintergrund der Sektion, damit sie sich in die Seite einfügt. */
+  flaeche?: "weiss" | "schaum" | "eis";
+}
+
+const { sprache, flaeche = "weiss" } = Astro.props;
+const t = uebersetzer(sprache);
+const laeden = bezugsquellen();
+
+/* Solange kein Laden aktiv ist, darf der Text keine Läden versprechen —
+   „und Läden, die liefern“ neben einer einzigen Karte ist ein Versprechen,
+   das die Seite im selben Blick bricht. */
+const gibtLaeden = laeden.length > 0;
+---
+
+<section class={`sek sek--${flaeche}`}>
+  <div class="behaelter">
+    <div class="sek-kopf schmal">
+      <p class="augenbraue" data-reveal>{t("bezug.augenbraue")}</p>
+      <h2 class="gross" data-reveal>{t("bezug.titel")}</h2>
+      <p class="lead" data-reveal>{gibtLaeden ? t("bezug.text") : t("bezug.text.allein")}</p>
+    </div>
+
+    <div class="raster raster--2">
+      <div class="karte" data-reveal>
+        <h3>{t("bezug.direkt.titel")}</h3>
+        <p class="leise">{t("bezug.direkt.text")}</p>
+        <div class="knopfreihe">
+          <WhatsappKnopf sprache={sprache} />
+          <a class="btn btn--rand" href={pfad(sprache, "bestellen")}>
+            {t("bezug.direkt.anfrage")}
+          </a>
+        </div>
+      </div>
+
+      {laeden.map((laden) => (
+        <div class="karte" data-reveal>
+          <h3>{laden.marke}</h3>
+          <p class="leise">{text(laden.spruch, sprache)}</p>
+          <div class="knopfreihe">
+            <a class="btn" href={laden.url} target="_blank" rel="noopener noreferrer">
+              {t("bezug.shop.knopf")}
+            </a>
+          </div>
+          <p class="leise bezug-vertrag">
+            {t("bezug.shop.vertrag", { name: laden.name })} · {laden.land}
+          </p>
+        </div>
+      ))}
+    </div>
+
+    <p class="leise bezug-fussnote" data-reveal>{gibtLaeden ? t("bezug.bald") : t("bezug.bald.keine")}</p>
+  </div>
+</section>

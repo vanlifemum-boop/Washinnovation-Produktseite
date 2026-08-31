@@ -5,7 +5,7 @@ import WhatsappKnopf from "../../components/WhatsappKnopf.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, datei, type Sprache } from "../../i18n/ui";
 import { RUFNUMMER_LESBAR, TELEFON_LINK, whatsappLink } from "../../inhalte/kontakt";
 import { FIRMA } from "../../inhalte/firma";
-import { sichtbareProjekte, modellAktiv } from "../../data/daten";
+import { sichtbareProjekte, modellAktiv, bezugsquellen } from "../../data/daten";
 
 export function getStaticPaths() {
   return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
@@ -63,6 +63,18 @@ const erfolgText = FIRMA.email ? t("bestellen.erfolg.text") : t("bestellen.erfol
           <a class="btn btn--rand" href={TELEFON_LINK}>{t("kontakt.telefon")}: {RUFNUMMER_LESBAR}</a>
         </div>
         <p class="leise kontaktkasten-fussnote">{t("whatsapp.hinweis")}</p>
+        {/* Nur wenn es wirklich einen Laden gibt — sonst führt der Hinweis ins Leere. */}
+        {bezugsquellen().length > 0 && (
+          <p class="leise kontaktkasten-fussnote">
+            {t("bezug.auchbei")}{" "}
+            {bezugsquellen().map((laden, i) => (
+              <>
+                {i > 0 && ", "}
+                <a href={laden.url} target="_blank" rel="noopener noreferrer">{laden.marke}</a>
+              </>
+            ))}
+          </p>
+        )}
       </div>
 
       <form class="formular" data-bestellformular novalidate>

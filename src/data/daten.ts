@@ -9,6 +9,7 @@ import projekteDatei from "./projekte.json";
 import lieferungenDatei from "./lieferungen.json";
 import eventsDatei from "./events.json";
 import wasserDatei from "./wasserzahlen.json";
+import bezugsquellenDatei from "./bezugsquellen.json";
 import type { Sprache } from "../i18n/ui";
 
 export type MehrsprachigerText = Partial<Record<Sprache, string>>;
@@ -25,6 +26,22 @@ export interface Projekt {
   ziel?: number;
   aktiv: boolean;
   beschreibung: MehrsprachigerText;
+}
+
+/**
+ * Ein Laden oder Shop, in dem es die Sets zu kaufen gibt. Nicht zu verwechseln
+ * mit der Seite /haendler — dort geht es darum, selbst Händler zu *werden*.
+ */
+export interface Bezugsquelle {
+  id: string;
+  /** Firmierung, wie sie im Impressum des Händlers steht. */
+  name: string;
+  /** Wie der Shop sich nennt. */
+  marke: string;
+  url: string;
+  land: string;
+  spruch: MehrsprachigerText;
+  aktiv: boolean;
 }
 
 export interface Lieferung {
@@ -75,6 +92,7 @@ export interface Wasserquelle {
 
 export const projekte = (projekteDatei.eintraege ?? []) as Projekt[];
 export const lieferungen = (lieferungenDatei.eintraege ?? []) as Lieferung[];
+export const alleBezugsquellen = (bezugsquellenDatei.eintraege ?? []) as Bezugsquelle[];
 export const veranstaltungen = (eventsDatei.eintraege ?? []) as Veranstaltung[];
 
 /** Nur bestätigte, öffentliche Lieferungen — die einzige Grundlage für Zahlen auf der Seite. */
@@ -103,6 +121,20 @@ export function sichtbareProjekte(): Projekt[] {
 
 export function projektNachSlug(slug: string): Projekt | undefined {
   return sichtbareProjekte().find((p) => p.slug === slug);
+}
+
+/**
+ * Bezugsquellen, in denen die Sets wirklich bestellbar sind.
+ * Genau wie bei den Projekten gilt: Ein Eintrag erscheint erst, wenn es
+ * stimmt — ein Knopf auf einen Shop ohne unsere Produkte kostet Vertrauen.
+ */
+export function bezugsquellen(): Bezugsquelle[] {
+  return alleBezugsquellen.filter((b) => b.aktiv);
+}
+
+/** Gibt es überhaupt schon einen Laden, auf den sich verweisen lässt? */
+export function bezugsquellenVorhanden(): boolean {
+  return bezugsquellen().length > 0;
 }
 
 /** Läuft das 1+1-Modell schon? Erst wenn ein Projekt bestätigt ist. */

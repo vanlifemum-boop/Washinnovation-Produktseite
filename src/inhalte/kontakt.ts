@@ -31,12 +31,11 @@ export const RUFNUMMER_LESBAR = "+49 152 08643106";
  * Name der Person hinter der Nummer — steht neben dem Knopf, damit klar ist,
  * wer antwortet.
  *
- * Bewusst kein eigener Wert: Der Name steht in src/inhalte/firma.ts, weil er
- * dort auch das Impressum speist. Zwei Schreibweisen desselben Namens auf einer
- * Seite („Justine“ im Kontakt, „Justyna“ im Impressum) sähen aus wie ein Fehler
- * — und eine davon wäre auch einer.
+ * Für die Kundschaft der Handelsname („Justine“), im Impressum und in den
+ * Rechtstexten der Registername („Justyna“). Beides steht in firma.ts; hier
+ * wird nur ausgewählt, damit nirgends eine dritte Schreibweise entsteht.
  */
-export const ANSPRECHPERSON = FIRMA.vertreten;
+export const ANSPRECHPERSON = FIRMA.handelsname || FIRMA.vertreten;
 
 /** `tel:`-Ziel. E.164, also mit Plus und ohne Leerzeichen. */
 export const TELEFON_LINK = `tel:+${RUFNUMMER}`;

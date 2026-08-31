@@ -37,7 +37,7 @@
 import {
   FIRMA, HOSTER, anschriftEinzeilig, anschriftZeilen, registerAngabe, steuerKennungen,
 } from "./firma";
-import { RUFNUMMER_LESBAR, ANSPRECHPERSON } from "./kontakt";
+import { RUFNUMMER_LESBAR } from "./kontakt";
 
 export interface Abschnitt {
   titel: string;
@@ -122,7 +122,7 @@ const de: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Kontakt",
         absaetze: [
           ...kontaktZeilen("E-Mail", "Telefon und WhatsApp"),
-          `Ansprechpartnerin: ${ANSPRECHPERSON}`,
+          `Ansprechpartnerin: ${FIRMA.vertreten}`,
         ],
       },
       {
@@ -379,7 +379,7 @@ const en: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Contact",
         absaetze: [
           ...kontaktZeilen("Email", "Phone and WhatsApp"),
-          `Contact person: ${ANSPRECHPERSON}`,
+          `Contact person: ${FIRMA.vertreten}`,
         ],
       },
       {
@@ -598,7 +598,7 @@ const pl: Record<RechtSchluessel, RechtsseiteRoh> = {
         titel: "Kontakt",
         absaetze: [
           ...kontaktZeilen("E-mail", "Telefon i WhatsApp"),
-          `Osoba kontaktowa: ${ANSPRECHPERSON}`,
+          `Osoba kontaktowa: ${FIRMA.vertreten}`,
         ],
       },
       {

@@ -4,6 +4,7 @@ import Basis from "../../layouts/Basis.astro";
 import ProduktKarte from "../../components/ProduktKarte.astro";
 import Zaehler from "../../components/Zaehler.astro";
 import Bildflaeche from "../../components/Bildflaeche.astro";
+import Bezugsquellen from "../../components/Bezugsquellen.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, datei, type Sprache } from "../../i18n/ui";
 import { wasserzahl, standLesbar, text } from "../../data/daten";
 
@@ -149,6 +150,10 @@ const produkte = alle
       </div>
     </div>
   </section>
+
+  <!-- ========================= Bezugsquellen ======================= -->
+  {/* Direkt nach den Produkten: erst sehen, was es gibt, dann wo es das gibt. */}
+  <Bezugsquellen sprache={sprache} flaeche="weiss" />
 
   <!-- ============================ Zähler =========================== -->
   <Zaehler sprache={sprache} />

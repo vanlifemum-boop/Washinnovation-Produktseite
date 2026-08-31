@@ -669,6 +669,15 @@ tfoot td { font-weight: 800; background: var(--schaum); }
 .datenliste dd { margin: 0; color: var(--text-leise); text-align: right; overflow-wrap: anywhere; }
 code { overflow-wrap: anywhere; }
 
+/* ---- Bezugsquellen: wer verkauft, und mit wem der Vertrag zustande kommt ---- */
+.bezug-vertrag {
+  /* Kleiner als der Fließtext, aber nicht versteckt: Wer bei einem fremden
+     Laden bestellt, soll das vor dem Klick wissen, nicht danach. */
+  font-size: 0.86rem;
+  margin: 1rem 0 0;
+}
+.bezug-fussnote { margin-top: clamp(22px, 3vw, 34px); }
+
 /* ---- Kontaktseite: Visitenkarte neben den Kontaktwegen ---- */
 .kontakt-raster {
   display: grid;

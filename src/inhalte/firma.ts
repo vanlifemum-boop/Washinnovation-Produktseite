@@ -37,8 +37,23 @@ export interface Firmendaten {
   land: string;
   sitzland: Sitzland;
   email: string;
-  /** Inhaberin bzw. vertretungsberechtigte Person, zugleich verantwortlich für den Inhalt. */
+  /**
+   * Inhaberin bzw. vertretungsberechtigte Person, wie sie im Register steht.
+   * Speist Impressum, § 18 Abs. 2 MStV und die Widerrufsbelehrung — dort zählt
+   * der amtliche Name, nichts anderes.
+   */
   vertreten: string;
+  /**
+   * Schreibweise für die Kundschaft, falls sie vom Registernamen abweicht.
+   * Hier „Justine“ statt „Justyna“: So steht es auf der Visitenkarte, und so
+   * kennen Kundinnen und Kunden sie. Leer lassen, wenn beides gleich ist —
+   * dann greift überall `vertreten`.
+   *
+   * Das darf auseinandergehen, muss aber getrennt gepflegt werden: Beide
+   * Schreibweisen ungeordnet nebeneinander auf einer Seite sähen aus wie ein
+   * Tippfehler, und im Impressum wäre die falsche ein echter Mangel.
+   */
+  handelsname: string;
 
   /** Polen: Steuernummer (NIP), zehnstellig. */
   nip: string;
@@ -80,6 +95,7 @@ export const FIRMA: Firmendaten = {
   sitzland: "PL",
   email: "",
   vertreten: "Justyna Martynek",
+  handelsname: "Justine Martynek",
   nip: "6671793054",
   regon: "542696594",
   registerArt: "CEIDG",

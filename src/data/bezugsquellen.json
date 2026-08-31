@@ -1,0 +1,31 @@
+{
+  "_schema": {
+    "hinweis": "Läden und Shops, in denen es die Sets zu kaufen gibt. Wichtigste Regel: 'aktiv' darf erst auf true, wenn die Produkte dort wirklich bestellbar sind — nicht, wenn es abgesprochen oder geplant ist. Ein Knopf, der auf eine Startseite ohne unsere Produkte führt, kostet mehr Vertrauen als er bringt. Nicht zu verwechseln mit der Seite /haendler: dort geht es darum, selbst Händler zu WERDEN.",
+    "felder": {
+      "id": "Kurz und eindeutig",
+      "name": "Vollständige Firmierung des Händlers, wie sie in dessen Impressum steht. Erscheint im Hinweis, mit wem der Kaufvertrag zustande kommt.",
+      "marke": "Wie der Shop sich nennt und wie ihn Kundschaft kennt",
+      "url": "Volle Adresse. Wenn es eine Kategorie- oder Produktseite mit unseren Sets gibt, diese eintragen — nicht die Startseite, sonst muss man dort erst suchen.",
+      "land": "Liefergebiet in Klartext, erscheint als Zusatz auf der Karte",
+      "spruch": "Ein Satz zum Shop, je Sprache. Darf Humor haben, muss aber stimmen.",
+      "aktiv": "true = Die Sets sind dort tatsächlich bestellbar und der Eintrag erscheint auf der Seite"
+    },
+    "rechtliches": "Fremde Händler dürfen mit Namen genannt und verlinkt werden. Ein fremdes Logo braucht dagegen Erlaubnis — deshalb hat dieser Datensatz absichtlich kein Logo-Feld. Fließt für Weiterleitungen eine Provision, gehört eine Werbekennzeichnung auf die Seite; das ist hier nicht vorgesehen."
+  },
+
+  "eintraege": [
+    {
+      "id": "gasfachfrau",
+      "name": "Die Gasfachfrau GmbH",
+      "marke": "Die Gasfachfrau",
+      "url": "https://gasfachfrau.de",
+      "land": "Deutschland",
+      "spruch": {
+        "de": "Führt Gas für den Camper — und jetzt auch das Wasser dazu.",
+        "en": "Already equips campers with gas. Now with the water to go with it.",
+        "pl": "Zaopatruje kampery w gaz — a teraz także w wodę."
+      },
+      "aktiv": false
+    }
+  ]
+}

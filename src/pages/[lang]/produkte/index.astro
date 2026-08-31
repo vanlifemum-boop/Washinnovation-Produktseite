@@ -1,6 +1,7 @@
 ---
 import { getCollection } from "astro:content";
 import Basis from "../../../layouts/Basis.astro";
+import Bezugsquellen from "../../../components/Bezugsquellen.astro";
 import ProduktKarte from "../../../components/ProduktKarte.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../../i18n/ui";
 import { modellAktiv } from "../../../data/daten";
@@ -51,4 +52,7 @@ const produkte = alle
       </div>
     </div>
   </section>
+
+  {/* Wer die Sets gesehen hat, will als Nächstes wissen, wo er sie bekommt. */}
+  <Bezugsquellen sprache={sprache} flaeche="schaum" />
 </Basis>
