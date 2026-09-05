@@ -2,7 +2,7 @@
 import Basis from "../../layouts/Basis.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../i18n/ui";
 import {
-  wasserzahlen, wasserquellen, standLesbar, text, type Wasserzahl,
+  wasserzahlen, wasserquellen, standLesbar, wasserwert, text, type Wasserzahl,
 } from "../../data/daten";
 
 export function getStaticPaths() {
@@ -50,7 +50,7 @@ function anteil(z: Wasserzahl) {
       <div class="raster raster--3">
         {welt.map((z) => (
           <div class="karte zahlkarte" data-reveal>
-            <p class="zahl">{z.wert}</p>
+            <p class="zahl">{wasserwert(z.wert, sprache)}</p>
             <h3>{text(z.titel, sprache)}</h3>
             {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
             <p class="beleg">{beleg(z)}</p>
@@ -72,7 +72,7 @@ function anteil(z: Wasserzahl) {
           <div class="anteil" data-reveal>
             <div class="anteil-kopf">
               <strong>{text(z.titel, sprache)}</strong>
-              <span>{z.wert}</span>
+              <span>{wasserwert(z.wert, sprache)}</span>
             </div>
             <div class="anteil-balken" aria-hidden="true">
               <i style={`width:${anteil(z)}%`}></i>
@@ -96,7 +96,7 @@ function anteil(z: Wasserzahl) {
       <div class="raster raster--3">
         {deutschland.map((z) => (
           <div class="karte zahlkarte" data-reveal>
-            <p class="zahl">{z.wert}</p>
+            <p class="zahl">{wasserwert(z.wert, sprache)}</p>
             <h3>{text(z.titel, sprache)}</h3>
             {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
             <p class="beleg">{beleg(z)}</p>

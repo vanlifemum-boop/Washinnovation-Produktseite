@@ -2,7 +2,7 @@
 import { getCollection, render } from "astro:content";
 import Basis from "../../../layouts/Basis.astro";
 import Bildflaeche from "../../../components/Bildflaeche.astro";
-import { AKTIVE_SPRACHEN, uebersetzer, pfad, type Sprache } from "../../../i18n/ui";
+import { AKTIVE_SPRACHEN, uebersetzer, pfad, gebietsschema, type Sprache } from "../../../i18n/ui";
 
 export async function getStaticPaths() {
   const alle = await getCollection("produkte");
@@ -27,7 +27,7 @@ const hatTransparenz = d.bild.endsWith(".png");
 const preisFormat =
   d.preis === null
     ? null
-    : new Intl.NumberFormat(sprache === "pl" ? "pl-PL" : sprache === "en" ? "en-GB" : "de-DE", {
+    : new Intl.NumberFormat(gebietsschema(sprache), {
         style: "currency",
         currency: "EUR",
       }).format(d.preis);

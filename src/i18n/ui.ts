@@ -20,9 +20,9 @@ import it from "./it.json";
 export const STANDARD_SPRACHE = "de" as const;
 
 /** Sprachen, für die Seiten gebaut werden. */
-export const AKTIVE_SPRACHEN = ["de", "pl", "en"] as const;
+export const AKTIVE_SPRACHEN = ["de", "pl", "en", "fr", "es", "it"] as const;
 
-/** Alle vorbereiteten Sprachen — fr/es/it warten auf ihre Übersetzung. */
+/** Alle verfügbaren Sprachen. */
 export const ALLE_SPRACHEN = ["de", "pl", "en", "fr", "es", "it"] as const;
 
 export type Sprache = (typeof ALLE_SPRACHEN)[number];
@@ -67,10 +67,23 @@ export function uebersetzer(sprache: Sprache) {
   };
 }
 
+const GEBIETSSCHEMATA: Record<Sprache, string> = {
+  de: "de-DE",
+  pl: "pl-PL",
+  en: "en-GB",
+  fr: "fr-FR",
+  es: "es-ES",
+  it: "it-IT",
+};
+
+/** Gebietsschema für Datums-, Zahlen- und Währungsformatierung. */
+export function gebietsschema(sprache: Sprache): string {
+  return GEBIETSSCHEMATA[sprache];
+}
+
 /** Datum in der Schreibweise der jeweiligen Sprache. */
 export function datum(iso: string, sprache: Sprache): string {
-  const gebietsschema = { de: "de-DE", pl: "pl-PL", en: "en-GB", fr: "fr-FR", es: "es-ES", it: "it-IT" }[sprache];
-  return new Intl.DateTimeFormat(gebietsschema, { day: "2-digit", month: "long", year: "numeric" }).format(
+  return new Intl.DateTimeFormat(gebietsschema(sprache), { day: "2-digit", month: "long", year: "numeric" }).format(
     new Date(iso),
   );
 }

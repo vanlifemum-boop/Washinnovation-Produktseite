@@ -329,7 +329,9 @@ und können klug damit umgehen“.
 | Deutsch | Quellsprache, vollständig |
 | Englisch | vollständig |
 | Polnisch | **Rohübersetzung — muss von einer Muttersprachlerin geprüft werden** (siehe `_hinweis` in `src/i18n/pl.json`) |
-| Französisch, Spanisch, Italienisch | vorbereitet: Navigation übersetzt, Rest fällt auf Englisch zurück |
+| Französisch | vollständig |
+| Spanisch | vollständig |
+| Italienisch | vollständig |
 
 Fehlt ein Schlüssel, greift die Kette Sprache → Englisch → Deutsch. Die Seite
 bleibt also vollständig, auch wenn eine Übersetzung Lücken hat.

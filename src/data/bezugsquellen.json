@@ -23,7 +23,10 @@
       "spruch": {
         "de": "Führt Gas für den Camper — und jetzt auch das Wasser dazu.",
         "en": "Already equips campers with gas. Now with the water to go with it.",
-        "pl": "Zaopatruje kampery w gaz — a teraz także w wodę."
+        "pl": "Zaopatruje kampery w gaz — a teraz także w wodę.",
+        "fr": "Équipe déjà les camping-cars en gaz — et désormais aussi en eau.",
+        "es": "Ya equipa las autocaravanas con gas; ahora también con agua.",
+        "it": "Rifornisce già i camper di gas — e ora anche dell’acqua che serve."
       },
       "aktiv": false
     }

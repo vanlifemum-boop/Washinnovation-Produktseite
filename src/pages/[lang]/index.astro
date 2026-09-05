@@ -6,7 +6,7 @@ import Zaehler from "../../components/Zaehler.astro";
 import Bildflaeche from "../../components/Bildflaeche.astro";
 import Bezugsquellen from "../../components/Bezugsquellen.astro";
 import { AKTIVE_SPRACHEN, uebersetzer, pfad, datei, type Sprache } from "../../i18n/ui";
-import { wasserzahl, standLesbar, text } from "../../data/daten";
+import { wasserzahl, standLesbar, wasserwert, text } from "../../data/daten";
 
 export function getStaticPaths() {
   return AKTIVE_SPRACHEN.map((lang) => ({ params: { lang } }));
@@ -110,7 +110,7 @@ const produkte = alle
         <div class="raster raster--2" style="margin-top:clamp(28px,4vw,44px)">
           {startZahlen.map((z) => (
             <div class="karte zahlkarte" data-reveal>
-              <p class="zahl">{z.wert}</p>
+              <p class="zahl">{wasserwert(z.wert, sprache)}</p>
               <h3>{text(z.titel, sprache)}</h3>
               {z.erlaeuterung && <p class="leise">{text(z.erlaeuterung, sprache)}</p>}
               <p class="beleg">{z.quelle} · {t("wasser.stand")} {standLesbar(z.stand)}</p>

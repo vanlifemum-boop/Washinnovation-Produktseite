@@ -12,7 +12,7 @@
       "bilder": "Liste weiterer Bildpfade unter public/",
       "ziel": "Zahl: angestrebte Sets für die nächste Lieferung, treibt den Fortschrittsbalken",
       "aktiv": "true = Vereinbarung unterschrieben und auf der Seite sichtbar",
-      "beschreibung": "Objekt mit je einem Text pro Sprache: { de, pl, en }"
+      "beschreibung": "Objekt mit je einem Text pro Sprache: { de, pl, en, fr, es, it }"
     },
     "beispiel": {
       "id": "beispiel",
@@ -28,7 +28,10 @@
       "beschreibung": {
         "de": "Was die Organisation tut und warum die Sets dort gebraucht werden.",
         "pl": "…",
-        "en": "…"
+        "en": "…",
+        "fr": "…",
+        "es": "…",
+        "it": "…"
       }
     }
   },
