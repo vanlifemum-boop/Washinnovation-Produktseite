@@ -10,7 +10,7 @@
       "datumBis": "ISO-Enddatum, optional",
       "verkauft": "Zahl oder null, solange das Event noch bevorsteht",
       "gespendet": "Zahl oder null",
-      "text": "Objekt pro Sprache: { de, pl, en } — Ankündigung oder Rückblick"
+      "text": "Objekt pro Sprache: { de, pl, en, fr, es, it } — Ankündigung oder Rückblick"
     },
     "beispiel": {
       "id": "2026-beispielfestival",
@@ -21,7 +21,14 @@
       "datumBis": "2026-07-13",
       "verkauft": null,
       "gespendet": null,
-      "text": { "de": "Wir sind mit dem Van da.", "pl": "…", "en": "…" }
+      "text": {
+        "de": "Wir sind mit dem Van da.",
+        "pl": "…",
+        "en": "…",
+        "fr": "…",
+        "es": "…",
+        "it": "…"
+      }
     }
   },
   "eintraege": []

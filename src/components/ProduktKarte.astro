@@ -1,5 +1,5 @@
 ---
-import { datei, pfad, uebersetzer, type Sprache } from "../i18n/ui";
+import { datei, pfad, uebersetzer, gebietsschema, type Sprache } from "../i18n/ui";
 
 interface Props {
   sprache: Sprache;
@@ -15,7 +15,7 @@ const t = uebersetzer(sprache);
 const preisFormat =
   preis === null
     ? null
-    : new Intl.NumberFormat(sprache === "pl" ? "pl-PL" : sprache === "en" ? "en-GB" : "de-DE", {
+    : new Intl.NumberFormat(gebietsschema(sprache), {
         style: "currency",
         currency: "EUR",
       }).format(preis);

@@ -5,7 +5,7 @@
       "id": "Eindeutig, wird nicht angezeigt",
       "wert": "Die Zahl, wie sie dasteht — als Text, damit '2,2 Mrd.' und '~70 %' gleich behandelt werden",
       "gruppe": "welt | nutzung | deutschland — bestimmt den Abschnitt auf der Seite",
-      "titel": "Objekt pro Sprache: { de, pl, en } — worum es geht",
+      "titel": "Objekt pro Sprache: { de, pl, en, fr, es, it } — worum es geht",
       "erlaeuterung": "Objekt pro Sprache, optional — ein Satz, der die Zahl greifbar macht",
       "quelle": "Wer die Zahl erhebt. Pflicht.",
       "stand": "Stand der Erhebung im Format JJJJ-MM. Pflicht."
@@ -19,17 +19,23 @@
       "beschreibung": {
         "de": "Die maßgebliche globale Erhebung zu Trinkwasser, Sanitärversorgung und Hygiene, Grundlage der Berichterstattung zum UN-Nachhaltigkeitsziel 6.",
         "pl": "Podstawowe światowe badanie dotyczące wody pitnej, sanitariatów i higieny, będące podstawą raportowania celu zrównoważonego rozwoju ONZ nr 6.",
-        "en": "The authoritative global monitoring programme for drinking water, sanitation and hygiene, and the basis for reporting on UN Sustainable Development Goal 6."
+        "en": "The authoritative global monitoring programme for drinking water, sanitation and hygiene, and the basis for reporting on UN Sustainable Development Goal 6.",
+        "fr": "Le programme mondial de référence pour le suivi de l’eau potable, de l’assainissement et de l’hygiène, qui sert de base au suivi de l’objectif de développement durable no 6 des Nations Unies.",
+        "es": "El programa mundial de referencia para el seguimiento del agua potable, el saneamiento y la higiene, y la base de los informes sobre el Objetivo de Desarrollo Sostenible 6 de las Naciones Unidas.",
+        "it": "Il programma mondiale di riferimento per il monitoraggio dell’acqua potabile, dei servizi igienico-sanitari e dell’igiene, su cui si basa la rendicontazione dell’Obiettivo di sviluppo sostenibile 6 delle Nazioni Unite."
       },
       "url": "https://washdata.org"
     },
     {
       "id": "un-wwdr",
-      "name": "UN-Weltwasserbericht (UNESCO)",
+      "name": "United Nations World Water Development Report (UNESCO)",
       "beschreibung": {
         "de": "Jährlich zum Weltwassertag veröffentlicht; ordnet die globale Süßwassernutzung ein.",
         "pl": "Publikowany co roku w Światowy Dzień Wody; porządkuje globalne zużycie wody słodkiej.",
-        "en": "Published each year for World Water Day; sets out how the world's fresh water is used."
+        "en": "Published each year for World Water Day; sets out how the world's fresh water is used.",
+        "fr": "Publié chaque année à l’occasion de la Journée mondiale de l’eau ; il présente l’utilisation de l’eau douce dans le monde.",
+        "es": "Se publica cada año con motivo del Día Mundial del Agua y explica cómo se utiliza el agua dulce en el mundo.",
+        "it": "Pubblicato ogni anno in occasione della Giornata mondiale dell’acqua; illustra come viene utilizzata l’acqua dolce nel mondo."
       },
       "url": "https://www.unesco.org/reports/wwdr"
     },
@@ -39,7 +45,10 @@
       "beschreibung": {
         "de": "Zahlen zur Trinkwasserversorgung und zum Pro-Kopf-Verbrauch in Deutschland.",
         "pl": "Dane o zaopatrzeniu w wodę pitną i zużyciu na osobę w Niemczech.",
-        "en": "Figures on drinking water supply and per-person consumption in Germany."
+        "en": "Figures on drinking water supply and per-person consumption in Germany.",
+        "fr": "Données sur l’approvisionnement en eau potable et la consommation par personne en Allemagne.",
+        "es": "Datos sobre el abastecimiento de agua potable y el consumo por persona en Alemania.",
+        "it": "Dati sull’approvvigionamento di acqua potabile e sul consumo pro capite in Germania."
       },
       "url": "https://www.destatis.de"
     }
@@ -53,12 +62,18 @@
       "titel": {
         "de": "Menschen ohne sicher verwaltetes Trinkwasser",
         "pl": "Ludzi bez bezpiecznie zarządzanej wody pitnej",
-        "en": "People without safely managed drinking water"
+        "en": "People without safely managed drinking water",
+        "fr": "Personnes privées d’un service d’eau potable géré en toute sécurité",
+        "es": "Personas sin un servicio de agua potable gestionado de forma segura",
+        "it": "Persone senza un servizio di acqua potabile gestito in sicurezza"
       },
       "erlaeuterung": {
         "de": "Das ist gut jeder vierte Mensch — 27 Prozent der Weltbevölkerung.",
         "pl": "To dobrze ponad co czwarty człowiek — 27 procent ludności świata.",
-        "en": "That is more than one person in four — 27 per cent of the world's population."
+        "en": "That is more than one person in four — 27 per cent of the world's population.",
+        "fr": "Cela représente plus d’une personne sur quatre — 27 % de la population mondiale.",
+        "es": "Es más de una de cada cuatro personas: el 27 % de la población mundial.",
+        "it": "Più di una persona su quattro — il 27% della popolazione mondiale."
       },
       "quelle": "WHO/UNICEF Joint Monitoring Programme (JMP)",
       "stand": "2026-08"
@@ -70,12 +85,18 @@
       "titel": {
         "de": "Menschen ohne sicher verwaltete Sanitärversorgung",
         "pl": "Ludzi bez bezpiecznie zarządzanych sanitariatów",
-        "en": "People without safely managed sanitation"
+        "en": "People without safely managed sanitation",
+        "fr": "Personnes privées d’un assainissement géré en toute sécurité",
+        "es": "Personas sin servicios de saneamiento gestionados de forma segura",
+        "it": "Persone senza servizi igienico-sanitari gestiti in sicurezza"
       },
       "erlaeuterung": {
         "de": "43 Prozent der Weltbevölkerung.",
         "pl": "43 procent ludności świata.",
-        "en": "43 per cent of the world's population."
+        "en": "43 per cent of the world's population.",
+        "fr": "43 % de la population mondiale.",
+        "es": "El 43 % de la población mundial.",
+        "it": "Il 43% della popolazione mondiale."
       },
       "quelle": "WHO/UNICEF Joint Monitoring Programme (JMP)",
       "stand": "2026-08"
@@ -87,12 +108,18 @@
       "titel": {
         "de": "Menschen ohne grundlegende Hygieneeinrichtung",
         "pl": "Ludzi bez podstawowych urządzeń higienicznych",
-        "en": "People without a basic hygiene facility"
+        "en": "People without a basic hygiene facility",
+        "fr": "Personnes privées d’une installation d’hygiène de base",
+        "es": "Personas sin una instalación básica para la higiene",
+        "it": "Persone senza una struttura di base per l’igiene"
       },
       "erlaeuterung": {
         "de": "Davon haben 653 Millionen zu Hause überhaupt keine Gelegenheit, sich die Hände zu waschen.",
         "pl": "Spośród nich 653 miliony nie mają w domu żadnej możliwości umycia rąk.",
-        "en": "Of those, 653 million have no handwashing facility at home at all."
+        "en": "Of those, 653 million have no handwashing facility at home at all.",
+        "fr": "Parmi elles, 653 millions ne disposent d’aucune installation pour se laver les mains à domicile.",
+        "es": "De ellas, 653 millones no tienen en casa ninguna instalación para lavarse las manos.",
+        "it": "Di queste, 653 milioni non dispongono a casa di alcuna possibilità per lavarsi le mani."
       },
       "quelle": "WHO/UNICEF Joint Monitoring Programme (JMP)",
       "stand": "2026-08"
@@ -104,12 +131,18 @@
       "titel": {
         "de": "Menschen mit über 30 Minuten Fußweg zum Wasser",
         "pl": "Ludzi, którzy idą po wodę ponad 30 minut",
-        "en": "People who walk more than 30 minutes to fetch water"
+        "en": "People who walk more than 30 minutes to fetch water",
+        "fr": "Personnes qui marchent plus de 30 minutes pour aller chercher de l’eau",
+        "es": "Personas que caminan más de 30 minutos para recoger agua",
+        "it": "Persone che camminano per oltre 30 minuti per raccogliere l’acqua"
       },
       "erlaeuterung": {
         "de": "Eine halbe Stunde hin, eine halbe zurück — und dann muss das Wasser noch getragen werden.",
         "pl": "Pół godziny tam, pół z powrotem — a wodę trzeba jeszcze przynieść.",
-        "en": "Half an hour there, half an hour back — and then the water still has to be carried."
+        "en": "Half an hour there, half an hour back — and then the water still has to be carried.",
+        "fr": "Une demi-heure à l’aller, une demi-heure au retour — puis il faut encore porter l’eau.",
+        "es": "Media hora de ida, media hora de vuelta y, después, todavía hay que cargar con el agua.",
+        "it": "Mezz’ora all’andata, mezz’ora al ritorno — e poi l’acqua deve ancora essere trasportata."
       },
       "quelle": "WHO/UNICEF Joint Monitoring Programme (JMP)",
       "stand": "2026-08"
@@ -121,12 +154,18 @@
       "titel": {
         "de": "der Gesundheitseinrichtungen weltweit haben keine Wasserversorgung",
         "pl": "placówek ochrony zdrowia na świecie nie ma dostępu do wody",
-        "en": "of health care facilities worldwide have no water service"
+        "en": "of health care facilities worldwide have no water service",
+        "fr": "des établissements de santé dans le monde ne disposent d’aucun service d’approvisionnement en eau",
+        "es": "de los centros sanitarios del mundo no disponen de un servicio de agua",
+        "it": "delle strutture sanitarie nel mondo non dispone di un servizio idrico"
       },
       "erlaeuterung": {
         "de": "In fragilen Regionen fehlt 37 Prozent der Einrichtungen die Wasserversorgung und 54 Prozent eine grundlegende Hygieneeinrichtung.",
         "pl": "W regionach niestabilnych 37 procent placówek nie ma wody, a 54 procent podstawowych urządzeń higienicznych.",
-        "en": "In fragile settings, 37 per cent of facilities lack a water service and 54 per cent lack basic hygiene facilities."
+        "en": "In fragile settings, 37 per cent of facilities lack a water service and 54 per cent lack basic hygiene facilities.",
+        "fr": "Dans les contextes fragiles, 37 % des établissements n’ont pas de service d’approvisionnement en eau et 54 % ne disposent pas d’installations d’hygiène de base.",
+        "es": "En contextos frágiles, el 37 % de los centros carece de servicio de agua y el 54 % no dispone de instalaciones básicas de higiene.",
+        "it": "Nei contesti fragili, il 37% delle strutture non dispone di un servizio idrico e il 54% non ha servizi di base per l’igiene."
       },
       "quelle": "WHO/UNICEF Joint Monitoring Programme (JMP)",
       "stand": "2026-08"
@@ -138,14 +177,20 @@
       "titel": {
         "de": "der Weltbevölkerung erlebt zeitweise schwere Wasserknappheit",
         "pl": "ludności świata doświadcza okresowo poważnych niedoborów wody",
-        "en": "of the world's population experiences severe water scarcity at least part of the year"
+        "en": "of the world's population experiences severe water scarcity at least part of the year",
+        "fr": "de la population mondiale connaît une grave pénurie d’eau pendant une partie de l’année",
+        "es": "de la población mundial sufre una grave escasez de agua durante al menos una parte del año",
+        "it": "della popolazione mondiale affronta una grave scarsità d’acqua per almeno una parte dell’anno"
       },
       "erlaeuterung": {
         "de": "Mindestens für einen Teil des Jahres.",
         "pl": "Przynajmniej przez część roku.",
-        "en": "For at least part of the year."
+        "en": "For at least part of the year.",
+        "fr": "Au moins pendant une partie de l’année.",
+        "es": "Al menos durante una parte del año.",
+        "it": "Almeno per una parte dell’anno."
       },
-      "quelle": "UN-Weltwasserbericht (UNESCO)",
+      "quelle": "United Nations World Water Development Report (UNESCO)",
       "stand": "2026-08"
     },
 
@@ -156,27 +201,43 @@
       "titel": {
         "de": "Landwirtschaft",
         "pl": "Rolnictwo",
-        "en": "Agriculture"
+        "en": "Agriculture",
+        "fr": "Agriculture",
+        "es": "Agricultura",
+        "it": "Agricoltura"
       },
       "erlaeuterung": {
         "de": "Der mit Abstand größte Verbraucher der globalen Süßwasserentnahme.",
         "pl": "Zdecydowanie największy odbiorca globalnego poboru wody słodkiej.",
-        "en": "By far the largest share of global freshwater withdrawal."
+        "en": "By far the largest share of global freshwater withdrawal.",
+        "fr": "De loin la plus grande part des prélèvements mondiaux d’eau douce.",
+        "es": "Con diferencia, el mayor consumo del agua dulce extraída en el mundo.",
+        "it": "Di gran lunga la quota maggiore dei prelievi globali di acqua dolce."
       },
-      "quelle": "UN-Weltwasserbericht (UNESCO)",
+      "quelle": "United Nations World Water Development Report (UNESCO)",
       "stand": "2026-08"
     },
     {
       "id": "industrie",
       "wert": "~20 %",
       "gruppe": "nutzung",
-      "titel": { "de": "Industrie", "pl": "Przemysł", "en": "Industry" },
+      "titel": {
+        "de": "Industrie",
+        "pl": "Przemysł",
+        "en": "Industry",
+        "fr": "Industrie",
+        "es": "Industria",
+        "it": "Industria"
+      },
       "erlaeuterung": {
         "de": "Zweitgrößter Sektor der Entnahme weltweit.",
         "pl": "Drugi co do wielkości sektor poboru wody na świecie.",
-        "en": "The second-largest sector of withdrawal worldwide."
+        "en": "The second-largest sector of withdrawal worldwide.",
+        "fr": "Le deuxième secteur de prélèvement à l’échelle mondiale.",
+        "es": "El segundo sector con mayor extracción de agua en el mundo.",
+        "it": "Il secondo settore per prelievo d’acqua a livello mondiale."
       },
-      "quelle": "UN-Weltwasserbericht (UNESCO)",
+      "quelle": "United Nations World Water Development Report (UNESCO)",
       "stand": "2026-08"
     },
     {
@@ -186,14 +247,20 @@
       "titel": {
         "de": "Haushalte und Kommunen",
         "pl": "Gospodarstwa domowe i gminy",
-        "en": "Households and municipalities"
+        "en": "Households and municipalities",
+        "fr": "Ménages et collectivités",
+        "es": "Hogares y municipios",
+        "it": "Famiglie e comuni"
       },
       "erlaeuterung": {
         "de": "Der kleinste Anteil — aber der mit dem stärksten relativen Zuwachs.",
         "pl": "Najmniejszy udział — ale rosnący najszybciej.",
-        "en": "The smallest share — but the one growing fastest."
+        "en": "The smallest share — but the one growing fastest.",
+        "fr": "La plus petite part — mais celle qui connaît la plus forte croissance relative.",
+        "es": "La proporción más pequeña, pero la que más crece en términos relativos.",
+        "it": "La quota minore — ma quella con la crescita relativa più rapida."
       },
-      "quelle": "UN-Weltwasserbericht (UNESCO)",
+      "quelle": "United Nations World Water Development Report (UNESCO)",
       "stand": "2026-08"
     },
 
@@ -204,12 +271,18 @@
       "titel": {
         "de": "Direkter Verbrauch pro Person und Tag",
         "pl": "Bezpośrednie zużycie na osobę dziennie",
-        "en": "Direct consumption per person per day"
+        "en": "Direct consumption per person per day",
+        "fr": "Consommation directe par personne et par jour",
+        "es": "Consumo directo por persona y día",
+        "it": "Consumo diretto per persona al giorno"
       },
       "erlaeuterung": {
         "de": "Das sind zwölf volle Zehn-Liter-Kanister. Jeden Tag, für einen Menschen.",
         "pl": "To dwanaście pełnych dziesięciolitrowych kanistrów. Każdego dnia, dla jednej osoby.",
-        "en": "That is twelve full ten-litre canisters. Every day, for one person."
+        "en": "That is twelve full ten-litre canisters. Every day, for one person.",
+        "fr": "Soit douze jerricans de dix litres pleins. Chaque jour, pour une seule personne.",
+        "es": "Equivale a doce bidones de diez litros llenos. Cada día, por persona.",
+        "it": "Sono dodici taniche piene da dieci litri. Ogni giorno, per una sola persona."
       },
       "quelle": "Statistisches Bundesamt (Destatis) und BDEW",
       "stand": "2026-08"
@@ -221,12 +294,18 @@
       "titel": {
         "de": "Anschlussgrad an die öffentliche Trinkwasserversorgung",
         "pl": "Stopień podłączenia do publicznej sieci wodociągowej",
-        "en": "Connection rate to the public drinking water supply"
+        "en": "Connection rate to the public drinking water supply",
+        "fr": "Taux de raccordement au réseau public d’eau potable",
+        "es": "Porcentaje de conexión a la red pública de agua potable",
+        "it": "Percentuale di allacciamento alla rete idrica pubblica"
       },
       "erlaeuterung": {
         "de": "Fast alle. Der Hahn ist hier so selbstverständlich, dass er kaum auffällt.",
         "pl": "Niemal wszyscy. Kran jest tu tak oczywisty, że prawie się go nie zauważa.",
-        "en": "Almost everyone. The tap here is so ordinary that it barely registers."
+        "en": "Almost everyone. The tap here is so ordinary that it barely registers.",
+        "fr": "Presque tout le monde. Ici, le robinet est si ordinaire qu’on le remarque à peine.",
+        "es": "Casi todo el mundo. Aquí el grifo es tan habitual que apenas reparamos en él.",
+        "it": "Quasi tutti. Qui il rubinetto è così scontato che quasi non lo si nota."
       },
       "quelle": "Statistisches Bundesamt (Destatis) und BDEW",
       "stand": "2026-08"
@@ -238,12 +317,18 @@
       "titel": {
         "de": "Baden, Duschen, Körperpflege",
         "pl": "Kąpiel, prysznic, higiena osobista",
-        "en": "Bathing, showering, personal hygiene"
+        "en": "Bathing, showering, personal hygiene",
+        "fr": "Bain, douche et hygiène corporelle",
+        "es": "Baño, ducha e higiene personal",
+        "it": "Bagno, doccia e igiene personale"
       },
       "erlaeuterung": {
         "de": "Rund 43,5 Liter am Tag — der größte Einzelposten. Genau hier setzen diese Produkte an.",
         "pl": "Około 43,5 litra dziennie — największa pojedyncza pozycja. Właśnie tu działają te zestawy.",
-        "en": "Around 43.5 litres a day — the single largest item. This is exactly where these products come in."
+        "en": "Around 43.5 litres a day — the single largest item. This is exactly where these products come in.",
+        "fr": "Environ 43,5 litres par jour — le premier poste à lui seul. C’est précisément là que ces produits interviennent.",
+        "es": "Unos 43,5 litros al día: la mayor partida individual. Justo ahí actúan estos productos.",
+        "it": "Circa 43,5 litri al giorno — la voce singola più importante. È proprio qui che intervengono questi prodotti."
       },
       "quelle": "Statistisches Bundesamt (Destatis) und BDEW",
       "stand": "2026-08"
@@ -255,12 +340,18 @@
       "titel": {
         "de": "Toilettenspülung",
         "pl": "Spłukiwanie toalety",
-        "en": "Toilet flushing"
+        "en": "Toilet flushing",
+        "fr": "Chasse d’eau des toilettes",
+        "es": "Descarga del inodoro",
+        "it": "Scarico del WC"
       },
       "erlaeuterung": {
         "de": "Rund 33 Liter bestes Trinkwasser am Tag — mehr, als vielen Menschen für einen ganzen Tag zur Verfügung steht.",
         "pl": "Około 33 litry najlepszej wody pitnej dziennie — więcej, niż wielu ludziom starcza na cały dzień.",
-        "en": "Around 33 litres of drinking water a day — more than many people have available for an entire day."
+        "en": "Around 33 litres of drinking water a day — more than many people have available for an entire day.",
+        "fr": "Environ 33 litres d’eau potable par jour — davantage que ce dont beaucoup de personnes disposent pour toute une journée.",
+        "es": "Unos 33 litros de agua potable al día, más de lo que muchas personas tienen disponible para toda una jornada.",
+        "it": "Circa 33 litri di acqua potabile al giorno — più di quanto molte persone abbiano a disposizione per un’intera giornata."
       },
       "quelle": "Statistisches Bundesamt (Destatis) und BDEW",
       "stand": "2026-08"
@@ -272,12 +363,18 @@
       "titel": {
         "de": "Essen und Trinken",
         "pl": "Jedzenie i picie",
-        "en": "Food and drink"
+        "en": "Food and drink",
+        "fr": "Alimentation et boisson",
+        "es": "Comida y bebida",
+        "it": "Cibo e bevande"
       },
       "erlaeuterung": {
         "de": "Rund 4,8 Liter. Nur davon trinken wir wirklich.",
         "pl": "Około 4,8 litra. Tylko to naprawdę pijemy.",
-        "en": "Around 4.8 litres. That is the part we actually drink."
+        "en": "Around 4.8 litres. That is the part we actually drink.",
+        "fr": "Environ 4,8 litres. C’est la seule part que nous buvons réellement.",
+        "es": "Unos 4,8 litros. Solo esa parte la bebemos realmente.",
+        "it": "Circa 4,8 litri. Solo questa è la parte che beviamo davvero."
       },
       "quelle": "Statistisches Bundesamt (Destatis) und BDEW",
       "stand": "2026-08"

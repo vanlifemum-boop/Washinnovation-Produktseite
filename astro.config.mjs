@@ -21,12 +21,10 @@ export default defineConfig({
   trailingSlash: "always",
   build: { format: "directory" },
 
-  // Sprachen: de/pl/en sind live. fr/es/it sind vorbereitet — ihre
-  // Übersetzungsdateien liegen unter src/i18n/, sie werden hier eingetragen,
-  // sobald die Texte vollständig sind (siehe README, Abschnitt "Sprache aktivieren").
+  // Alle sechs Sprachfassungen sind vollständig und werden statisch gebaut.
   i18n: {
     defaultLocale: "de",
-    locales: ["de", "pl", "en"],
+    locales: ["de", "pl", "en", "fr", "es", "it"],
     routing: {
       prefixDefaultLocale: true,
       redirectToDefaultLocale: false,

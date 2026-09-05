@@ -186,6 +186,28 @@ export function standLesbar(stand: string): string {
   return monat ? `${monat}/${jahr}` : stand;
 }
 
+/** Sprachgerechte Abkürzungen und Dezimaltrennzeichen für die belegten Zahlen. */
+export function wasserwert(wert: string, sprache: Sprache): string {
+  const milliard = {
+    de: "Mrd.",
+    pl: "mld",
+    en: "bn",
+    fr: "Md",
+    es: "mil mill.",
+    it: "mld",
+  }[sprache];
+  const million = {
+    de: "Mio.",
+    pl: "mln",
+    en: "m",
+    fr: "M",
+    es: "mill.",
+    it: "mln",
+  }[sprache];
+  const lokalisiert = wert.replace("Mrd.", milliard).replace("Mio.", million);
+  return sprache === "en" ? lokalisiert.replace(/(\d),(\d)/g, "$1.$2") : lokalisiert;
+}
+
 /** Text in der gewünschten Sprache, sonst Englisch, sonst Deutsch, sonst leer. */
 export function text(feld: MehrsprachigerText | undefined, sprache: Sprache): string {
   if (!feld) return "";
